@@ -239,3 +239,8 @@ body header.developer-header a {
   color: inherit !important;
 }
 
+/* Hide floating chatbot bubble in 3D View Mode */
+body[data-view="3d"] #btn-ai-assistant-toggle {
+  display: none !important;
+}
+

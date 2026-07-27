@@ -72,11 +72,26 @@ export const CustomCursor: React.FC = () => {
     window.addEventListener("mouseup", onMouseUp);
     window.addEventListener("mouseover", onMouseOver);
 
+    // Inject global CSS rule with exception for iframes & device preview viewports
+    const styleEl = document.createElement("style");
+    styleEl.id = "global-custom-cursor-override";
+    styleEl.innerHTML = `
+      *, *::before, *::after, button, a, input, select, textarea, label, [role="button"], .cursor-pointer {
+        cursor: none !important;
+      }
+      iframe, .disable-custom-cursor, .disable-custom-cursor *, iframe * {
+        cursor: auto !important;
+      }
+    `;
+    document.head.appendChild(styleEl);
+
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
       window.removeEventListener("mouseover", onMouseOver);
+      const el = document.getElementById("global-custom-cursor-override");
+      if (el) el.remove();
     };
   }, []);
 

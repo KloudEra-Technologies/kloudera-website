@@ -27,6 +27,13 @@ export default function Home() {
     return () => window.removeEventListener("error", handleError);
   }, []);
 
+  useEffect(() => {
+    document.body.setAttribute("data-view", viewMode);
+    return () => {
+      document.body.removeAttribute("data-view");
+    };
+  }, [viewMode]);
+
   const handleVerifyComplete = () => {
     setVerified(true);
   };
