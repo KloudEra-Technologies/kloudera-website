@@ -1,26 +1,241 @@
 @import "tailwindcss";
 
+/* Global pointer rules: ensure native pointer remains visible */
+body {
+  cursor: auto;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #f4f4f5;
+  --card: #09090b;
+  --card-foreground: #f4f4f5;
+  --primary: #14b8a6; /* Teal */
+  --primary-foreground: #0d0d0d;
+  --secondary: #a855f7; /* Purple */
+  --secondary-foreground: #0d0d0d;
+  --border: rgba(20, 184, 166, 0.15);
+  
+  /* Cyber glowing colors */
+  --glow-teal: rgba(20, 184, 166, 0.5);
+  --glow-purple: rgba(168, 85, 247, 0.5);
+  --glow-rose: rgba(244, 63, 94, 0.5);
+  --glow-blue: rgba(59, 130, 246, 0.5);
+}
+
+/* High Contrast override variables */
+.high-contrast {
+  --background: #000000;
+  --foreground: #ffffff;
+  --primary: #00ffcc;
+  --secondary: #ff00ff;
+  --border: #ffffff;
+  --glow-teal: transparent;
+  --glow-purple: transparent;
+  --glow-rose: transparent;
+  --glow-blue: transparent;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
+
+/* Custom cyber scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.9);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
+}
+
+/* Glassmorphism Panel styles */
+.cyber-panel {
+  background: rgba(9, 9, 11, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(20, 184, 166, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.cyber-panel-purple {
+  background: rgba(9, 9, 11, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Glowing utilities */
+.glow-text-teal {
+  text-shadow: 0 0 10px rgba(20, 184, 166, 0.6);
+}
+.glow-text-purple {
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+}
+.glow-text-rose {
+  text-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
+}
+.glow-text-blue {
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+}
+
+.glow-border-teal {
+  box-shadow: 0 0 15px rgba(20, 184, 166, 0.25);
+  border-color: rgba(20, 184, 166, 0.4);
+}
+.glow-border-purple {
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
+  border-color: rgba(168, 85, 247, 0.4);
+}
+.glow-border-rose {
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.25);
+  border-color: rgba(244, 63, 94, 0.4);
+}
+
+/* Holographic dynamic grid background */
+.cyber-grid {
+  background-image: 
+    linear-gradient(rgba(20, 184, 166, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 184, 166, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center center;
+}
+
+/* Core keyframe utility animations */
+@keyframes gridFlow {
+  0% { background-position: 0px 0px; }
+  100% { background-position: 40px 40px; }
+}
+
+.animate-grid-flow {
+  animation: gridFlow 20s linear infinite;
+}
+
+.cursor-none {
+  cursor: auto !important;
+}
+
+.cursor-none a,
+.cursor-none button,
+.cursor-none [role="button"] {
+  cursor: pointer !important;
+}
+
+.cursor-none input,
+.cursor-none textarea {
+  cursor: text !important;
+}
+
+/* Hide scrollbar utility */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 3D Holographic Shelf System */
+.shelf-row {
+  position: relative;
+  border-bottom: 4px solid var(--primary);
+  box-shadow: 0 12px 25px -5px rgba(20, 184, 166, 0.2);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+
+.shelf-row::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+  box-shadow: 0 0 15px var(--secondary);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.shelf-card {
+  transform: perspective(1000px) rotateX(10deg);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  background: rgba(9, 9, 11, 0.8);
+  border: 1px solid rgba(20, 184, 166, 0.15);
+}
+
+.shelf-card:hover {
+  transform: perspective(1000px) rotateX(0deg) translateY(-8px);
+  border-color: var(--secondary);
+  box-shadow: 0 20px 40px rgba(168, 85, 247, 0.2), 0 0 25px rgba(20, 184, 166, 0.1);
+}
+
+/* Premium High-Contrast Light Header overrides for all visitor-facing pages */
+body header {
+  background-color: rgba(243, 244, 246, 0.98) !important; /* Light Slate Gray */
+  border-bottom: 1px solid rgba(209, 213, 219, 0.9) !important; /* Cool grey-300 border */
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+/* Force all text/links inside the visitor header to high-contrast dark text */
+body header nav a, 
+body header nav span, 
+body header nav p,
+body header a span,
+body header span:not(.font-mono) {
+  color: #0f172a !important; /* Slate-900 */
+}
+
+body header nav a:hover {
+  color: #0284c7 !important; /* High-contrast Sky Blue on hover */
+}
+
+/* Adjust hamburger menu icon inside the visitor header */
+body header button svg {
+  stroke: #0f172a !important;
+}
+
+/* Make page description / company name inside the visitor header look crisp */
+body header h1,
+body header h2,
+body header h3 {
+  color: #0f172a !important;
+}
+
+/* Reset and preserve Developer Header dark styling */
+body header.developer-header {
+  background-color: rgba(9, 9, 11, 0.95) !important;
+  border-bottom: 1px solid rgba(20, 184, 166, 0.2) !important;
+}
+
+body header.developer-header h1,
+body header.developer-header h2,
+body header.developer-header h3,
+body header.developer-header span,
+body header.developer-header p,
+body header.developer-header a {
+  color: inherit !important;
+}
+

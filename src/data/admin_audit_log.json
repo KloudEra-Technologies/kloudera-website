@@ -1,0 +1,196 @@
+[
+  {
+    "id": "audit_1784871480760_tjl1q",
+    "timestamp": "2026-07-24T05:38:00.760Z",
+    "formattedTime": "7/24/2026, 11:07:59 AM IST",
+    "event": "MEETING_BOOKED",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "New consultation scheduled: Abhay Dwivedi (abc@gmail.com) on 2026-07-24T10:30:00.000Z via Teams",
+    "details": {
+      "visitorName": "Abhay Dwivedi",
+      "email": "abc@gmail.com",
+      "company": "K company",
+      "date": "2026-07-24T10:30:00.000Z",
+      "duration": 30,
+      "platform": "Teams"
+    },
+    "status": "SENT_VIA_RESEND_API",
+    "smtpMessage": "Successfully delivered email via Resend API to info@kloudera.ai!"
+  },
+  {
+    "id": "audit_1784806032689_rdxwk",
+    "timestamp": "2026-07-23T11:27:12.689Z",
+    "formattedTime": "7/23/2026, 4:57:12 PM IST",
+    "event": "WEBSITE_CONTENT_PUBLISHED",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "Website content packets were updated and published live.",
+    "details": {
+      "publishedBy": "Ultimate Master Admin"
+    },
+    "status": "SENT_VIA_RESEND_API",
+    "smtpMessage": "Successfully delivered email via Resend API to info@kloudera.ai!"
+  },
+  {
+    "id": "audit_1784805984265_fyjbu",
+    "timestamp": "2026-07-23T11:26:24.265Z",
+    "formattedTime": "7/23/2026, 4:56:23 PM IST",
+    "event": "WEBSITE_CONTENT_PUBLISHED",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "Website content packets were updated and published live.",
+    "details": {
+      "publishedBy": "Ultimate Master Admin"
+    },
+    "status": "SENT_VIA_RESEND_API",
+    "smtpMessage": "Successfully delivered email via Resend API to info@kloudera.ai!"
+  },
+  {
+    "id": "audit_1784805983579_otnn0",
+    "timestamp": "2026-07-23T11:26:23.579Z",
+    "formattedTime": "7/23/2026, 4:56:23 PM IST",
+    "event": "WEBSITE_CONTENT_PUBLISHED",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "Website content packets were updated and published live.",
+    "details": {
+      "publishedBy": "Ultimate Master Admin"
+    },
+    "status": "SENT_VIA_RESEND_API",
+    "smtpMessage": "Successfully delivered email via Resend API to info@kloudera.ai!"
+  },
+  {
+    "id": "audit_1784805982824_vgl2y",
+    "timestamp": "2026-07-23T11:26:22.824Z",
+    "formattedTime": "7/23/2026, 4:56:22 PM IST",
+    "event": "WEBSITE_CONTENT_PUBLISHED",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "Website content packets were updated and published live.",
+    "details": {
+      "publishedBy": "Ultimate Master Admin"
+    },
+    "status": "SENT_VIA_RESEND_API",
+    "smtpMessage": "Successfully delivered email via Resend API to info@kloudera.ai!"
+  },
+  {
+    "id": "audit_1784782127899_odqll",
+    "timestamp": "2026-07-23T04:48:47.899Z",
+    "formattedTime": "7/23/2026, 10:18:47 AM IST",
+    "event": "MEETING_BOOKED",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "New consultation scheduled: Alice Strategist (alice@enterprise.com) on 2026-07-23T09:00:00.000Z via Teams",
+    "details": {
+      "visitorName": "Alice Strategist",
+      "email": "alice@enterprise.com",
+      "company": "Enterprise Cloud Corp",
+      "date": "2026-07-23T09:00:00.000Z",
+      "duration": 30,
+      "platform": "Teams"
+    },
+    "status": "SENT_VIA_RESEND_API",
+    "smtpMessage": "Successfully delivered email via Resend API to info@kloudera.ai!"
+  },
+  {
+    "id": "audit_1784781658635_75vy5",
+    "timestamp": "2026-07-23T04:40:58.635Z",
+    "formattedTime": "7/23/2026, 10:10:56 AM IST",
+    "event": "MEETING_BOOKED",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "New consultation scheduled: Alice Strategist (alice@enterprise.com) on 2026-07-23T09:00:00.000Z via Teams",
+    "details": {
+      "visitorName": "Alice Strategist",
+      "email": "alice@enterprise.com",
+      "company": "Enterprise Cloud Corp",
+      "date": "2026-07-23T09:00:00.000Z",
+      "duration": 30,
+      "platform": "Teams"
+    },
+    "status": "SENT_VIA_RESEND_API",
+    "smtpMessage": "Successfully delivered email via Resend API to info@kloudera.ai!"
+  },
+  {
+    "id": "audit_1784634901283_zdt74",
+    "timestamp": "2026-07-21T11:55:01.283Z",
+    "formattedTime": "7/21/2026, 5:24:59 PM IST",
+    "event": "SECURITY_CREDENTIALS_UPDATE",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "System security access passwords or admin notification email were modified.",
+    "details": {
+      "modifiedBy": "Ultimate Master Admin",
+      "newContentPassword": "Updated (Masked)",
+      "newUltimatePassword": "Updated (Masked)",
+      "adminEmail": "info@kloudera.ai"
+    },
+    "status": "SENT_VIA_RESEND_API",
+    "smtpMessage": "Successfully delivered email via Resend API to info@kloudera.ai!"
+  },
+  {
+    "id": "audit_1784634817759_e9n7x",
+    "timestamp": "2026-07-21T11:53:37.759Z",
+    "formattedTime": "7/21/2026, 5:23:35 PM IST",
+    "event": "WEBSITE_CONTENT_PUBLISHED",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "Website content packets were updated and published live.",
+    "details": {
+      "publishedBy": "Ultimate Master Admin"
+    },
+    "status": "OUTLOOK_AUTH_ERROR",
+    "smtpMessage": "Invalid login: 534-5.7.9 Please log in with your web browser and then try again. For more\n534-5.7.9 information, go to\n534 5.7.9  https://support.google.com/mail/?p=WebLoginRequired d2e1a72fcca58-84c2adcd3d1sm7150622b3a.22 - gsmtp"
+  },
+  {
+    "id": "audit_1784634005905_v98v3",
+    "timestamp": "2026-07-21T11:40:05.905Z",
+    "formattedTime": "7/21/2026, 5:10:05 PM IST",
+    "event": "WEBSITE_CONTENT_PUBLISHED",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "Website content packets were updated and published live.",
+    "details": {
+      "publishedBy": "Ultimate Master Admin"
+    },
+    "status": "OUTLOOK_PASSWORD_REQUIRED",
+    "smtpMessage": "Microsoft Outlook (info@kloudera.ai) requires authentication. Click 'Advanced Custom SMTP Settings' below and enter your Outlook Password (or App Password)."
+  },
+  {
+    "id": "audit_1784633606765_j643g",
+    "timestamp": "2026-07-21T11:33:26.765Z",
+    "formattedTime": "7/21/2026, 5:03:24 PM IST",
+    "event": "SECURITY_CREDENTIALS_UPDATE",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "System security access passwords or admin notification email were modified.",
+    "details": {
+      "modifiedBy": "Ultimate Master Admin",
+      "newContentPassword": "Updated (Masked)",
+      "newUltimatePassword": "Updated (Masked)",
+      "adminEmail": "info@kloudera.ai"
+    },
+    "status": "SENT_VIA_ZERO_CONFIG_RELAY",
+    "smtpMessage": "Instant email dispatched directly to info@kloudera.ai! Check your inbox."
+  },
+  {
+    "id": "audit_1784632403193_we3nw",
+    "timestamp": "2026-07-21T11:13:23.194Z",
+    "formattedTime": "7/21/2026, 4:43:23 PM IST",
+    "event": "SECURITY_CREDENTIALS_UPDATE",
+    "recipientEmail": "info@klouder.ai",
+    "summary": "System security access passwords or admin notification email were modified.",
+    "details": {
+      "modifiedBy": "Ultimate Master Admin",
+      "newContentPassword": "Updated (Masked)",
+      "newUltimatePassword": "Updated (Masked)",
+      "adminEmail": "info@klouder.ai"
+    },
+    "status": "DELIVERED_TO_AUDIT_MAIL"
+  },
+  {
+    "id": "audit_1784631868888_gr1q3",
+    "timestamp": "2026-07-21T11:04:28.888Z",
+    "formattedTime": "7/21/2026, 4:34:28 PM IST",
+    "event": "SECURITY_CREDENTIALS_UPDATE",
+    "recipientEmail": "info@klouder.ai",
+    "summary": "System security access passwords or admin notification email were modified.",
+    "details": {
+      "modifiedBy": "Ultimate Master Admin",
+      "newContentPassword": "Updated (Masked)",
+      "newUltimatePassword": "Updated (Masked)",
+      "adminEmail": "info@klouder.ai"
+    },
+    "status": "DELIVERED_TO_AUDIT_MAIL"
+  }
+]

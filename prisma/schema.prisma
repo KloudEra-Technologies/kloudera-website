@@ -1,0 +1,201 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String?
+  email         String?    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?    // Hashed password for admin panel login
+  role          String     @default("user") // "user" or "admin"
+  sessions      Session[]
+  accounts      Account[]
+  auditLogs     AuditLog[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model MeetingBooking {
+  id               String   @id @default(cuid())
+  visitorName      String
+  company          String?
+  email            String
+  phone            String?
+  date             DateTime // Scheduled start date/time
+  duration         Int      // Duration in minutes (e.g. 30, 45, 60)
+  timezone         String   @default("Asia/Kolkata")
+  purpose          String
+  platform         String   @default("Teams") // "Teams", "Meet"
+  meetingLink      String?                    // Microsoft Teams or Google Meet link
+  status           String   @default("PENDING") // "PENDING", "APPROVED", "DECLINED", "RESCHEDULED", "CANCELLED"
+  cancelToken      String   @unique @default(cuid())
+  specialRequests  String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model LeadSubmission {
+  id          String   @id @default(cuid())
+  type        String   // "CONTACT", "SUPPORT", "QUOTE", "PARTNER", "NEWSLETTER", "HARDWARE_ENQUIRY", "CYBER_CONSULT"
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  subject     String?
+  message     String?
+  payload     String?  // JSON metadata of the lead details (e.g. products requested, budget)
+  status      String   @default("OPEN") // "OPEN", "IN_PROGRESS", "RESOLVED"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JobListing {
+  id           String           @id @default(cuid())
+  title        String
+  department   String           // "Engineering", "Security", "Sales", "Consulting", etc.
+  location     String           // "Remote", "Hybrid", "Onsite"
+  description  String
+  requirements String           // Text list or description
+  experience   String           // "Entry-level", "Mid-level", "Senior", "Lead"
+  status       String           @default("ACTIVE") // "ACTIVE", "INACTIVE"
+  applications JobApplication[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model JobApplication {
+  id           String     @id @default(cuid())
+  jobId        String
+  job          JobListing @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  name         String
+  email        String
+  phone        String
+  resumeUrl    String     // Path to stored resume
+  coverLetter  String?
+  status       String     @default("PENDING") // "PENDING", "REVIEWED", "INTERVIEWING", "REJECTED", "HIRED"
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  summary     String
+  content     String
+  category    String   // "Security", "AI", "Cloud", "Microsoft", "Hardware", "IT Services"
+  author      String
+  readTime    String   @default("5 min read")
+  published   Boolean  @default(false)
+  coverImage  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model HardwareProduct {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  category    String   // "MacBooks", "GPUs", "Servers", "Workstations", "Networking"
+  image       String
+  description String
+  specs       String   // JSON containing specs (e.g. CPU, RAM, GPU, Storage)
+  features    String   // JSON containing key highlights
+  hotspots    String   // JSON list of hotspot coordinates and messages for product showcase
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ServiceItem {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  category    String   // "Security", "AI", "Microsoft", "Cloud", "Managed IT"
+  description String
+  icon        String   // Lucide icon name (e.g., "Shield", "Brain")
+  details     String   // JSON configuration for service features/subservices
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  author    String
+  role      String
+  company   String
+  content   String
+  avatar    String?
+  createdAt DateTime @default(now())
+}
+
+model Partner {
+  id        String   @id @default(cuid())
+  name      String
+  logoUrl   String
+  website   String?
+  createdAt DateTime @default(now())
+}
+
+model SystemConfig {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   // JSON configuration data
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  email     String?
+  action    String   // e.g. "UPDATE_BLOG", "APPROVE_MEETING"
+  details   String
+  ipAddress String?
+  createdAt DateTime @default(now())
+}

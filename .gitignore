@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/src/generated/prisma
+
+# ignore root-level screenshots and scratch files
+/*.png
+/take_screenshot.js
+/Kloudera services/
+/Chatbot Character.png
+/KlouderaNewLogo-removebg-preview.png
