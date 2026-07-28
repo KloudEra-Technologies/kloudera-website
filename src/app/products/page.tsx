@@ -8,7 +8,7 @@ export default function ProductsPage() {
   const [productsData, setProductsData] = useState<any>(null);
 
   useEffect(() => {
-    fetch("/api/website-content")
+    fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         if (data.products) {

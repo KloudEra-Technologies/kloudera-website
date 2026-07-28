@@ -80,7 +80,7 @@ export default function CareersPage() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    fetch("/api/website-content")
+    fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
       .then(res => {
         if (res.ok) return res.json();
         throw new Error("API load failed");

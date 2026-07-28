@@ -33,7 +33,7 @@ export default function ContactPage() {
   const [offices, setOffices] = useState<any[]>(DEFAULT_OFFICES);
 
   useEffect(() => {
-    fetch("/api/website-content")
+    fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
       .then(res => {
         if (res.ok) return res.json();
         throw new Error("API load failed");

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { getImageStyle } from "@/lib/imageHelper";
 
 const DEFAULT_WHY_CHOOSE_US = [
   {
@@ -46,7 +47,7 @@ export default function AboutPage() {
   const [team, setTeam] = useState<any[]>(DEFAULT_TEAM);
 
   useEffect(() => {
-    fetch("/api/website-content")
+    fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
       .then(res => {
         if (res.ok) return res.json();
         throw new Error("API load failed");
@@ -128,7 +129,8 @@ export default function AboutPage() {
                   <img
                     src={mbr.image}
                     alt={mbr.name}
-                    className="w-24 h-24 rounded-full object-cover border-2 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+                    className="w-24 h-24 rounded-full border-2 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+                    style={getImageStyle(mbr.image)}
                   />
                 ) : (
                   <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-950 via-blue-900 to-indigo-950 border-2 border-cyan-500/40 flex items-center justify-center text-cyan-300 text-2xl font-extrabold shadow-[0_0_20px_rgba(6,182,212,0.3)]">

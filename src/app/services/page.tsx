@@ -170,7 +170,7 @@ export default function ServicesHubPage() {
   const [categories, setCategories] = useState<any[]>(DEFAULT_CATEGORIES);
 
   useEffect(() => {
-    fetch("/api/website-content")
+    fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
       .then(res => {
         if (res.ok) return res.json();
         throw new Error("API load failed");

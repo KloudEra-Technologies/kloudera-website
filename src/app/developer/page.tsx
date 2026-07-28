@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import ProfessionalBlueHome from "@/components/ProfessionalBlueHome";
+import { getAdjustmentValue, setAdjustmentValue, getImageStyle } from "@/lib/imageHelper";
 
 type PageKey = "home" | "services" | "products" | "achievements" | "clienteles" | "certifications" | "about" | "careers" | "contact" | "security" | "brand" | "partners";
 
@@ -54,6 +55,8 @@ const compressImage = (file: File, maxWidth = 800, maxHeight = 800, quality = 0.
     reader.onerror = () => resolve(file);
   });
 };
+
+
 
 export default function DeveloperPage() {
   const [password, setPassword] = useState("");
@@ -1944,16 +1947,168 @@ export default function DeveloperPage() {
                                 }}
                                 className="text-[9.5px] text-zinc-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[8.5px] file:font-mono file:bg-teal-500 file:text-black hover:file:bg-teal-400 cursor-pointer"
                               />
-                              {selectedElement.value[key] && (
-                                <div className="mt-1 flex items-center gap-2">
-                                  <img
-                                    src={selectedElement.value[key]}
-                                    alt="Preview"
-                                    className="w-10 h-10 rounded object-cover border border-zinc-700 bg-black"
-                                  />
-                                  <span className="text-[8px] text-zinc-400 font-mono break-all line-clamp-1">{selectedElement.value[key]}</span>
-                                </div>
-                              )}
+                              {selectedElement.value[key] && (() => {
+                                const currentUrl = selectedElement.value[key];
+                                const scaleVal = Number(getAdjustmentValue(currentUrl, "scale", "1"));
+                                const xVal = Number(getAdjustmentValue(currentUrl, "x", "0"));
+                                const yVal = Number(getAdjustmentValue(currentUrl, "y", "0"));
+                                const rotVal = Number(getAdjustmentValue(currentUrl, "rot", "0"));
+                                const fitVal = getAdjustmentValue(currentUrl, "fit", "cover");
+                                const filterVal = getAdjustmentValue(currentUrl, "filter", "none");
+
+                                return (
+                                  <div className="mt-3 border-t border-teal-500/10 pt-3 space-y-4 font-mono">
+                                    {/* Canva Header */}
+                                    <div className="flex justify-between items-center bg-teal-500/10 p-1.5 rounded border border-teal-500/20">
+                                      <span className="text-[8.5px] text-teal-400 font-bold uppercase tracking-wider">🎨 CANVA IMAGE DESIGN CONSOLE</span>
+                                      <button 
+                                        type="button"
+                                        onClick={() => {
+                                          const resetUrl = currentUrl.split("?")[0];
+                                          updateNestedValue([...selectedElement.path, key], resetUrl);
+                                        }}
+                                        className="text-[7.5px] bg-zinc-800 hover:bg-rose-950 text-zinc-400 hover:text-rose-300 px-1 py-0.5 rounded border border-zinc-700 hover:border-rose-500 transition-all uppercase"
+                                      >
+                                        RESET
+                                      </button>
+                                    </div>
+
+                                    {/* Visual Canvas Sandbox */}
+                                    <div className="flex justify-center items-center p-4 bg-black rounded-lg border border-zinc-800 overflow-hidden relative group">
+                                      <div className="w-24 h-24 rounded-full border border-teal-500/20 bg-zinc-950 overflow-hidden relative flex items-center justify-center shadow-lg shadow-teal-500/5">
+                                        <img
+                                          src={currentUrl}
+                                          alt="Visual Preview"
+                                          className="w-full h-full"
+                                          style={getImageStyle(currentUrl)}
+                                        />
+                                      </div>
+                                      <span className="absolute bottom-1 right-2 text-[7px] text-zinc-500 uppercase tracking-tight opacity-50 group-hover:opacity-100 transition-all">VISUAL SANDBOX</span>
+                                    </div>
+
+                                    {/* Canva Controls */}
+                                    <div className="space-y-3 text-[9px]">
+                                      {/* Zoom (Scale) */}
+                                      <div className="flex flex-col gap-1">
+                                        <div className="flex justify-between text-zinc-400 font-bold text-[8.5px]">
+                                          <span>ZOOM & SCALE</span>
+                                          <span className="text-teal-400 font-mono">x{scaleVal.toFixed(2)}</span>
+                                        </div>
+                                        <input
+                                          type="range"
+                                          min="1"
+                                          max="3"
+                                          step="0.05"
+                                          value={scaleVal}
+                                          onChange={(e) => {
+                                            const updated = setAdjustmentValue(currentUrl, "scale", e.target.value);
+                                            updateNestedValue([...selectedElement.path, key], updated);
+                                          }}
+                                          className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-400"
+                                        />
+                                      </div>
+
+                                      {/* Horizontal Pan Offset */}
+                                      <div className="flex flex-col gap-1">
+                                        <div className="flex justify-between text-zinc-400 font-bold text-[8.5px]">
+                                          <span>PAN HORIZONTAL (X)</span>
+                                          <span className="text-teal-400 font-mono">{xVal}px</span>
+                                        </div>
+                                        <input
+                                          type="range"
+                                          min="-100"
+                                          max="100"
+                                          step="1"
+                                          value={xVal}
+                                          onChange={(e) => {
+                                            const updated = setAdjustmentValue(currentUrl, "x", e.target.value);
+                                            updateNestedValue([...selectedElement.path, key], updated);
+                                          }}
+                                          className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-400"
+                                        />
+                                      </div>
+
+                                      {/* Vertical Pan Offset */}
+                                      <div className="flex flex-col gap-1">
+                                        <div className="flex justify-between text-zinc-400 font-bold text-[8.5px]">
+                                          <span>PAN VERTICAL (Y)</span>
+                                          <span className="text-teal-400 font-mono">{yVal}px</span>
+                                        </div>
+                                        <input
+                                          type="range"
+                                          min="-100"
+                                          max="100"
+                                          step="1"
+                                          value={yVal}
+                                          onChange={(e) => {
+                                            const updated = setAdjustmentValue(currentUrl, "y", e.target.value);
+                                            updateNestedValue([...selectedElement.path, key], updated);
+                                          }}
+                                          className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-400"
+                                        />
+                                      </div>
+
+                                      {/* Rotation */}
+                                      <div className="flex flex-col gap-1">
+                                        <div className="flex justify-between text-zinc-400 font-bold text-[8.5px]">
+                                          <span>ROTATE MATRIX</span>
+                                          <span className="text-teal-400 font-mono">{rotVal}°</span>
+                                        </div>
+                                        <input
+                                          type="range"
+                                          min="-180"
+                                          max="180"
+                                          step="5"
+                                          value={rotVal}
+                                          onChange={(e) => {
+                                            const updated = setAdjustmentValue(currentUrl, "rot", e.target.value);
+                                            updateNestedValue([...selectedElement.path, key], updated);
+                                          }}
+                                          className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-400"
+                                        />
+                                      </div>
+
+                                      {/* Fit Mode & Filters */}
+                                      <div className="grid grid-cols-2 gap-3 pt-1">
+                                        {/* Fit Selector */}
+                                        <div className="flex flex-col gap-1">
+                                          <label className="text-[7.5px] text-zinc-500 uppercase font-bold">Fit Aspect</label>
+                                          <select
+                                            value={fitVal}
+                                            onChange={(e) => {
+                                              const updated = setAdjustmentValue(currentUrl, "fit", e.target.value);
+                                              updateNestedValue([...selectedElement.path, key], updated);
+                                            }}
+                                            className="bg-black border border-zinc-800 rounded p-1.5 text-white focus:outline-none focus:border-teal-500 text-[9.5px]"
+                                          >
+                                            <option value="cover">COVER (FILL)</option>
+                                            <option value="contain">CONTAIN (FIT)</option>
+                                            <option value="fill">STRETCH</option>
+                                          </select>
+                                        </div>
+
+                                        {/* Filter Selector */}
+                                        <div className="flex flex-col gap-1">
+                                          <label className="text-[7.5px] text-zinc-500 uppercase font-bold">Creative Filter</label>
+                                          <select
+                                            value={filterVal}
+                                            onChange={(e) => {
+                                              const updated = setAdjustmentValue(currentUrl, "filter", e.target.value);
+                                              updateNestedValue([...selectedElement.path, key], updated);
+                                            }}
+                                            className="bg-black border border-zinc-800 rounded p-1.5 text-white focus:outline-none focus:border-teal-500 text-[9.5px]"
+                                          >
+                                            <option value="none">NORMAL</option>
+                                            <option value="grayscale">GRAYSCALE MATRIX</option>
+                                            <option value="neon">CYBER neon TINT</option>
+                                            <option value="warm">RETRO WARM</option>
+                                          </select>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })()}
                             </div>
                           )}
                         </div>

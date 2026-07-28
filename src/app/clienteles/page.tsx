@@ -8,7 +8,7 @@ export default function ClientelesPage() {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetch("/api/website-content")
+    fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((d) => {
         if (d.clienteles) setData(d.clienteles);

@@ -29,7 +29,7 @@ export function ProfessionalBlueHome({
 
   useEffect(() => {
     if (initialSiteData) return;
-    fetch("/api/website-content")
+    fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error("Failed to fetch");
