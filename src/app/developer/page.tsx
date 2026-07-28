@@ -217,22 +217,25 @@ export default function DeveloperPage() {
     setUploadSuccess(false);
     setUploadError(null);
 
-    const formData = new FormData();
-    formData.append("logo", file);
-
     try {
-      const res = await fetch("/api/upload-logo", {
+      const compressedBlob = await compressImage(file);
+      const uploadFile = new File([compressedBlob], file.name.replace(/\\.[^/.]+$/, ".jpg"), { type: "image/jpeg" });
+      const token = localStorage.getItem("dev_token") || "";
+
+      const formData = new FormData();
+      formData.append("file", uploadFile);
+      formData.append("token", token);
+
+      const res = await fetch("/api/upload-image", {
         method: "POST",
+        headers: { "x-developer-token": token },
         body: formData,
       });
 
       if (res.ok) {
+        const data = await res.json();
+        updateNestedValue(["brand", "logoUrl"], data.url);
         setUploadSuccess(true);
-        // Force refresh all frames
-        const iframe = document.querySelector("iframe");
-        if (iframe) {
-          iframe.src = iframe.src;
-        }
         setTimeout(() => setUploadSuccess(false), 3000);
       } else {
         const data = await res.json();

@@ -14,6 +14,7 @@ export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", icon
 
   useEffect(() => {
     const loadLogoAndCrop = async () => {
+      let logoSrc = "/logo.png";
       try {
         const res = await fetch("/api/website-content", { cache: "no-store" });
         if (res.ok) {
@@ -24,13 +25,16 @@ export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", icon
           if (data.brand?.logoLeft) {
             setLogoLeft(data.brand.logoLeft);
           }
+          if (data.brand?.logoUrl) {
+            logoSrc = data.brand.logoUrl;
+          }
         }
       } catch (e) {}
 
       // Load image and crop transparent borders
       const img = new Image();
       img.crossOrigin = "anonymous";
-      img.src = "/logo.png";
+      img.src = logoSrc;
       img.onload = () => {
         const canvas = document.createElement("canvas");
         canvas.width = img.width;
