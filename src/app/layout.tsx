@@ -4,6 +4,7 @@ import "./globals.css";
 import { AccessibilityProvider, SettingsPanel } from "@/components/AccessibilityContext";
 import { CustomCursor } from "@/components/CustomCursor";
 import { AiAssistant } from "@/components/AiAssistant";
+import { EditorProvider, EditorToolbar } from "@/components/editor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,10 +35,13 @@ export default function RootLayout({
     >
       <body className="h-full bg-black text-zinc-100 flex flex-col antialiased">
         <AccessibilityProvider>
-          <CustomCursor />
-          <div className="flex-1 flex flex-col">{children}</div>
-          <AiAssistant />
-          <SettingsPanel />
+          <EditorProvider>
+            <CustomCursor />
+            <div className="flex-1 flex flex-col">{children}</div>
+            <AiAssistant />
+            <SettingsPanel />
+            <EditorToolbar />
+          </EditorProvider>
         </AccessibilityProvider>
       </body>
     </html>

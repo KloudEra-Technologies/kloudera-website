@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "./KloudEraLogo";
 import { useAccessibility } from "./AccessibilityContext";
+import { InlineText } from "@/components/editor";
 
 interface ProfessionalBlueHomeProps {
   onLaunch3D?: () => void;
@@ -44,11 +45,7 @@ export function ProfessionalBlueHome({
 
   const homeData = initialSiteData?.home || fetchedData || {};
 
-  const heroBadge = homeData.heroBadge || "ENTERPRISE CYBERSECURITY & HARDWARE PLATFORM";
-  const heroTitlePrefix = homeData.heroTitlePrefix !== undefined ? homeData.heroTitlePrefix : "Architecting ";
-  const heroTitleHighlight = homeData.heroTitleHighlight || "Zero-Trust";
-  const heroTitleSuffix = homeData.heroTitleSuffix !== undefined ? homeData.heroTitleSuffix : " Digital Enterprises";
-  const heroSubtitle = homeData.heroSubtitle || "Empowering Fortune 500 infrastructure with 24/7 Security Operations Surveillance, custom GPU AI compute clusters, and seamless Microsoft Cloud ecosystem governance.";
+  const heroHighlightGradient = homeData.heroHighlightGradient ?? true;
 
   const solutionCards = homeData.solutionCards || [
     { category: "CYBERSECURITY", title: "Protect. Detect. Respond.", desc: "vCISO, vDPO, 24/7 Monitoring, VAPT, and proactive security strategy.", color: "#06b6d4" },
@@ -88,14 +85,17 @@ export function ProfessionalBlueHome({
               <span>Products</span>
               <span className="text-[9px] font-mono font-bold bg-amber-950/80 text-amber-300 border border-amber-500/40 px-1.5 py-0.2 rounded-full">SOON</span>
             </Link>
-            <Link 
-              href="/developer" 
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-950/40 text-[11px] font-mono font-bold text-cyan-300 hover:bg-cyan-900/60 hover:border-cyan-400 transition-all shadow-[0_0_10px_rgba(6,182,212,0.15)]"
-              title="Open Developer CMS Portal"
+            <button 
+              onClick={() => {
+                const event = new KeyboardEvent('keydown', { ctrlKey: true, shiftKey: true, key: 'e' });
+                window.dispatchEvent(event);
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-950/40 text-[11px] font-mono font-bold text-cyan-300 hover:bg-cyan-900/60 hover:border-cyan-400 transition-all shadow-[0_0_10px_rgba(6,182,212,0.15)] cursor-pointer"
+              title="Open Editor Mode (Ctrl+Shift+E)"
             >
-              <span>🛠️</span>
-              <span>Developer Portal</span>
-            </Link>
+              <span>✏️</span>
+              <span>Edit Site</span>
+            </button>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -192,13 +192,16 @@ export function ProfessionalBlueHome({
               <span>🚀 // PRODUCTS</span>
               <span className="text-[9px] bg-amber-950 px-2 py-0.5 rounded border border-amber-800">SOON</span>
             </Link>
-            <Link 
-              href="/developer" 
-              onClick={() => setMobileMenuOpen(false)} 
-              className="block text-cyan-400 hover:text-cyan-300 py-1 font-bold"
+            <button 
+              onClick={() => {
+                setMobileMenuOpen(false);
+                const event = new KeyboardEvent('keydown', { ctrlKey: true, shiftKey: true, key: 'e' });
+                window.dispatchEvent(event);
+              }}
+              className="block text-cyan-400 hover:text-cyan-300 py-1 font-bold w-full text-left"
             >
-              🛠️ // DEVELOPER EDITOR
-            </Link>
+              ✏️ // EDIT SITE
+            </button>
           </div>
         )}
       </header>
@@ -212,16 +215,27 @@ export function ProfessionalBlueHome({
           <div className="mx-auto max-w-3xl text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/60 px-3.5 py-1 text-[10px] sm:text-xs font-semibold tracking-wider text-cyan-300 backdrop-blur-md mb-6 max-w-full">
               <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
-              <span className="truncate">{heroBadge}</span>
+              <InlineText as="span" className="truncate" path={["home", "heroBadge"]} fallback="ENTERPRISE CYBERSECURITY & HARDWARE PLATFORM" />
             </div>
 
             <h1 className="text-2xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight break-words">
-              {heroTitlePrefix}<span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent">{heroTitleHighlight}</span>{heroTitleSuffix}
+              <InlineText as="span" path={["home", "heroTitlePrefix"]} fallback="Architecting " />
+              <InlineText 
+                as="span" 
+                className={heroHighlightGradient ? "bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent" : "text-white"}
+                path={["home", "heroTitleHighlight"]} 
+                fallback="Zero-Trust" 
+              />
+              <InlineText as="span" path={["home", "heroTitleSuffix"]} fallback=" Digital Enterprises" />
             </h1>
 
-            <p className="mt-4 sm:mt-6 text-xs sm:text-base md:text-lg text-slate-300 leading-relaxed px-2 sm:px-0">
-              {heroSubtitle}
-            </p>
+            <InlineText 
+              as="p" 
+              multiline
+              className="mt-4 sm:mt-6 text-xs sm:text-base md:text-lg text-slate-300 leading-relaxed px-2 sm:px-0"
+              path={["home", "heroSubtitle"]} 
+              fallback="Empowering Fortune 500 infrastructure with 24/7 Security Operations Surveillance, custom GPU AI compute clusters, and seamless Microsoft Cloud ecosystem governance." 
+            />
 
             <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto">
               <a
