@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAccessibility } from "@/components/AccessibilityContext";
+import { InlineText } from "@/components/editor";
 
 const DEFAULT_OFFICES = [
   {
@@ -29,7 +30,6 @@ export default function ContactPage() {
   const [success, setSuccess] = useState(false);
 
   // Dynamic content states
-  const [pageTitle, setPageTitle] = useState("Transmit General Inquiry");
   const [offices, setOffices] = useState<any[]>(DEFAULT_OFFICES);
 
   useEffect(() => {
@@ -40,7 +40,6 @@ export default function ContactPage() {
       })
       .then(data => {
         if (data && data.contact) {
-          if (data.contact.title) setPageTitle(data.contact.title);
           if (data.contact.offices) setOffices(data.contact.offices);
         }
       })
@@ -105,7 +104,7 @@ export default function ContactPage() {
         <div className="cyber-panel p-6 rounded-lg border border-teal-500/20 font-mono text-xs max-w-xl mx-auto w-full">
           <div className="border-b border-teal-500/10 pb-3 mb-6">
             <span className="text-[9px] text-teal-400 font-bold uppercase tracking-widest block mb-1">COMMS GATEWAY</span>
-            <h2 className="text-sm font-bold text-white uppercase">{pageTitle}</h2>
+            <InlineText as="h2" className="text-sm font-bold text-white uppercase" path={["contact", "title"]} fallback="Transmit General Inquiry" />
           </div>
 
           {success ? (
@@ -185,24 +184,22 @@ export default function ContactPage() {
           {offices.map((office, idx) => (
             <div key={idx} className="cyber-panel p-5 sm:p-6 rounded-xl border border-teal-500/20 space-y-4 bg-zinc-950/80 backdrop-blur-md">
               <div className="border-b border-teal-500/20 pb-2 flex justify-between items-center">
-                <span className="font-bold text-white uppercase tracking-wider text-xs">{office.city || office.name || `OFFICE HUB ${idx + 1}`}</span>
+                <InlineText as="span" className="font-bold text-white uppercase tracking-wider text-xs" path={["contact", "offices", String(idx), "city"]} fallback={office.city || office.name || `OFFICE HUB ${idx + 1}`} />
                 <span className="text-[8.5px] font-bold text-teal-400 uppercase bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">{office.tag || "HUB"}</span>
               </div>
-              <p className="text-zinc-400 leading-relaxed text-[10.5px]">
-                {office.address}
-              </p>
+              <InlineText as="p" multiline className="text-zinc-400 leading-relaxed text-[10.5px]" path={["contact", "offices", String(idx), "address"]} fallback={office.address} />
               <div className="space-y-1 text-[9.5px]">
                 <div className="flex justify-between text-zinc-500">
                   <span>HOURS:</span>
-                  <span className="text-zinc-300 font-bold">{office.hours}</span>
+                  <InlineText as="span" className="text-zinc-300 font-bold" path={["contact", "offices", String(idx), "hours"]} fallback={office.hours} />
                 </div>
                 <div className="flex justify-between text-zinc-500">
                   <span>CONTACTS:</span>
-                  <span className="text-zinc-300 font-bold">{office.phone}</span>
+                  <InlineText as="span" className="text-zinc-300 font-bold" path={["contact", "offices", String(idx), "phone"]} fallback={office.phone} />
                 </div>
                 <div className="flex justify-between text-zinc-500">
                   <span>EMAIL:</span>
-                  <span className="text-teal-400 font-bold">{office.email}</span>
+                  <InlineText as="span" className="text-teal-400 font-bold" path={["contact", "offices", String(idx), "email"]} fallback={office.email} />
                 </div>
               </div>
             </div>

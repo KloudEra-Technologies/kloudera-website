@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { MicrosoftLoader } from "@/components/LoadingSequences";
 import { useAccessibility } from "@/components/AccessibilityContext";
+import { InlineText } from "@/components/editor";
 
 interface SolutionItem {
   id: string;
@@ -124,9 +125,7 @@ export default function MicrosoftSolutionsPage() {
       <header className="border-b border-blue-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
         <div className="font-mono">
           <span className="text-[10px] font-bold text-blue-500 tracking-widest uppercase">KLOUDERA TECHNOLOGIES // GOLD SUITE</span>
-          <h1 className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-blue">
-            MICROSOFT SOLUTIONS DECK
-          </h1>
+          <InlineText as="h1" className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-blue" path={["services", "microsoft", "title"]} fallback="MICROSOFT SOLUTIONS DECK" />
         </div>
 
         <div className="flex gap-4 mt-4 sm:mt-0 items-center">
@@ -155,9 +154,7 @@ export default function MicrosoftSolutionsPage() {
             <span className="text-[9px] font-bold text-blue-400 font-mono tracking-widest uppercase bg-blue-500/10 px-2.5 py-1 rounded border border-blue-500/10">
               SMART SOLUTION ARCHITECT ADVISOR
             </span>
-            <h2 className="text-md font-bold font-mono text-white mt-3 uppercase">
-              What is your primary operational bottleneck?
-            </h2>
+            <InlineText as="h2" className="text-md font-bold font-mono text-white mt-3 uppercase" path={["services", "microsoft", "heading"]} fallback="What is your primary operational bottleneck?" />
           </div>
 
           {/* Goal Selectors */}

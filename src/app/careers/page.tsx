@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAccessibility } from "@/components/AccessibilityContext";
+import { InlineText } from "@/components/editor";
 
 interface Job {
   id: string;
@@ -62,9 +63,6 @@ export default function CareersPage() {
   const [deptFilter, setDeptFilter] = useState("ALL");
   
   // Dynamic page content states
-  const [pageTitle, setPageTitle] = useState("Bright Future Awaits You!");
-  const [pageIntro, setPageIntro] = useState("At KloudEra Technologies, we’re shaping the future of Cyber Security, Cloud AI, and Digital Transformation. We’re a team of innovators, creators, and problem-solvers who thrive on building impactful solutions.");
-  const [whyJoinUs, setWhyJoinUs] = useState("Work on cutting-edge projects in Cyber Security, Cloud & AI Career growth & mentorship opportunities Inclusive and collaborative culture Flexible, future-ready workplace");
   const [timeline, setTimeline] = useState<any[]>([
     { step: "01", name: "PACKET AUDIT", desc: "Resume parsing and credential validation." },
     { step: "02", name: "DIAGNOSTIC TESTING", desc: "Practical hands-on scenario laboratories." },
@@ -87,9 +85,6 @@ export default function CareersPage() {
       })
       .then(data => {
         if (data && data.careers) {
-          if (data.careers.title) setPageTitle(data.careers.title);
-          if (data.careers.intro) setPageIntro(data.careers.intro);
-          if (data.careers.whyJoinUs) setWhyJoinUs(data.careers.whyJoinUs);
           if (data.careers.timeline) setTimeline(data.careers.timeline);
         }
       })
@@ -216,18 +211,14 @@ export default function CareersPage() {
         <section className="cyber-panel p-8 rounded-lg border border-teal-500/20 bg-zinc-950/20 space-y-6 font-mono text-xs">
           <div className="space-y-2 border-b border-teal-500/10 pb-4">
             <span className="text-[9px] text-teal-400 font-bold tracking-widest block uppercase">HUMAN CAPITAL // CAREERS</span>
-            <h2 className="text-lg font-bold text-white uppercase">{pageTitle}</h2>
+            <InlineText as="h2" className="text-lg font-bold text-white uppercase" path={["careers", "title"]} fallback="Bright Future Awaits You!" />
           </div>
           
-          <p className="text-zinc-400 leading-relaxed text-[11px]">
-            {pageIntro}
-          </p>
+          <InlineText as="p" multiline className="text-zinc-400 leading-relaxed text-[11px]" path={["careers", "intro"]} fallback="At KloudEra Technologies, we’re shaping the future of Cyber Security, Cloud AI, and Digital Transformation. We’re a team of innovators, creators, and problem-solvers who thrive on building impactful solutions." />
 
           <div className="border-t border-teal-500/10 pt-4 space-y-2">
             <span className="text-[9px] text-zinc-500 font-bold block uppercase tracking-wider">Why Join Us?</span>
-            <p className="text-zinc-400 leading-relaxed text-[10.5px]">
-              {whyJoinUs}
-            </p>
+            <InlineText as="p" multiline className="text-zinc-400 leading-relaxed text-[10.5px]" path={["careers", "whyJoinUs"]} fallback="Work on cutting-edge projects in Cyber Security, Cloud & AI Career growth & mentorship opportunities Inclusive and collaborative culture Flexible, future-ready workplace" />
           </div>
         </section>
 
@@ -239,8 +230,10 @@ export default function CareersPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center font-mono text-[10px]">
             {timeline.map((stage: any, idx: number) => (
               <div key={idx} className="p-4 bg-black/40 border border-teal-500/5 rounded">
-                <span className="block text-xs font-bold text-teal-400">{stage.step} // {stage.name}</span>
-                <p className="text-zinc-500 mt-2 leading-relaxed">{stage.desc}</p>
+                <span className="block text-xs font-bold text-teal-400">
+                  <InlineText as="span" path={["careers", "timeline", String(idx), "step"]} fallback={stage.step} /> // <InlineText as="span" path={["careers", "timeline", String(idx), "name"]} fallback={stage.name} />
+                </span>
+                <InlineText as="p" multiline className="text-zinc-500 mt-2 leading-relaxed" path={["careers", "timeline", String(idx), "desc"]} fallback={stage.desc} />
               </div>
             ))}
           </div>

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useAccessibility } from "@/components/AccessibilityContext";
+import { InlineText } from "@/components/editor";
 
 export default function SupportPage() {
   const { playAudio } = useAccessibility();
@@ -46,9 +47,7 @@ export default function SupportPage() {
       <header className="border-b border-teal-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
         <div className="font-mono">
           <span className="text-[10px] font-bold text-teal-400 tracking-widest uppercase">KLOUDERA TECHNOLOGIES // SECURE RESPONSE</span>
-          <h1 className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal">
-            SUPPORT CORE
-          </h1>
+          <InlineText as="h1" className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal" path={["support", "title"]} fallback="SUPPORT CORE" />
         </div>
 
         <button
@@ -64,7 +63,7 @@ export default function SupportPage() {
         <div className="cyber-panel p-6 rounded-lg border border-teal-500/20 font-mono text-xs">
           <div className="border-b border-teal-500/10 pb-3 mb-6">
             <span className="text-[9px] text-teal-400 font-bold uppercase tracking-widest block mb-1">TICKET DAEMON</span>
-            <h2 className="text-sm font-bold text-white uppercase">Log Secure Support Ticket</h2>
+            <InlineText as="h2" className="text-sm font-bold text-white uppercase" path={["support", "heading"]} fallback="Log Secure Support Ticket" />
           </div>
 
           {success ? (

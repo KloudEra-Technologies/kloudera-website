@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { InlineText } from "@/components/editor";
 
 export default function CloudInfrastructurePage() {
   return (
@@ -9,9 +10,7 @@ export default function CloudInfrastructurePage() {
       <header className="border-b border-teal-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
         <div className="font-mono">
           <span className="text-[10px] font-bold text-teal-400 tracking-widest uppercase">KLOUDERA TECHNOLOGIES // COMPUTE WING</span>
-          <h1 className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal">
-            CLOUD & GPU ARCHITECTURE
-          </h1>
+          <InlineText as="h1" className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal" path={["services", "cloud", "title"]} fallback="CLOUD & GPU ARCHITECTURE" />
         </div>
 
         <button
@@ -28,21 +27,17 @@ export default function CloudInfrastructurePage() {
           <span className="text-[8px] font-bold text-teal-400 tracking-widest uppercase bg-teal-500/10 px-2 py-1 rounded border border-teal-500/10">
             COMPUTE INFRASTRUCTURE
           </span>
-          <h2 className="text-sm font-bold text-white mt-3 uppercase">High-density datacenter environments</h2>
+          <InlineText as="h2" className="text-sm font-bold text-white mt-3 uppercase" path={["services", "cloud", "heading"]} fallback="High-density datacenter environments" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="cyber-panel p-6 rounded-lg border border-teal-500/20 space-y-3">
-            <span className="block font-bold text-white">GPU Supercomputing Scale</span>
-            <p className="text-zinc-500 leading-normal">
-              We design cluster environments featuring Nvidia H100 arrays, linked with high-bandwidth InfiniBand switches to execute heavy CUDA and deep learning calculations.
-            </p>
+            <InlineText as="span" className="block font-bold text-white" path={["services", "cloud", "boxes", "0", "title"]} fallback="GPU Supercomputing Scale" />
+            <InlineText as="p" multiline className="text-zinc-500 leading-normal" path={["services", "cloud", "boxes", "0", "desc"]} fallback="We design cluster environments featuring Nvidia H100 arrays, linked with high-bandwidth InfiniBand switches to execute heavy CUDA and deep learning calculations." />
           </div>
           <div className="cyber-panel p-6 rounded-lg border border-teal-500/20 space-y-3">
-            <span className="block font-bold text-white">Hybrid Cloud Sync Routing</span>
-            <p className="text-zinc-500 leading-normal">
-              Linking legacy local database nodes to virtualized Azure servers using secure IPSec VPN tunnels and high-performance ExpressRoute circuits.
-            </p>
+            <InlineText as="span" className="block font-bold text-white" path={["services", "cloud", "boxes", "1", "title"]} fallback="Hybrid Cloud Sync Routing" />
+            <InlineText as="p" multiline className="text-zinc-500 leading-normal" path={["services", "cloud", "boxes", "1", "desc"]} fallback="Linking legacy local database nodes to virtualized Azure servers using secure IPSec VPN tunnels and high-performance ExpressRoute circuits." />
           </div>
         </div>
       </main>

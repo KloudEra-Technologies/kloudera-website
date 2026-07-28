@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
 import { getImageStyle, getCleanImageUrl } from "@/lib/imageHelper";
+import { InlineText, InlineImage } from "@/components/editor";
 
 export default function ClientelesPage() {
   const [data, setData] = useState<any>(null);
@@ -16,8 +17,6 @@ export default function ClientelesPage() {
       })
       .catch((err) => console.error("Failed to load clienteles data", err));
   }, []);
-
-  const title = data?.title || "Our Clienteles";
 
   return (
     <div className="min-h-screen bg-[#001060] text-zinc-100 flex flex-col font-sans selection:bg-blue-500/30">
@@ -46,12 +45,19 @@ export default function ClientelesPage() {
       <main className="flex-1 max-w-6xl mx-auto w-full p-6 py-16 space-y-12">
         {/* Title */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight uppercase">
-            Our <span className="text-blue-400">{title.replace("Our ", "")}</span>
-          </h1>
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-mono">
-            Trusted by fintech pioneers, global infrastructure consultancies, IT enterprise leaders, and academic research institutions.
-          </p>
+          <InlineText 
+            as="h1" 
+            className="text-4xl sm:text-6xl font-black text-white tracking-tight uppercase"
+            path={["clienteles", "title"]}
+            fallback="Our Clienteles"
+          />
+          <InlineText 
+            as="p" 
+            multiline
+            className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-mono"
+            path={["clienteles", "intro"]}
+            fallback="Trusted by fintech pioneers, global infrastructure consultancies, IT enterprise leaders, and academic research institutions."
+          />
         </div>
 
         {/* Clientele Grid */}
@@ -71,11 +77,11 @@ export default function ClientelesPage() {
                 <div className="flex flex-col items-center justify-center h-full w-full overflow-hidden">
                   {hasCustomImage ? (
                     <div className="h-16 w-full flex items-center justify-center overflow-hidden relative">
-                      <img
-                        src={getCleanImageUrl(item.logoType)}
-                        alt={item.name}
+                      <InlineImage 
+                        path={["clienteles", "items", String(idx), "logoType"]} 
+                        fallback={item.logoType} 
                         className="h-full w-auto max-h-16"
-                        style={getImageStyle(item.logoType)}
+                        alt={item.name}
                       />
                     </div>
                   ) : (
@@ -143,9 +149,14 @@ export default function ClientelesPage() {
                   )}
                 </div>
                 
-                <span className="text-xs font-bold text-blue-900 bg-blue-100/90 px-5 py-1 rounded-md border border-blue-200">
-                  {item.sector || "Client Partner"}
-                </span>
+                <div className="text-center space-y-2 mt-6 w-full">
+                  <div className="flex justify-between items-center w-full mb-1">
+                    <InlineText as="span" className="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded" path={["clienteles", "items", String(idx), "sector"]} fallback={item.sector} />
+                    <InlineText as="span" className="text-[9px] font-bold text-blue-500 uppercase tracking-widest" path={["clienteles", "items", String(idx), "category"]} fallback={item.category} />
+                  </div>
+                  <InlineText as="h3" className="text-lg font-black text-slate-800 tracking-tight" path={["clienteles", "items", String(idx), "name"]} fallback={item.name} />
+                  <InlineText as="p" multiline className="text-xs text-slate-500 leading-relaxed" path={["clienteles", "items", String(idx), "desc"]} fallback={item.desc} />
+                </div>
               </div>
             );
           })}

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { InlineText } from "@/components/editor";
 
 export default function TermsPage() {
   return (
@@ -9,9 +10,7 @@ export default function TermsPage() {
       <header className="border-b border-teal-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
         <div className="font-mono">
           <span className="text-[10px] font-bold text-teal-400 tracking-widest uppercase">KLOUDERA TECHNOLOGIES // LEGAL LAYER</span>
-          <h1 className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal">
-            TERMS OF SERVICE
-          </h1>
+          <InlineText as="h1" className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal" path={["terms", "title"]} fallback="TERMS OF SERVICE" />
         </div>
 
         <button
@@ -24,13 +23,9 @@ export default function TermsPage() {
 
       {/* Content */}
       <main className="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6 py-12 font-mono text-xs leading-relaxed text-zinc-400">
-        <h2 className="text-sm font-bold text-white uppercase">System Terms & Agreement</h2>
-        <p>
-          By interacting with the Kloudera Technologies virtual command center and reserving calendar slots, you agree to comply with standard acceptable use policies.
-        </p>
-        <p>
-          Intrusion attempts, packet flooding, or double-booking spoof attempts are logged in our system audit tables and will result in connection bans.
-        </p>
+        <InlineText as="h2" className="text-sm font-bold text-white uppercase" path={["terms", "heading"]} fallback="System Terms & Agreement" />
+        <InlineText as="p" multiline path={["terms", "p1"]} fallback="By interacting with the Kloudera Technologies virtual command center and reserving calendar slots, you agree to comply with standard acceptable use policies." />
+        <InlineText as="p" multiline path={["terms", "p2"]} fallback="Intrusion attempts, packet flooding, or double-booking spoof attempts are logged in our system audit tables and will result in connection bans." />
       </main>
     </div>
   );

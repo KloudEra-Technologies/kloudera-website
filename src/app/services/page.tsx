@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { InlineText } from "@/components/editor";
 
 const ICONS = [
   // Cybersecurity (Shield)
@@ -165,8 +166,6 @@ const DEFAULT_CATEGORIES = [
 ];
 
 export default function ServicesHubPage() {
-  const [pageTitle, setPageTitle] = useState("Our Services");
-  const [ctaText, setCtaText] = useState("Interested in learning more about how our services can benefit your business? Contact us today to discuss your needs and find the perfect solution. Our team is ready to help you optimize, secure, and scale your IT infrastructure. Reach out now!");
   const [categories, setCategories] = useState<any[]>(DEFAULT_CATEGORIES);
 
   useEffect(() => {
@@ -177,8 +176,6 @@ export default function ServicesHubPage() {
       })
       .then(data => {
         if (data && data.services) {
-          if (data.services.title) setPageTitle(data.services.title);
-          if (data.services.ctaText) setCtaText(data.services.ctaText);
           if (data.services.categories) setCategories(data.services.categories);
         }
       })
@@ -212,9 +209,7 @@ export default function ServicesHubPage() {
           <span className="text-[9px] font-bold text-cyan-300 tracking-widest uppercase bg-blue-950/60 px-3 py-1 rounded border border-blue-500/30">
             SOLUTIONS COMMAND
           </span>
-          <h2 className="text-2xl font-extrabold tracking-widest text-white uppercase mt-3">
-            {pageTitle}
-          </h2>
+          <InlineText as="h2" className="text-2xl font-extrabold tracking-widest text-white uppercase mt-3" path={["services", "title"]} fallback="Our Services" />
         </div>
 
         {/* Categories Grid */}
@@ -228,21 +223,17 @@ export default function ServicesHubPage() {
                 <div className="w-10 h-10 bg-blue-950/80 border border-blue-800 rounded-lg flex items-center justify-center text-cyan-400 flex-shrink-0">
                   {ICONS[idx % ICONS.length]}
                 </div>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-                  {cat.title}
-                </h3>
+                <InlineText as="h3" className="text-sm font-bold text-white uppercase tracking-wider" path={["services", "categories", String(idx), "title"]} fallback={cat.title} />
               </div>
 
-              <p className="text-slate-300 text-xs leading-relaxed">
-                {cat.desc}
-              </p>
+              <InlineText as="p" multiline className="text-slate-300 text-xs leading-relaxed" path={["services", "categories", String(idx), "desc"]} fallback={cat.desc} />
 
               {/* Items List */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
                 {cat.items && cat.items.map((item: string, iIdx: number) => (
                   <div key={iIdx} className="flex items-center gap-2 text-[11px] text-slate-300 bg-blue-950/30 border border-blue-900/30 rounded px-3 py-1.5">
                     <span className="text-cyan-400 font-bold">›</span>
-                    <span>{item}</span>
+                    <InlineText as="span" path={["services", "categories", String(idx), "items", String(iIdx)]} fallback={item} />
                   </div>
                 ))}
               </div>
@@ -252,9 +243,7 @@ export default function ServicesHubPage() {
 
         {/* Bottom CTA */}
         <div className="text-center p-8 rounded-xl border border-blue-500/30 bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 space-y-4 shadow-[0_0_30px_rgba(37,99,235,0.15)]">
-          <p className="text-slate-300 text-xs max-w-2xl mx-auto leading-relaxed">
-            {ctaText}
-          </p>
+          <InlineText as="p" multiline className="text-slate-300 text-xs max-w-2xl mx-auto leading-relaxed" path={["services", "ctaText"]} fallback="Interested in learning more about how our services can benefit your business? Contact us today to discuss your needs and find the perfect solution. Our team is ready to help you optimize, secure, and scale your IT infrastructure. Reach out now!" />
 
           <button
             onClick={() => window.location.href = "/contact"}

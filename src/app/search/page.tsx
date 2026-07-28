@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { InlineText } from "@/components/editor";
 
 interface SearchResult {
   title: string;
@@ -70,9 +71,7 @@ export default function SearchPage() {
       <header className="border-b border-teal-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
         <div className="font-mono">
           <span className="text-[10px] font-bold text-teal-400 tracking-widest uppercase">KLOUDERA TECHNOLOGIES // SEARCH DECK</span>
-          <h1 className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal">
-            SEARCH RESULTS
-          </h1>
+          <InlineText as="h1" className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal" path={["search", "title"]} fallback="SEARCH RESULTS" />
         </div>
 
         <button

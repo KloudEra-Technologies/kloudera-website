@@ -244,3 +244,65 @@ body[data-view="3d"] #btn-ai-assistant-toggle {
   display: none !important;
 }
 
+/* ============================================================
+   KLOUDERA CANVA EDIT MODE — Full-Site Visual Editor Styles
+   Activated by Ctrl+Shift+E shortcut
+   ============================================================ */
+
+/* Pulsing border on the page to show edit mode is active */
+body.kloudera-edit-active {
+  outline: 3px solid rgba(20, 184, 166, 0.6) !important;
+  outline-offset: -3px;
+}
+
+/* Show a dashed outline on ALL text/heading elements when hovering in edit mode */
+body.kloudera-edit-active h1:hover,
+body.kloudera-edit-active h2:hover,
+body.kloudera-edit-active h3:hover,
+body.kloudera-edit-active h4:hover,
+body.kloudera-edit-active h5:hover,
+body.kloudera-edit-active h6:hover,
+body.kloudera-edit-active p:hover,
+body.kloudera-edit-active span:hover,
+body.kloudera-edit-active li:hover,
+body.kloudera-edit-active label:hover {
+  outline: 2px dashed rgba(20, 184, 166, 0.7) !important;
+  outline-offset: 2px;
+  border-radius: 3px;
+  cursor: text !important;
+  position: relative;
+}
+
+/* InlineText elements in edit mode: highlight always when mode is active */
+body.kloudera-edit-active [data-inline-editable="true"] {
+  outline: 2px dashed rgba(20, 184, 166, 0.5) !important;
+  outline-offset: 2px;
+  border-radius: 3px;
+  cursor: text !important;
+}
+
+/* InlineText in editing state (active input/textarea) */
+body.kloudera-edit-active [data-inline-editable="true"]:focus-within {
+  outline: 2px solid rgba(20, 184, 166, 1) !important;
+  box-shadow: 0 0 12px rgba(20, 184, 166, 0.4);
+}
+
+/* "EDIT MODE" top banner when active */
+body.kloudera-edit-active::before {
+  content: "✏️  CANVA EDIT MODE ACTIVE — Click any text to edit it";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  background: linear-gradient(90deg, rgba(20, 184, 166, 0.95), rgba(6, 182, 212, 0.95));
+  color: #000;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: bold;
+  text-align: center;
+  padding: 6px 16px;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+

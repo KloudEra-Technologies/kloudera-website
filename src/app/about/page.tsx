@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getImageStyle, getCleanImageUrl } from "@/lib/imageHelper";
+import { InlineText, InlineImage } from "@/components/editor";
 
 const DEFAULT_WHY_CHOOSE_US = [
   {
@@ -41,8 +42,6 @@ const DEFAULT_TEAM = [
 ];
 
 export default function AboutPage() {
-  const [missionTitle, setMissionTitle] = useState("Innovative IT Solutions & Cloud Technology");
-  const [missionDesc, setMissionDesc] = useState("We believe in your success and that technology can drive the best results for your business, no matter your industry or goals. At Kloudera, we specialize in innovative IT solutions that focus on cloud technology and data management.");
   const [whyChooseUs, setWhyChooseUs] = useState<any[]>(DEFAULT_WHY_CHOOSE_US);
   const [team, setTeam] = useState<any[]>(DEFAULT_TEAM);
 
@@ -54,8 +53,6 @@ export default function AboutPage() {
       })
       .then(data => {
         if (data && data.about) {
-          if (data.about.missionTitle) setMissionTitle(data.about.missionTitle);
-          if (data.about.missionDesc) setMissionDesc(data.about.missionDesc);
           if (data.about.whyChooseUs) setWhyChooseUs(data.about.whyChooseUs);
           if (data.about.team) setTeam(data.about.team);
         }
@@ -88,10 +85,14 @@ export default function AboutPage() {
         {/* Our Mission */}
         <section className="p-6 rounded-xl border border-blue-500/20 bg-slate-900/60 space-y-4 shadow-xl backdrop-blur-xl">
           <span className="text-[9px] font-bold text-cyan-400 tracking-widest uppercase">OUR MISSION</span>
-          <h2 className="text-sm font-bold text-white uppercase">{missionTitle}</h2>
-          <p className="text-slate-300 leading-relaxed text-xs">
-            {missionDesc}
-          </p>
+          <InlineText as="h2" className="text-sm font-bold text-white uppercase" path={["about", "missionTitle"]} fallback="Innovative IT Solutions & Cloud Technology" />
+          <InlineText 
+            as="p" 
+            multiline
+            className="text-slate-300 leading-relaxed text-xs"
+            path={["about", "missionDesc"]}
+            fallback="We believe in your success and that technology can drive the best results for your business, no matter your industry or goals. At Kloudera, we specialize in innovative IT solutions that focus on cloud technology and data management."
+          />
         </section>
 
         {/* Why Choose Us */}
@@ -103,11 +104,9 @@ export default function AboutPage() {
             {whyChooseUs.map((item, i) => (
               <div key={i} className="p-5 rounded-xl border border-blue-500/20 bg-slate-900/50 hover:border-cyan-400/40 transition-all backdrop-blur-md">
                 <span className="text-[9.5px] font-bold text-cyan-400 block mb-1">
-                  ⚡ // {item.title}
+                  ⚡ // <InlineText as="span" path={["about", "whyChooseUs", String(i), "title"]} fallback={item.title} />
                 </span>
-                <p className="text-slate-300 text-xs leading-relaxed">
-                  {item.desc}
-                </p>
+                <InlineText as="p" multiline className="text-slate-300 text-xs leading-relaxed" path={["about", "whyChooseUs", String(i), "desc"]} fallback={item.desc} />
               </div>
             ))}
           </div>
@@ -125,26 +124,17 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {team.map((mbr, idx) => (
               <div key={idx} className="p-6 rounded-2xl border border-blue-500/20 bg-slate-900/60 flex flex-col items-center text-center space-y-4 hover:border-cyan-400/40 transition-all shadow-xl backdrop-blur-xl">
-                {mbr.image ? (
-                  <img
-                    src={getCleanImageUrl(mbr.image)}
-                    alt={mbr.name}
-                    className="w-24 h-24 rounded-full border-2 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)]"
-                    style={getImageStyle(mbr.image)}
+                <div className="w-24 h-24 rounded-full border-2 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)] overflow-hidden">
+                  <InlineImage 
+                    path={["about", "team", String(idx), "image"]} 
+                    fallback={mbr.image || ""} 
+                    className="w-full h-full"
                   />
-                ) : (
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-950 via-blue-900 to-indigo-950 border-2 border-cyan-500/40 flex items-center justify-center text-cyan-300 text-2xl font-extrabold shadow-[0_0_20px_rgba(6,182,212,0.3)]">
-                    {mbr.initials || "K"}
-                  </div>
-                )}
+                </div>
                 <div className="space-y-2 w-full">
-                  <span className="block font-extrabold text-white text-base tracking-wide">{mbr.name}</span>
+                  <InlineText as="span" className="block font-extrabold text-white text-base tracking-wide" path={["about", "team", String(idx), "name"]} fallback={mbr.name} />
                   <div className="flex flex-wrap items-center justify-center gap-1.5 font-mono text-[9.5px]">
-                    {(mbr.role || "").split(" | ").map((r: string, rIdx: number) => (
-                      <span key={rIdx} className="bg-blue-950/80 text-cyan-300 px-2 py-0.5 rounded-md border border-blue-800/60 shadow-sm">
-                        {r}
-                      </span>
-                    ))}
+                    <InlineText as="span" className="bg-blue-950/80 text-cyan-300 px-2 py-0.5 rounded-md border border-blue-800/60 shadow-sm" path={["about", "team", String(idx), "role"]} fallback={mbr.role || ""} />
                   </div>
                 </div>
               </div>

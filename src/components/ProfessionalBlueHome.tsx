@@ -256,12 +256,8 @@ export function ProfessionalBlueHome({
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">CORE CAPABILITIES</h2>
-            <p className="mt-2 text-3xl font-extrabold text-white sm:text-4xl">
-              Enterprise Solution Architecture
-            </p>
-            <p className="mt-4 text-slate-400 text-sm">
-              Explore our core operational wings. Select a domain below to review hardware specs and security frameworks.
-            </p>
+            <InlineText as="p" className="mt-2 text-3xl font-extrabold text-white sm:text-4xl" path={["home", "servicesTitle"]} fallback="Enterprise Solution Architecture" />
+            <InlineText as="p" multiline className="mt-4 text-slate-400 text-sm" path={["home", "servicesDesc"]} fallback="Explore our core operational wings. Select a domain below to review hardware specs and security frameworks." />
           </div>
 
           {/* Tab Selection */}
@@ -295,24 +291,22 @@ export function ProfessionalBlueHome({
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-blue-900/40 pb-4">
                   <div>
-                    <h3 className="text-2xl font-bold text-white">24/7 Security Operations Center (SOC)</h3>
-                    <p className="text-xs text-cyan-400 font-mono mt-1">ZERO-TRUST AUDITING • PENETRATION AUDITS • VAPT</p>
+                    <InlineText as="h3" className="text-2xl font-bold text-white" path={["home", "cyberTitle"]} fallback="24/7 Security Operations Center (SOC)" />
+                    <InlineText as="p" className="text-xs text-cyan-400 font-mono mt-1" path={["home", "cyberSubtitle"]} fallback="ZERO-TRUST AUDITING • PENETRATION AUDITS • VAPT" />
                   </div>
                   <Link href="/services" className="rounded bg-blue-950 px-3 py-1.5 text-xs font-bold text-blue-300 border border-blue-800 hover:border-cyan-400">
                     Full SOC Suite →
                   </Link>
                 </div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  Our continuous telemetry surveillance engine monitors global IP networks, detecting and neutralizing zero-day intrusions before they compromise critical database clusters.
-                </p>
+                <InlineText as="p" multiline className="text-sm text-slate-300 leading-relaxed" path={["home", "cyberDesc"]} fallback="Our continuous telemetry surveillance engine monitors global IP networks, detecting and neutralizing zero-day intrusions before they compromise critical database clusters." />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <div className="rounded-lg bg-blue-950/30 border border-blue-800/30 p-4">
-                    <h4 className="font-bold text-white text-xs">Continuous Threat Deflection</h4>
-                    <p className="text-xs text-slate-400 mt-1">Real-time deep packet inspection with automated AI firewall countermeasures.</p>
+                    <InlineText as="h4" className="font-bold text-white text-xs" path={["home", "cyberCard1Title"]} fallback="Continuous Threat Deflection" />
+                    <InlineText as="p" multiline className="text-xs text-slate-400 mt-1" path={["home", "cyberCard1Desc"]} fallback="Real-time deep packet inspection with automated AI firewall countermeasures." />
                   </div>
                   <div className="rounded-lg bg-blue-950/30 border border-blue-800/30 p-4">
-                    <h4 className="font-bold text-white text-xs">Vulnerability & Penetration Testing</h4>
-                    <p className="text-xs text-slate-400 mt-1">Rigorous ethical hacking simulations against web applications, APIs, and cloud networks.</p>
+                    <InlineText as="h4" className="font-bold text-white text-xs" path={["home", "cyberCard2Title"]} fallback="Vulnerability & Penetration Testing" />
+                    <InlineText as="p" multiline className="text-xs text-slate-400 mt-1" path={["home", "cyberCard2Desc"]} fallback="Rigorous ethical hacking simulations against web applications, APIs, and cloud networks." />
                   </div>
                 </div>
               </div>
@@ -322,16 +316,14 @@ export function ProfessionalBlueHome({
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-blue-900/40 pb-4">
                   <div>
-                    <h3 className="text-2xl font-bold text-white">High-Performance AI & Workstation Rigs</h3>
-                    <p className="text-xs text-cyan-400 font-mono mt-1">NVIDIA HGX H100 • MACBOOK MAX • CLOUDRACK R960</p>
+                    <InlineText as="h3" className="text-2xl font-bold text-white" path={["home", "hardwareTitle"]} fallback="High-Performance AI & Workstation Rigs" />
+                    <InlineText as="p" className="text-xs text-cyan-400 font-mono mt-1" path={["home", "hardwareSubtitle"]} fallback="NVIDIA HGX H100 • MACBOOK MAX • CLOUDRACK R960" />
                   </div>
                   <Link href="/services" className="rounded bg-blue-950 px-3 py-1.5 text-xs font-bold text-blue-300 border border-blue-800 hover:border-cyan-400">
                     Hardware Vault →
                   </Link>
                 </div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  Provision bespoke compute nodes tailored for LLM neural model training, compilation pipelines, and high-density enterprise database hosting.
-                </p>
+                <InlineText as="p" multiline className="text-sm text-slate-300 leading-relaxed" path={["home", "hardwareDesc"]} fallback="Provision bespoke compute nodes tailored for LLM neural model training, compilation pipelines, and high-density enterprise database hosting." />
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
                   <div className="rounded-lg bg-blue-950/30 border border-blue-800/30 p-4">
                     <h4 className="font-bold text-white text-xs">Nvidia HGX H100</h4>
@@ -412,7 +404,7 @@ export function ProfessionalBlueHome({
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8">
             <div>
               <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">STRATEGIC ECOSYSTEM</h2>
-              <p className="mt-1 text-3xl font-extrabold text-white">Technology Partner Directory</p>
+              <InlineText as="p" className="mt-1 text-3xl font-extrabold text-white" path={["home", "partnersTitle"]} fallback="Technology Partner Directory" />
             </div>
             <Link href="/partners" className="rounded-lg bg-blue-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-blue-500 transition-colors">
               Explore All Partners →
@@ -448,7 +440,7 @@ export function ProfessionalBlueHome({
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">WHY ENTERPRISES CHOOSE US</h2>
-            <p className="mt-2 text-3xl font-extrabold text-white">How Your Organization Benefits</p>
+            <InlineText as="p" className="mt-2 text-3xl font-extrabold text-white" path={["home", "benefitsTitle"]} fallback="How Your Organization Benefits" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-left">
             <div className="rounded-xl border border-blue-500/20 bg-blue-950/20 p-6 backdrop-blur-lg">
@@ -481,12 +473,8 @@ export function ProfessionalBlueHome({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">ABOUT KLOUDERA</h2>
-              <h3 className="mt-2 text-3xl font-extrabold text-white sm:text-4xl">
-                Built for High-Stakes Enterprise Resilience
-              </h3>
-              <p className="mt-4 text-sm text-slate-300 leading-relaxed">
-                Kloudera Technologies provides Fortune 500 organizations with end-to-end security posture optimization, compute hardware procurement, and cloud modernization strategies.
-              </p>
+              <InlineText as="h3" className="mt-2 text-3xl font-extrabold text-white sm:text-4xl" path={["home", "aboutTitle"]} fallback="Built for High-Stakes Enterprise Resilience" />
+              <InlineText as="p" multiline className="mt-4 text-sm text-slate-300 leading-relaxed" path={["home", "aboutDesc"]} fallback="Kloudera Technologies provides Fortune 500 organizations with end-to-end security posture optimization, compute hardware procurement, and cloud modernization strategies." />
               <div className="mt-6 space-y-3">
                 <div className="flex items-center gap-3">
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold">✓</span>
@@ -729,7 +717,7 @@ export function ProfessionalBlueHome({
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8">
             <div>
               <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">CAREER PORTAL</h2>
-              <p className="mt-1 text-3xl font-extrabold text-white">Join the Kloudera Engineering Core</p>
+              <InlineText as="p" className="mt-1 text-3xl font-extrabold text-white" path={["home", "careersTitle"]} fallback="Join the Kloudera Engineering Core" />
             </div>
             <Link href="/careers" className="rounded-lg bg-blue-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-blue-500">
               View All Open Positions →
@@ -773,10 +761,8 @@ export function ProfessionalBlueHome({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
               <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">GET IN TOUCH</h2>
-              <h3 className="mt-2 text-3xl font-extrabold text-white">Schedule a Systems Consultation</h3>
-              <p className="mt-4 text-sm text-slate-300 leading-relaxed">
-                Connect directly with our solutions engineering team to evaluate your infrastructure security posture or configure enterprise hardware rigs.
-              </p>
+              <InlineText as="h3" className="mt-2 text-3xl font-extrabold text-white" path={["home", "contactTitle"]} fallback="Schedule a Systems Consultation" />
+              <InlineText as="p" multiline className="mt-4 text-sm text-slate-300 leading-relaxed" path={["home", "contactDesc"]} fallback="Connect directly with our solutions engineering team to evaluate your infrastructure security posture or configure enterprise hardware rigs." />
 
               <div className="mt-8 space-y-4">
                 <Link
@@ -871,12 +857,8 @@ export function ProfessionalBlueHome({
             </div>
 
             <div className="max-w-2xl mx-auto space-y-3">
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight uppercase font-mono">
-                Products Suite In Progress
-              </h2>
-              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-                Our engineering team is actively building proprietary enterprise software solutions including <span className="text-cyan-300 font-mono font-bold">Kloudera Meet Scheduler</span>, <span className="text-blue-300 font-mono font-bold">Klodera Data Recovery Tool</span>, and <span className="text-indigo-300 font-mono font-bold">Kloudera Remote Device Controller</span>.
-              </p>
+              <InlineText as="h2" className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight uppercase font-mono" path={["home", "productsTitle"]} fallback="Products Suite In Progress" />
+              <InlineText as="p" multiline className="text-slate-300 text-xs sm:text-sm leading-relaxed" path={["home", "productsDesc"]} fallback="Our engineering team is actively building proprietary enterprise software solutions including Kloudera Meet Scheduler, Klodera Data Recovery Tool, and Kloudera Remote Device Controller." />
             </div>
 
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -903,7 +885,7 @@ export function ProfessionalBlueHome({
         <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <KloudEraLogo className="h-8 w-auto text-blue-400" />
-            <span className="text-xs text-slate-500 font-mono">© 2026 Kloudera Technologies Inc. All rights reserved.</span>
+            <InlineText as="span" className="text-xs text-slate-500 font-mono" path={["home", "footerCopyright"]} fallback="© 2026 Kloudera Technologies Inc. All rights reserved." />
           </div>
 
           <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400">

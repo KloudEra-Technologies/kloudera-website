@@ -12,7 +12,7 @@ interface InlineImageProps {
 }
 
 export const InlineImage = ({ path, fallback, className = "", alt = "" }: InlineImageProps) => {
-  const { isEditMode, siteData, updateNestedValue } = useEditor();
+  const { isEditMode, siteData, updateNestedValue, authToken } = useEditor();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showControls, setShowControls] = useState(false);
 
@@ -42,7 +42,7 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const token = localStorage.getItem("dev_token") || "";
+    const token = authToken || "";
     const formData = new FormData();
     formData.append("file", file);
     formData.append("token", token);

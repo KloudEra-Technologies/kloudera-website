@@ -1,11 +1,18 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useEditor } from "./EditorContext";
 
 export const EditorToolbar = () => {
-  const { isEditMode, publishChanges, closeEditor } = useEditor();
+  const { isEditMode, publishChanges, closeEditor, authToken } = useEditor();
   const [publishing, setPublishing] = useState(false);
+  
+  // Settings Modal State
+  const [showSettings, setShowSettings] = useState(false);
+  const [newContentPassword, setNewContentPassword] = useState("");
+  const [newUltimatePassword, setNewUltimatePassword] = useState("");
+  const [masterPassword, setMasterPassword] = useState("");
+  const [isRequesting, setIsRequesting] = useState(false);
 
   if (!isEditMode) return null;
 
@@ -15,14 +22,62 @@ export const EditorToolbar = () => {
     setPublishing(false);
   };
 
+  const handlePasswordChangeRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!masterPassword) {
+      alert("Master Password is required to authorize this change.");
+      return;
+    }
+    
+    if (!newContentPassword && !newUltimatePassword) {
+      alert("Please specify at least one new password to change.");
+      return;
+    }
+
+    setIsRequesting(true);
+    try {
+      const res = await fetch("/api/request-password-change", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          masterPassword,
+          newContentPassword: newContentPassword || undefined,
+          newUltimatePassword: newUltimatePassword || undefined,
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Verification email sent! Please check info@kloudera.ai to confirm the password change.");
+        setShowSettings(false);
+        setNewContentPassword("");
+        setNewUltimatePassword("");
+        setMasterPassword("");
+      } else {
+        alert(`Error: ${data.error}`);
+      }
+    } catch (err) {
+      alert("Network error. Could not request password change.");
+    }
+    setIsRequesting(false);
+  };
+
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] bg-zinc-950/95 backdrop-blur-xl border border-teal-500/40 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_25px_rgba(20,184,166,0.2)] p-3 flex items-center gap-4 font-mono font-bold animate-[slideUp_0.3s_ease-out]">
+    <>
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] bg-zinc-950/95 backdrop-blur-xl border border-teal-500/40 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_25px_rgba(20,184,166,0.2)] p-3 flex items-center gap-4 font-mono font-bold animate-[slideUp_0.3s_ease-out]">
       <div className="flex flex-col">
         <span className="text-[10px] text-teal-400 tracking-widest uppercase">CANVA EDIT MODE</span>
         <span className="text-[8px] text-zinc-500">LIVE WEBSITE EDITOR</span>
       </div>
 
       <div className="h-8 w-px bg-zinc-800 mx-2" />
+
+      <button
+        onClick={() => setShowSettings(true)}
+        className="px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 hover:border-zinc-500 rounded-lg uppercase tracking-wider text-[10px] transition-all"
+      >
+        ⚙️ SETTINGS
+      </button>
 
       <button
         onClick={handlePublish}
@@ -39,5 +94,65 @@ export const EditorToolbar = () => {
         ❌ EXIT EDITOR
       </button>
     </div>
+
+    {showSettings && (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[10000] flex items-center justify-center animate-[fadeIn_0.2s_ease-out]">
+        <div className="bg-zinc-950 border border-teal-500/30 rounded-2xl p-6 max-w-md w-full shadow-2xl relative">
+          <button 
+            onClick={() => setShowSettings(false)}
+            className="absolute top-4 right-4 text-zinc-500 hover:text-white"
+          >
+            ✕
+          </button>
+          <h2 className="text-teal-400 font-mono font-bold text-lg mb-1 uppercase tracking-wider">Editor Settings</h2>
+          <p className="text-zinc-400 text-xs mb-6">Request a password change. A confirmation link will be emailed to the administrator.</p>
+
+          <form onSubmit={handlePasswordChangeRequest} className="space-y-4">
+            <div className="space-y-1">
+              <label className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider block">Current Master Password (Required)</label>
+              <input 
+                type="password" 
+                value={masterPassword}
+                onChange={e => setMasterPassword(e.target.value)}
+                className="w-full bg-black border border-zinc-800 focus:border-teal-500 rounded-lg p-2 text-white text-sm outline-none transition-colors"
+                placeholder="Authorize with Master Password"
+                required
+              />
+            </div>
+
+            <div className="space-y-1 mt-4 pt-4 border-t border-zinc-800">
+              <label className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider block">New Developer Password (Optional)</label>
+              <input 
+                type="password" 
+                value={newContentPassword}
+                onChange={e => setNewContentPassword(e.target.value)}
+                className="w-full bg-black border border-zinc-800 focus:border-teal-500 rounded-lg p-2 text-white text-sm outline-none transition-colors"
+                placeholder="Leave blank to keep unchanged"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider block">New Master Password (Optional)</label>
+              <input 
+                type="password" 
+                value={newUltimatePassword}
+                onChange={e => setNewUltimatePassword(e.target.value)}
+                className="w-full bg-black border border-zinc-800 focus:border-rose-500 rounded-lg p-2 text-white text-sm outline-none transition-colors"
+                placeholder="Leave blank to keep unchanged"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isRequesting || !masterPassword || (!newContentPassword && !newUltimatePassword)}
+              className="w-full mt-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-black font-bold uppercase tracking-wider rounded-lg transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isRequesting ? "REQUESTING..." : "Send Confirmation Email"}
+            </button>
+          </form>
+        </div>
+      </div>
+    )}
+    </>
   );
 };

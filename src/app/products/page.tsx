@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
+import { InlineText } from "@/components/editor";
 
 export default function ProductsPage() {
   const [productsData, setProductsData] = useState<any>(null);
@@ -18,8 +19,6 @@ export default function ProductsPage() {
       .catch((err) => console.error("Failed to load products data", err));
   }, []);
 
-  const title = productsData?.title || "Kloudera Software & Infrastructure Product Suite";
-  const intro = productsData?.intro || "Proprietary enterprise cybersecurity, AI compute management, and cloud governance products engineered for high-stakes resilience.";
   const items = productsData?.items || [];
 
   return (
@@ -53,12 +52,8 @@ export default function ProductsPage() {
             <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping" />
             <span>🛠️ WORK IN PROGRESS — UNDER ACTIVE DEVELOPMENT</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight uppercase glow-text-teal">
-            {title}
-          </h1>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-            {intro}
-          </p>
+          <InlineText as="h1" className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight uppercase glow-text-teal" path={["products", "title"]} fallback="Kloudera Software & Infrastructure Product Suite" />
+          <InlineText as="p" multiline className="text-slate-400 text-sm sm:text-base leading-relaxed" path={["products", "intro"]} fallback="Proprietary enterprise cybersecurity, AI compute management, and cloud governance products engineered for high-stakes resilience." />
           <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-950/20 text-amber-200/90 text-xs font-mono max-w-xl mx-auto">
             ⚡ Notice: Products in this suite are currently in private enterprise testing & hardware staging. Full commercial launch scheduled soon.
           </div>
@@ -74,24 +69,16 @@ export default function ProductsPage() {
               <div className="flex justify-between items-start gap-4 border-b border-blue-900/30 pb-4">
                 <div>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-cyan-400 block mb-1">
-                    // {prod.category || "ENTERPRISE"}
+                    // <InlineText as="span" path={["products", "items", String(idx), "category"]} fallback={prod.category || "ENTERPRISE"} />
                   </span>
-                  <h2 className="text-xl sm:text-2xl font-bold text-white font-mono group-hover:text-cyan-300 transition-colors">
-                    {prod.name}
-                  </h2>
+                  <InlineText as="h2" className="text-xl sm:text-2xl font-bold text-white font-mono group-hover:text-cyan-300 transition-colors" path={["products", "items", String(idx), "name"]} fallback={prod.name} />
                 </div>
-                <span className="text-[9px] font-mono font-extrabold uppercase bg-cyan-950/80 text-cyan-300 px-3 py-1 rounded-full border border-cyan-500/30 shrink-0">
-                  {prod.badge || "FEATURED"}
-                </span>
+                <InlineText as="span" className="text-[9px] font-mono font-extrabold uppercase bg-cyan-950/80 text-cyan-300 px-3 py-1 rounded-full border border-cyan-500/30 shrink-0" path={["products", "items", String(idx), "badge"]} fallback={prod.badge || "FEATURED"} />
               </div>
 
-              <p className="text-cyan-200/90 text-xs font-mono font-semibold">
-                {prod.tagline}
-              </p>
+              <InlineText as="p" className="text-cyan-200/90 text-xs font-mono font-semibold" path={["products", "items", String(idx), "tagline"]} fallback={prod.tagline} />
 
-              <p className="text-slate-400 text-xs leading-relaxed">
-                {prod.desc}
-              </p>
+              <InlineText as="p" multiline className="text-slate-400 text-xs leading-relaxed" path={["products", "items", String(idx), "desc"]} fallback={prod.desc} />
 
               {/* Feature Highlights */}
               {prod.features && (
@@ -103,7 +90,7 @@ export default function ProductsPage() {
                     {prod.features.map((feat: string, fIdx: number) => (
                       <div key={fIdx} className="flex items-center gap-2 text-slate-300">
                         <span className="text-cyan-400 text-xs">✔</span>
-                        <span>{feat}</span>
+                        <InlineText as="span" path={["products", "items", String(idx), "features", String(fIdx)]} fallback={feat} />
                       </div>
                     ))}
                   </div>

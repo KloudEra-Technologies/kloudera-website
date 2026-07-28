@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
+import { InlineText } from "@/components/editor";
 
 export default function CertificationsPage() {
   const [data, setData] = useState<any>(null);
@@ -16,8 +17,6 @@ export default function CertificationsPage() {
       .catch((err) => console.error("Failed to load certifications data", err));
   }, []);
 
-  const title = data?.title || "Security Compliance & Global Standards";
-  const intro = data?.intro || "Kloudera operates under audited global security frameworks, data privacy laws, and quality management protocols.";
   const items = data?.items || [];
 
   return (
@@ -51,12 +50,19 @@ export default function CertificationsPage() {
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>AUDITED COMPLIANCE STANDARDS</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight uppercase glow-text-teal">
-            {title}
-          </h1>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-            {intro}
-          </p>
+          <InlineText 
+            as="h1" 
+            className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight uppercase glow-text-teal" 
+            path={["certifications", "title"]} 
+            fallback="Security Compliance & Global Standards" 
+          />
+          <InlineText 
+            as="p" 
+            multiline
+            className="text-slate-400 text-sm sm:text-base leading-relaxed" 
+            path={["certifications", "intro"]} 
+            fallback="Kloudera operates under audited global security frameworks, data privacy laws, and quality management protocols." 
+          />
         </div>
 
         {/* Certifications Grid */}
@@ -69,24 +75,18 @@ export default function CertificationsPage() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center border-b border-blue-900/30 pb-3">
                   <span className="text-sm font-extrabold font-mono text-emerald-400">
-                    🛡️ {cert.code}
+                    🛡️ <InlineText as="span" path={["certifications", "items", String(idx), "code"]} fallback={cert.code} />
                   </span>
-                  <span className="text-[8.5px] font-mono font-bold text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
-                    {cert.status || "ACTIVE"}
-                  </span>
+                  <InlineText as="span" className="text-[8.5px] font-mono font-bold text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800" path={["certifications", "items", String(idx), "status"]} fallback={cert.status || "ACTIVE"} />
                 </div>
 
-                <h2 className="text-base font-bold text-white font-mono group-hover:text-emerald-300 transition-colors">
-                  {cert.title}
-                </h2>
+                <InlineText as="h2" className="text-base font-bold text-white font-mono group-hover:text-emerald-300 transition-colors" path={["certifications", "items", String(idx), "title"]} fallback={cert.title} />
 
                 <p className="text-[11px] font-mono text-slate-400 font-semibold">
-                  Issuing Authority: <span className="text-slate-200">{cert.issuer}</span>
+                  Issuing Authority: <InlineText as="span" className="text-slate-200" path={["certifications", "items", String(idx), "issuer"]} fallback={cert.issuer} />
                 </p>
 
-                <p className="text-slate-400 text-xs leading-relaxed">
-                  {cert.desc}
-                </p>
+                <InlineText as="p" multiline className="text-slate-400 text-xs leading-relaxed" path={["certifications", "items", String(idx), "desc"]} fallback={cert.desc} />
               </div>
 
               <div className="pt-4 border-t border-blue-950 flex items-center justify-between text-[10px] font-mono text-emerald-400">

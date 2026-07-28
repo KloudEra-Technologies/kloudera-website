@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { HardwareLoader } from "@/components/LoadingSequences";
 import { useAccessibility } from "@/components/AccessibilityContext";
+import { InlineText } from "@/components/editor";
 
 interface Product {
   name: string;
@@ -178,9 +179,7 @@ export default function HardwarePage() {
       <header className="border-b border-rose-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
         <div className="font-mono">
           <span className="text-[10px] font-bold text-rose-500 tracking-widest uppercase">KLOUDERA TECHNOLOGIES // COMPUTE VAULT</span>
-          <h1 className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-rose">
-            ENTERPRISE HARDWARE
-          </h1>
+          <InlineText as="h1" className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-rose" path={["services", "hardware", "title"]} fallback="ENTERPRISE HARDWARE" />
         </div>
 
         <div className="flex gap-4 mt-4 sm:mt-0 items-center">

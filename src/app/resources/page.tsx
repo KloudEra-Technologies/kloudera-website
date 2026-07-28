@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useAccessibility } from "@/components/AccessibilityContext";
+import { InlineText } from "@/components/editor";
 
 interface DocumentItem {
   id: string;
@@ -99,9 +100,7 @@ export default function KnowledgeCenterPage() {
       <header className="border-b border-teal-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
         <div className="font-mono">
           <span className="text-[10px] font-bold text-teal-400 tracking-widest uppercase">KLOUDERA TECHNOLOGIES // KNOWLEDGE HUB</span>
-          <h1 className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal">
-            RESOURCES & DOCUMENTATION
-          </h1>
+          <InlineText as="h1" className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal" path={["resources", "title"]} fallback="RESOURCES & DOCUMENTATION" />
         </div>
 
         <div className="flex gap-4 mt-4 sm:mt-0 items-center font-mono">
@@ -125,7 +124,7 @@ export default function KnowledgeCenterPage() {
         <section className="cyber-panel p-5 rounded-lg border border-teal-500/20 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
           <div className="md:col-span-1 font-mono">
             <span className="text-[8px] text-teal-400 font-bold uppercase tracking-widest block">TELEMETRY FILTER</span>
-            <h2 className="text-sm font-bold text-white uppercase">Filter Resource Indexes</h2>
+            <InlineText as="h2" className="text-sm font-bold text-white uppercase" path={["resources", "filterTitle"]} fallback="Filter Resource Indexes" />
           </div>
           
           <div className="md:col-span-2 flex flex-col sm:flex-row gap-3 w-full font-mono text-xs">

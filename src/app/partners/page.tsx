@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { InlineText } from "@/components/editor";
 
 const FEATURED_PARTNERS = [
   {
@@ -203,11 +204,6 @@ export default function PartnersPage() {
       .catch((err) => console.error("Failed to load partners database", err));
   }, []);
 
-  const title = partnersData?.title || "OUR STRATEGIC PARTNERS";
-  const tagline = partnersData?.tagline || "KLOUDERA TECHNOLOGIES // GLOBAL ECOSYSTEM";
-  const introTitle = partnersData?.introTitle || "Enterprise Alliances & Security Nodes";
-  const introDesc = partnersData?.introDesc || "We integrate with top-tier cybersecurity networks, cloud providers, and hardware infrastructure suppliers to deliver threat-shielded operational stability.";
-  
   const featured = partnersData?.featured || FEATURED_PARTNERS;
   const alliances = partnersData?.alliances || OTHER_ALLIANCES;
 
@@ -227,10 +223,8 @@ export default function PartnersPage() {
       {/* Header Section */}
       <header className="border-b border-teal-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
         <div className="font-mono">
-          <span className="text-[10px] font-bold text-teal-400 tracking-widest uppercase">{tagline}</span>
-          <h1 className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal">
-            {title}
-          </h1>
+          <InlineText as="span" className="text-[10px] font-bold text-teal-400 tracking-widest uppercase" path={["partners", "tagline"]} fallback="KLOUDERA TECHNOLOGIES // GLOBAL ECOSYSTEM" />
+          <InlineText as="h1" className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal" path={["partners", "title"]} fallback="OUR STRATEGIC PARTNERS" />
         </div>
 
         <div className="flex gap-4 mt-4 sm:mt-0 items-center font-mono">
@@ -259,10 +253,8 @@ export default function PartnersPage() {
           <span className="text-[8px] font-bold text-teal-400 tracking-widest uppercase bg-teal-500/10 px-2.5 py-1 rounded border border-teal-500/10">
             INTEGRATED COGNITIVE CORE
           </span>
-          <h2 className="text-lg font-bold text-white uppercase mt-2">{introTitle}</h2>
-          <p className="text-zinc-500 text-[10.5px] leading-relaxed">
-            {introDesc}
-          </p>
+          <InlineText as="h2" className="text-lg font-bold text-white uppercase mt-2" path={["partners", "introTitle"]} fallback="Enterprise Alliances & Security Nodes" />
+          <InlineText as="p" multiline className="text-zinc-500 text-[10.5px] leading-relaxed" path={["partners", "introDesc"]} fallback="We integrate with top-tier cybersecurity networks, cloud providers, and hardware infrastructure suppliers to deliver threat-shielded operational stability." />
         </div>
 
         {/* Featured Partners Section */}
@@ -279,14 +271,12 @@ export default function PartnersPage() {
                     {getPartnerIcon(partner.name, partner.logoColor)}
                   </div>
                   <div>
-                    <h3 className="text-[12px] font-bold text-white uppercase tracking-wider">{partner.name}</h3>
-                    <span className="text-[8px] font-semibold text-zinc-500 block uppercase mt-0.5 tracking-tight">{partner.tagline}</span>
+                    <InlineText as="h3" className="text-[12px] font-bold text-white uppercase tracking-wider" path={["partners", "featured", String(idx), "name"]} fallback={partner.name} />
+                    <InlineText as="span" className="text-[8px] font-semibold text-zinc-500 block uppercase mt-0.5 tracking-tight" path={["partners", "featured", String(idx), "tagline"]} fallback={partner.tagline} />
                   </div>
                 </div>
 
-                <p className="text-zinc-400 text-[10px] leading-relaxed">
-                  {partner.details}
-                </p>
+                <InlineText as="p" multiline className="text-zinc-400 text-[10px] leading-relaxed" path={["partners", "featured", String(idx), "details"]} fallback={partner.details} />
               </div>
 
               <div className="pt-2 flex justify-between items-center text-[8.5px] text-zinc-500 font-bold border-t border-teal-500/5">

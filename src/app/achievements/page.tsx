@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
+import { InlineText } from "@/components/editor";
 
 export default function AchievementsPage() {
   const [data, setData] = useState<any>(null);
@@ -15,8 +16,6 @@ export default function AchievementsPage() {
       })
       .catch((err) => console.error("Failed to load achievements data", err));
   }, []);
-
-  const title = data?.title || "Our Achievements";
 
   return (
     <div className="min-h-screen bg-[#030712] text-zinc-100 flex flex-col font-sans selection:bg-cyan-500/30">
@@ -45,12 +44,19 @@ export default function AchievementsPage() {
       <main className="flex-1 max-w-5xl mx-auto w-full p-6 py-16 space-y-12">
         {/* Title */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight uppercase">
-            Our <span className="text-blue-500">{title.replace("Our ", "")}</span>
-          </h1>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-mono">
-            Kloudera Technologies is officially registered, accredited, and recognized under national technology initiatives by the Government of India.
-          </p>
+          <InlineText 
+            as="h1" 
+            className="text-4xl sm:text-6xl font-black text-white tracking-tight uppercase"
+            path={["achievements", "title"]} 
+            fallback="Our Achievements"
+          />
+          <InlineText 
+            as="p" 
+            multiline
+            className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-mono"
+            path={["achievements", "description"]}
+            fallback="Kloudera Technologies is officially registered, accredited, and recognized under national technology initiatives by the Government of India."
+          />
         </div>
 
         {/* Impact Cards */}
@@ -64,17 +70,24 @@ export default function AchievementsPage() {
                 </div>
                 <div className="text-left">
                   <span className="text-4xl font-black tracking-tight text-red-600 font-sans block">MSME</span>
-                  <span className="text-xs text-slate-800 font-bold block leading-tight">सूक्ष्म , लघु एवं मध्यम उद्यम</span>
-                  <span className="text-[9px] text-slate-500 font-mono block">MICRO, SMALL & MEDIUM ENTERPRISES</span>
+                  <InlineText as="span" className="text-xs text-slate-800 font-bold block leading-tight" path={["achievements", "msme", "title_hi"]} fallback="सूक्ष्म , लघु एवं मध्यम उद्यम" />
+                  <InlineText as="span" className="text-[9px] text-slate-500 font-mono block" path={["achievements", "msme", "title_en"]} fallback="MICRO, SMALL & MEDIUM ENTERPRISES" />
                 </div>
               </div>
-              <p className="text-slate-600 text-xs leading-relaxed max-w-xs mx-auto pt-2">
-                Certified enterprise under the Ministry of Micro, Small & Medium Enterprises, Government of India.
-              </p>
+              <InlineText 
+                as="p" 
+                multiline
+                className="text-slate-600 text-xs leading-relaxed max-w-xs mx-auto pt-2" 
+                path={["achievements", "msme", "desc"]} 
+                fallback="Certified enterprise under the Ministry of Micro, Small & Medium Enterprises, Government of India." 
+              />
             </div>
-            <span className="text-xs font-mono font-bold uppercase text-blue-900 bg-blue-50 px-5 py-1.5 rounded-full border border-blue-200">
-              Government of India Certified
-            </span>
+            <InlineText 
+              as="span" 
+              className="text-xs font-mono font-bold uppercase text-blue-900 bg-blue-50 px-5 py-1.5 rounded-full border border-blue-200"
+              path={["achievements", "msme", "badge"]}
+              fallback="Government of India Certified"
+            />
           </div>
 
           {/* #startupindia Card */}
@@ -86,13 +99,20 @@ export default function AchievementsPage() {
                 <span className="text-yellow-500">i</span>
                 <span className="text-emerald-500 border-b-4 border-emerald-500 inline-block pb-0.5">a</span>
               </div>
-              <p className="text-slate-600 text-xs leading-relaxed max-w-xs mx-auto pt-2">
-                Recognized technology venture by the Department for Promotion of Industry and Internal Trade (DPIIT), Govt. of India.
-              </p>
+              <InlineText 
+                as="p" 
+                multiline
+                className="text-slate-600 text-xs leading-relaxed max-w-xs mx-auto pt-2" 
+                path={["achievements", "startup", "desc"]} 
+                fallback="Recognized technology venture by the Department for Promotion of Industry and Internal Trade (DPIIT), Govt. of India." 
+              />
             </div>
-            <span className="text-xs font-mono font-bold uppercase text-orange-900 bg-orange-50 px-5 py-1.5 rounded-full border border-orange-200">
-              DPIIT Recognized Startup
-            </span>
+            <InlineText 
+              as="span" 
+              className="text-xs font-mono font-bold uppercase text-orange-900 bg-orange-50 px-5 py-1.5 rounded-full border border-orange-200" 
+              path={["achievements", "startup", "badge"]}
+              fallback="DPIIT Recognized Startup"
+            />
           </div>
         </div>
       </main>

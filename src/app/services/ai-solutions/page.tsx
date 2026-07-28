@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiSolutionsLoader } from "@/components/LoadingSequences";
 import { useAccessibility } from "@/components/AccessibilityContext";
+import { InlineText } from "@/components/editor";
 
 interface Node {
   id: string;
@@ -245,9 +246,7 @@ export default function AiSolutionsPage() {
       <header className="border-b border-purple-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
         <div>
           <span className="text-[10px] font-bold text-purple-500 tracking-widest uppercase">KLOUDERA TECHNOLOGIES // COGNITIVE WING</span>
-          <h1 className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-purple">
-            NEURAL COMPUTATION LAB
-          </h1>
+          <InlineText as="h1" className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-purple" path={["services", "ai-solutions", "title"]} fallback="NEURAL COMPUTATION LAB" />
         </div>
 
         <div className="flex gap-4 mt-4 sm:mt-0 items-center">
@@ -423,8 +422,8 @@ export default function AiSolutionsPage() {
               ].map((pipe, idx) => (
                 <div key={idx} className="p-3 bg-black/40 border border-purple-500/5 rounded relative flex flex-col justify-between min-h-[88px]">
                   <div>
-                    <span className="block text-[8px] font-bold text-purple-400">{pipe.step} // {pipe.name}</span>
-                    <p className="text-[8px] text-zinc-500 mt-1 leading-normal">{pipe.desc}</p>
+                    <span className="block text-[8px] font-bold text-purple-400">{pipe.step} // <InlineText as="span" path={["services", "ai-solutions", "pipeline", String(idx), "name"]} fallback={pipe.name} /></span>
+                    <InlineText as="p" multiline className="text-[8px] text-zinc-500 mt-1 leading-normal" path={["services", "ai-solutions", "pipeline", String(idx), "desc"]} fallback={pipe.desc} />
                   </div>
                   {idx < 4 && (
                     <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-1.5 z-10 text-purple-500/40 font-bold">
