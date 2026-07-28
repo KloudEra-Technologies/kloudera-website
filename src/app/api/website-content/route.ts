@@ -1,14 +1,50 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { prisma } from "@/lib/db";
+import { recordAuditNotification } from "@/app/api/admin-audit/route";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const FILE_PATH = path.join(process.cwd(), "src", "data", "website_content.json");
 
+// In-memory cache fallback for serverless environments with read-only file systems
+let memoryCache: any = null;
+
 export async function GET() {
   try {
+    // 1. Check in-memory cache first
+    if (memoryCache) {
+      return NextResponse.json(memoryCache, {
+        headers: {
+          "Cache-Control": "no-store, max-age=0, must-revalidate",
+          "Pragma": "no-cache"
+        }
+      });
+    }
+
+    // 2. Try to load from database next
+    try {
+      const config = await prisma.systemConfig.findUnique({
+        where: { key: "website_content" }
+      });
+      if (config) {
+        const parsed = JSON.parse(config.value);
+        // Sync to memory cache for quick future accesses
+        memoryCache = parsed;
+        return NextResponse.json(parsed, {
+          headers: {
+            "Cache-Control": "no-store, max-age=0, must-revalidate",
+            "Pragma": "no-cache"
+          }
+        });
+      }
+    } catch (dbErr) {
+      console.warn("Failed to read website content from database, falling back to disk", dbErr);
+    }
+
+    // 3. Fallback to reading the local JSON file from disk
     if (!fs.existsSync(FILE_PATH)) {
       return NextResponse.json({ error: "Content file not found" }, { status: 404 });
     }
@@ -25,18 +61,36 @@ export async function GET() {
   }
 }
 
-import { recordAuditNotification } from "@/app/api/admin-audit/route";
-
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    
-    if (!fs.existsSync(FILE_PATH)) {
-      return NextResponse.json({ error: "Content file not found" }, { status: 404 });
+
+    // Retrieve current credentials using our fallback priority system
+    let currentContent: any = null;
+    if (memoryCache) {
+      currentContent = memoryCache;
+    } else {
+      try {
+        const config = await prisma.systemConfig.findUnique({
+          where: { key: "website_content" }
+        });
+        if (config) {
+          currentContent = JSON.parse(config.value);
+        }
+      } catch (dbErr) {
+        console.warn("DB read error in credentials check", dbErr);
+      }
+      
+      if (!currentContent && fs.existsSync(FILE_PATH)) {
+        currentContent = JSON.parse(fs.readFileSync(FILE_PATH, "utf8"));
+      }
     }
 
-    const currentContent = JSON.parse(fs.readFileSync(FILE_PATH, "utf8"));
-    const currentCredentials = currentContent.credentials || { contentPassword: "content123", ultimatePassword: "admin", adminEmail: "admin@kloudera.ai" };
+    const currentCredentials = currentContent?.credentials || { 
+      contentPassword: "content123", 
+      ultimatePassword: "PasswordAdmin", 
+      adminEmail: "info@kloudera.ai" 
+    };
     
     // Check developer password gate
     const devToken = req.headers.get("x-developer-token") || req.cookies.get("developer_token")?.value;
@@ -64,7 +118,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid data payload" }, { status: 400 });
     }
 
-    const targetEmail = body.credentials?.adminEmail || currentCredentials.adminEmail || "admin@kloudera.ai";
+    const targetEmail = body.credentials?.adminEmail || currentCredentials.adminEmail || "info@kloudera.ai";
 
     if (credentialsChanged) {
       recordAuditNotification(
@@ -89,8 +143,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Write back to website_content.json
-    fs.writeFileSync(FILE_PATH, JSON.stringify(body, null, 2), "utf8");
+    // Save updates
+    memoryCache = body; // Sync memory cache
+
+    // 1. Save to Database (Prisma SystemConfig table)
+    try {
+      await prisma.systemConfig.upsert({
+        where: { key: "website_content" },
+        update: { value: JSON.stringify(body) },
+        create: { key: "website_content", value: JSON.stringify(body) }
+      });
+    } catch (dbErr: any) {
+      console.warn("Database write failed (this is expected if database is read-only):", dbErr.message);
+    }
+
+    // 2. Save to Disk (Prisma SQLite or local filesystem - will fail gracefully on serverless hosts like Vercel)
+    try {
+      fs.writeFileSync(FILE_PATH, JSON.stringify(body, null, 2), "utf8");
+    } catch (diskErr: any) {
+      console.warn("Disk write failed (expected on read-only cloud hosts like Vercel):", diskErr.message);
+    }
     
     return NextResponse.json({ success: true, accessLevel: isUltimate ? "ultimate" : "content" });
   } catch (err: any) {
