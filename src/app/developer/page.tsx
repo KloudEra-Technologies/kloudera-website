@@ -458,7 +458,8 @@ export default function DeveloperPage() {
         setPublishSuccess(true);
         setTimeout(() => setPublishSuccess(false), 3000);
       } else {
-        alert("Failed to publish changes. Check access token.");
+        const errData = await res.json().catch(() => ({}));
+        alert(`Failed to publish changes: ${errData.error || "Check access token."}`);
       }
     } catch (err) {
       console.error(err);

@@ -48,8 +48,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized. Access token mismatch." }, { status: 401 });
     }
 
+    // Detect if credentials were changed
+    const credentialsChanged = body.credentials && (
+      body.credentials.contentPassword !== currentCredentials.contentPassword ||
+      body.credentials.ultimatePassword !== currentCredentials.ultimatePassword ||
+      body.credentials.adminEmail !== currentCredentials.adminEmail
+    );
+
     // If payload attempts to modify credentials, restrict to Ultimate Access only
-    if (body.credentials && !isUltimate) {
+    if (credentialsChanged && !isUltimate) {
       return NextResponse.json({ error: "Forbidden. Only Ultimate Access master can modify access credentials." }, { status: 403 });
     }
 
@@ -58,13 +65,6 @@ export async function POST(req: NextRequest) {
     }
 
     const targetEmail = body.credentials?.adminEmail || currentCredentials.adminEmail || "admin@kloudera.ai";
-
-    // Detect if credentials were changed
-    const credentialsChanged = body.credentials && (
-      body.credentials.contentPassword !== currentCredentials.contentPassword ||
-      body.credentials.ultimatePassword !== currentCredentials.ultimatePassword ||
-      body.credentials.adminEmail !== currentCredentials.adminEmail
-    );
 
     if (credentialsChanged) {
       recordAuditNotification(
