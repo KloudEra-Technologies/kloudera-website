@@ -450,7 +450,23 @@ export default function DeveloperPage() {
 
     // Update selected element value in real time
     if (selectedElement) {
-      setSelectedElement((prev) => (prev ? { ...prev, value: newValue } : null));
+      setSelectedElement((prev) => {
+        if (!prev) return null;
+        if (pathArray.join(".") === prev.path.join(".")) {
+          return { ...prev, value: newValue };
+        }
+        if (pathArray.join(".").startsWith(prev.path.join(".") + ".")) {
+          const relativePath = pathArray.slice(prev.path.length);
+          const valCopy = JSON.parse(JSON.stringify(prev.value));
+          let curr = valCopy;
+          for (let i = 0; i < relativePath.length - 1; i++) {
+            curr = curr[relativePath[i]];
+          }
+          curr[relativePath[relativePath.length - 1]] = newValue;
+          return { ...prev, value: valCopy };
+        }
+        return prev;
+      });
     }
   };
 
