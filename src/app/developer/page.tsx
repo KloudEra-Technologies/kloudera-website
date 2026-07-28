@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import ProfessionalBlueHome from "@/components/ProfessionalBlueHome";
 
-type PageKey = "home" | "services" | "products" | "achievements" | "clienteles" | "certifications" | "about" | "careers" | "contact" | "security" | "brand";
+type PageKey = "home" | "services" | "products" | "achievements" | "clienteles" | "certifications" | "about" | "careers" | "contact" | "security" | "brand" | "partners";
 
 export default function DeveloperPage() {
   const [password, setPassword] = useState("");
@@ -657,7 +657,7 @@ export default function DeveloperPage() {
           <div className="w-full">
             <span className="text-[8px] text-zinc-500 uppercase tracking-widest block mb-2 hidden lg:block">PAGE SELECTOR</span>
             <div className="flex flex-row lg:flex-col gap-1 overflow-x-auto pb-1 lg:pb-0">
-              {(["home", "brand", "services", "products", "achievements", "clienteles", "certifications", "about", "careers", "contact"] as PageKey[]).map((p) => (
+              {(["home", "brand", "services", "products", "achievements", "clienteles", "certifications", "about", "careers", "contact", "partners"] as PageKey[]).map((p) => (
                 <button
                   key={p}
                   onClick={() => { setSelectedPage(p); setSelectedElement(null); }}
@@ -1456,6 +1456,84 @@ export default function DeveloperPage() {
                             </div>
                           ))}
                         </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedPage === "partners" && (
+                    <div className="space-y-8 font-mono">
+                      <div className="space-y-2 border-l-2 border-teal-500/20 pl-4 py-2 hover:bg-zinc-950/40 cursor-pointer transition-all"
+                           onClick={() => setSelectedElement({ path: ["partners", "title"], type: "text", value: siteData?.partners?.title || "" })}>
+                        <span className="text-[8px] text-teal-400 font-bold">PAGE_TITLE (EDITABLE)</span>
+                        <h3 className="font-bold text-white text-xs uppercase">{siteData?.partners?.title || "OUR STRATEGIC PARTNERS"}</h3>
+                      </div>
+
+                      <div className="space-y-2 border-l-2 border-teal-500/20 pl-4 py-2 hover:bg-zinc-950/40 cursor-pointer transition-all"
+                           onClick={() => setSelectedElement({ path: ["partners", "tagline"], type: "text", value: siteData?.partners?.tagline || "" })}>
+                        <span className="text-[8px] text-teal-400 font-bold">PAGE_TAGLINE (EDITABLE)</span>
+                        <h3 className="font-bold text-white text-xs uppercase">{siteData?.partners?.tagline || "KLOUDERA TECHNOLOGIES // GLOBAL ECOSYSTEM"}</h3>
+                      </div>
+
+                      <div className="space-y-2 border-l-2 border-teal-500/20 pl-4 py-2 hover:bg-zinc-950/40 cursor-pointer transition-all"
+                           onClick={() => setSelectedElement({ path: ["partners", "introTitle"], type: "text", value: siteData?.partners?.introTitle || "" })}>
+                        <span className="text-[8px] text-teal-400 font-bold">INTRO_TITLE (EDITABLE)</span>
+                        <h3 className="font-bold text-white text-xs uppercase">{siteData?.partners?.introTitle || "Enterprise Alliances & Security Nodes"}</h3>
+                      </div>
+
+                      <div className="space-y-2 border-l-2 border-teal-500/20 pl-4 py-2 hover:bg-zinc-950/40 cursor-pointer transition-all"
+                           onClick={() => setSelectedElement({ path: ["partners", "introDesc"], type: "text", value: siteData?.partners?.introDesc || "" })}>
+                        <span className="text-[8px] text-teal-400 font-bold">INTRO_DESCRIPTION (EDITABLE)</span>
+                        <p className="text-zinc-400 text-[10px] leading-relaxed">{siteData?.partners?.introDesc || ""}</p>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-wider">Featured Partners List</span>
+                          <button
+                            onClick={() => addItemToArray(["partners", "featured"], { name: "New Partner", logoColor: "#0ea5e9", tagline: "Alliance Level Title", details: "Integration and partnership details..." })}
+                            className="px-3 py-1 bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/40 text-[9px] font-bold uppercase rounded transition-all cursor-pointer"
+                          >
+                            ➕ Add Partner
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {(siteData?.partners?.featured || []).map((partner: any, idx: number) => (
+                            <div 
+                              key={idx} 
+                              onClick={() => setSelectedElement({ path: ["partners", "featured", idx.toString()], type: "door", value: partner })}
+                              className={`p-4 border rounded bg-zinc-950/50 hover:bg-zinc-950 transition-all cursor-pointer relative ${
+                                selectedElement?.path.join(".") === `partners.featured.${idx}` ? "border-teal-400 ring-1 ring-teal-400" : "border-zinc-800"
+                              }`}
+                            >
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeItemFromArray(["partners", "featured"], idx);
+                                }}
+                                className="absolute top-2 right-2 p-1 text-rose-400 hover:text-rose-300 font-bold text-[9px]"
+                              >
+                                ✖ DELETE
+                              </button>
+                              <span className="text-teal-400 font-bold text-[9.5px] block mb-1">🤝 // {partner.name}</span>
+                              <span className="text-zinc-500 text-[8px] block uppercase mb-1">{partner.tagline}</span>
+                              <p className="text-zinc-400 text-[10px] leading-relaxed">{partner.details}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 border-l-2 border-teal-500/20 pl-4 py-3 bg-zinc-950/20 rounded">
+                        <span className="text-[8px] text-teal-400 font-bold block mb-1">Extended Network & Client Alliances (Comma Separated List)</span>
+                        <textarea
+                          rows={4}
+                          value={(siteData?.partners?.alliances || []).join(", ")}
+                          onChange={(e) => {
+                            const list = e.target.value.split(",").map((s: string) => s.trim()).filter(Boolean);
+                            updateNestedValue(["partners", "alliances"], list);
+                          }}
+                          className="w-full bg-black border border-teal-500/10 hover:border-teal-500/30 focus:border-teal-500 rounded p-2 text-white focus:outline-none text-[11px] leading-relaxed"
+                        />
                       </div>
                     </div>
                   )}
