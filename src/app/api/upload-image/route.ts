@@ -48,12 +48,7 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Sanitize filename and prepare public uploads folder
     const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
-    }
-
     const fileExt = path.extname(file.name) || ".png";
     const sanitizedBase = path.basename(file.name, fileExt).replace(/[^a-zA-Z0-9_-]/g, "_");
     const fileName = `${Date.now()}_${sanitizedBase}${fileExt}`;
@@ -61,6 +56,9 @@ export async function POST(req: NextRequest) {
 
     // Save image file to disk (will fail gracefully on serverless but succeed in persistent environments)
     try {
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
       fs.writeFileSync(filePath, buffer);
     } catch (diskErr: any) {
       console.warn("Disk image write failed (expected on serverless environments):", diskErr.message);
