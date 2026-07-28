@@ -85,17 +85,6 @@ export function ProfessionalBlueHome({
               <span>Products</span>
               <span className="text-[9px] font-mono font-bold bg-amber-950/80 text-amber-300 border border-amber-500/40 px-1.5 py-0.2 rounded-full">SOON</span>
             </Link>
-            <button 
-              onClick={() => {
-                const event = new KeyboardEvent('keydown', { ctrlKey: true, shiftKey: true, key: 'e' });
-                window.dispatchEvent(event);
-              }}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-950/40 text-[11px] font-mono font-bold text-cyan-300 hover:bg-cyan-900/60 hover:border-cyan-400 transition-all shadow-[0_0_10px_rgba(6,182,212,0.15)] cursor-pointer"
-              title="Open Editor Mode (Ctrl+Shift+E)"
-            >
-              <span>✏️</span>
-              <span>Edit Site</span>
-            </button>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -192,16 +181,6 @@ export function ProfessionalBlueHome({
               <span>🚀 // PRODUCTS</span>
               <span className="text-[9px] bg-amber-950 px-2 py-0.5 rounded border border-amber-800">SOON</span>
             </Link>
-            <button 
-              onClick={() => {
-                setMobileMenuOpen(false);
-                const event = new KeyboardEvent('keydown', { ctrlKey: true, shiftKey: true, key: 'e' });
-                window.dispatchEvent(event);
-              }}
-              className="block text-cyan-400 hover:text-cyan-300 py-1 font-bold w-full text-left"
-            >
-              ✏️ // EDIT SITE
-            </button>
           </div>
         )}
       </header>
