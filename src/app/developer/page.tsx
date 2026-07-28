@@ -522,6 +522,7 @@ export default function DeveloperPage() {
 
       if (res.ok) {
         setPublishSuccess(true);
+        alert("✅ Website changes published successfully!");
         setTimeout(() => setPublishSuccess(false), 3000);
       } else {
         const errData = await res.json().catch(() => ({}));
