@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useAccessibility } from "./AccessibilityContext";
+import { usePathname } from "next/navigation";
 
 interface Message {
   sender: "bot" | "user";
@@ -12,6 +13,11 @@ interface Message {
 }
 
 export const AiAssistant: React.FC = () => {
+  const pathname = usePathname();
+  if (pathname && pathname.startsWith("/developer")) {
+    return null;
+  }
+
   const { playAudio, performanceMode } = useAccessibility();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
