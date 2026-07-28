@@ -1974,17 +1974,24 @@ export default function DeveloperPage() {
                                     </div>
 
                                     {/* Visual Canvas Sandbox */}
-                                    <div className="flex justify-center items-center p-4 bg-black rounded-lg border border-zinc-800 overflow-hidden relative group">
-                                      <div className="w-24 h-24 rounded-full border border-teal-500/20 bg-zinc-950 overflow-hidden relative flex items-center justify-center shadow-lg shadow-teal-500/5">
-                                        <img
-                                          src={currentUrl}
-                                          alt="Visual Preview"
-                                          className="w-full h-full"
-                                          style={getImageStyle(currentUrl)}
-                                        />
-                                      </div>
-                                      <span className="absolute bottom-1 right-2 text-[7px] text-zinc-500 uppercase tracking-tight opacity-50 group-hover:opacity-100 transition-all">VISUAL SANDBOX</span>
-                                    </div>
+                                    {(() => {
+                                      const isProfilePhoto = selectedElement.path.includes("team") || selectedElement.path.includes("careers") || key.toLowerCase().includes("avatar");
+                                      return (
+                                        <div className="flex justify-center items-center p-4 bg-black rounded-lg border border-zinc-800 overflow-hidden relative group w-full">
+                                          <div className={`border border-teal-500/20 bg-zinc-950 overflow-hidden relative flex items-center justify-center shadow-lg shadow-teal-500/5 ${
+                                            isProfilePhoto ? "w-24 h-24 rounded-full" : "w-36 h-20 rounded-md"
+                                          }`}>
+                                            <img
+                                              src={currentUrl}
+                                              alt="Visual Preview"
+                                              className="w-full h-full"
+                                              style={getImageStyle(currentUrl)}
+                                            />
+                                          </div>
+                                          <span className="absolute bottom-1 right-2 text-[7px] text-zinc-500 uppercase tracking-tight opacity-50 group-hover:opacity-100 transition-all">VISUAL SANDBOX</span>
+                                        </div>
+                                      );
+                                    })()}
 
                                     {/* Canva Controls */}
                                     <div className="space-y-3 text-[9px]">
