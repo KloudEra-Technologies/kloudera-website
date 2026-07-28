@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ProfessionalBlueHome from "@/components/ProfessionalBlueHome";
 import { getAdjustmentValue, setAdjustmentValue, getImageStyle, getCleanImageUrl } from "@/lib/imageHelper";
 
@@ -99,6 +99,17 @@ export default function DeveloperPage() {
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  // High-performance image state for Canva tools
+  const [tempUrl, setTempUrl] = useState<string>("");
+  const [tempUrlKey, setTempUrlKey] = useState<string>("");
+  const tempUrlRef = useRef<string>("");
+
+  useEffect(() => {
+    setTempUrl("");
+    setTempUrlKey("");
+    tempUrlRef.current = "";
+  }, [selectedElement]);
 
   // Canva interactive state management
   const [brandEditorMode, setBrandEditorMode] = useState<"visual" | "structured">("visual");
@@ -1937,6 +1948,9 @@ export default function DeveloperPage() {
                                     });
                                     const data = await res.json();
                                     if (res.ok && data.url) {
+                                      setTempUrl("");
+                                      setTempUrlKey("");
+                                      tempUrlRef.current = "";
                                       updateNestedValue([...selectedElement.path, key], data.url);
                                       alert("Image uploaded and updated successfully!");
                                     } else {
@@ -1949,7 +1963,7 @@ export default function DeveloperPage() {
                                 className="text-[9.5px] text-zinc-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[8.5px] file:font-mono file:bg-teal-500 file:text-black hover:file:bg-teal-400 cursor-pointer"
                               />
                               {selectedElement.value[key] && (() => {
-                                const currentUrl = selectedElement.value[key];
+                                const currentUrl = (tempUrlKey === key && tempUrl) ? tempUrl : (selectedElement.value[key] || "");
                                 const scaleVal = Number(getAdjustmentValue(currentUrl, "scale", "1"));
                                 const xVal = Number(getAdjustmentValue(currentUrl, "x", "0"));
                                 const yVal = Number(getAdjustmentValue(currentUrl, "y", "0"));
@@ -1966,6 +1980,9 @@ export default function DeveloperPage() {
                                         type="button"
                                         onClick={() => {
                                           const resetUrl = currentUrl.split("?")[0];
+                                          setTempUrl("");
+                                          setTempUrlKey("");
+                                          tempUrlRef.current = "";
                                           updateNestedValue([...selectedElement.path, key], resetUrl);
                                         }}
                                         className="text-[7.5px] bg-zinc-800 hover:bg-rose-950 text-zinc-400 hover:text-rose-300 px-1 py-0.5 rounded border border-zinc-700 hover:border-rose-500 transition-all uppercase"
@@ -2010,7 +2027,14 @@ export default function DeveloperPage() {
                                           value={scaleVal}
                                           onChange={(e) => {
                                             const updated = setAdjustmentValue(currentUrl, "scale", e.target.value);
-                                            updateNestedValue([...selectedElement.path, key], updated);
+                                            setTempUrl(updated);
+                                            setTempUrlKey(key);
+                                            tempUrlRef.current = updated;
+                                          }}
+                                          onPointerUp={() => {
+                                            if (tempUrlRef.current) {
+                                              updateNestedValue([...selectedElement.path, key], tempUrlRef.current);
+                                            }
                                           }}
                                           className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-400"
                                         />
@@ -2030,7 +2054,14 @@ export default function DeveloperPage() {
                                           value={xVal}
                                           onChange={(e) => {
                                             const updated = setAdjustmentValue(currentUrl, "x", e.target.value);
-                                            updateNestedValue([...selectedElement.path, key], updated);
+                                            setTempUrl(updated);
+                                            setTempUrlKey(key);
+                                            tempUrlRef.current = updated;
+                                          }}
+                                          onPointerUp={() => {
+                                            if (tempUrlRef.current) {
+                                              updateNestedValue([...selectedElement.path, key], tempUrlRef.current);
+                                            }
                                           }}
                                           className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-400"
                                         />
@@ -2050,7 +2081,14 @@ export default function DeveloperPage() {
                                           value={yVal}
                                           onChange={(e) => {
                                             const updated = setAdjustmentValue(currentUrl, "y", e.target.value);
-                                            updateNestedValue([...selectedElement.path, key], updated);
+                                            setTempUrl(updated);
+                                            setTempUrlKey(key);
+                                            tempUrlRef.current = updated;
+                                          }}
+                                          onPointerUp={() => {
+                                            if (tempUrlRef.current) {
+                                              updateNestedValue([...selectedElement.path, key], tempUrlRef.current);
+                                            }
                                           }}
                                           className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-400"
                                         />
@@ -2070,7 +2108,14 @@ export default function DeveloperPage() {
                                           value={rotVal}
                                           onChange={(e) => {
                                             const updated = setAdjustmentValue(currentUrl, "rot", e.target.value);
-                                            updateNestedValue([...selectedElement.path, key], updated);
+                                            setTempUrl(updated);
+                                            setTempUrlKey(key);
+                                            tempUrlRef.current = updated;
+                                          }}
+                                          onPointerUp={() => {
+                                            if (tempUrlRef.current) {
+                                              updateNestedValue([...selectedElement.path, key], tempUrlRef.current);
+                                            }
                                           }}
                                           className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-teal-400"
                                         />
