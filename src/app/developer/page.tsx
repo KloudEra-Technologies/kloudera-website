@@ -1862,7 +1862,7 @@ export default function DeveloperPage() {
                                     const data = await res.json();
                                     if (res.ok && data.url) {
                                       updateNestedValue([...selectedElement.path, key], data.url);
-                                      alert(`Image successfully saved to: ${data.url}`);
+                                      alert("Image uploaded and updated successfully!");
                                     } else {
                                       alert(`Upload error: ${data.error || "Failed to save file."}`);
                                     }
