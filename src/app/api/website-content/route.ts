@@ -40,8 +40,8 @@ export async function GET() {
           }
         });
       }
-    } catch (dbErr) {
-      console.warn("Failed to read website content from database, falling back to disk", dbErr);
+    } catch (dbErr: any) {
+      console.error("CRITICAL DATABASE READ FAILURE in GET /api/website-content:", dbErr);
     }
 
     // 3. Fallback to reading the local JSON file from disk
@@ -154,7 +154,10 @@ export async function POST(req: NextRequest) {
         create: { key: "website_content", value: JSON.stringify(body) }
       });
     } catch (dbErr: any) {
-      console.warn("Database write failed (this is expected if database is read-only):", dbErr.message);
+      console.error("CRITICAL DATABASE WRITE FAILURE in POST /api/website-content:", dbErr);
+      return NextResponse.json({ 
+        error: "Database publish failed: " + dbErr.message + ". Please check your Vercel DATABASE_URL connection variable." 
+      }, { status: 500 });
     }
 
     // 2. Save to Disk (Prisma SQLite or local filesystem - will fail gracefully on serverless hosts like Vercel)
