@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No image file provided" }, { status: 400 });
     }
 
-    // Verify developer access token
-    const devToken = req.headers.get("x-developer-token") || req.cookies.get("developer_token")?.value;
+    // Verify developer access token (checking both FormData and headers for security and bypass proxies)
+    const devToken = (formData.get("token") as string | null) || req.headers.get("x-developer-token") || req.cookies.get("developer_token")?.value;
 
     // Load credentials from database or JSON file
     let currentContent: any = null;

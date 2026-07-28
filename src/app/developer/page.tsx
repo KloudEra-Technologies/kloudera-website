@@ -1928,6 +1928,7 @@ export default function DeveloperPage() {
                                   const token = localStorage.getItem("dev_token") || "";
                                   const bodyData = new FormData();
                                   bodyData.append("file", uploadFile);
+                                  bodyData.append("token", token);
                                   try {
                                     const res = await fetch("/api/upload-image", {
                                       method: "POST",
