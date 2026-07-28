@@ -29,8 +29,20 @@ export default function Home() {
 
   useEffect(() => {
     document.body.setAttribute("data-view", viewMode);
+    
+    // Prevent 3D view on mobile devices (< 768px width)
+    const checkMobile = () => {
+      if (window.innerWidth < 768 && viewMode === "3d") {
+        setViewMode("classic");
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    
     return () => {
       document.body.removeAttribute("data-view");
+      window.removeEventListener("resize", checkMobile);
     };
   }, [viewMode]);
 

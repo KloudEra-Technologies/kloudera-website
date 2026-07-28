@@ -104,7 +104,7 @@ export function ProfessionalBlueHome({
                 playAudio("click");
                 onLaunch3D();
               }}
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-cyan-500/40 bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 px-3.5 sm:px-5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.25)] backdrop-blur-md transition-all hover:scale-105 hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(6,182,212,0.45)] cursor-pointer"
+              className="group relative hidden sm:inline-flex items-center gap-2 overflow-hidden rounded-full border border-cyan-500/40 bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 px-3.5 sm:px-5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.25)] backdrop-blur-md transition-all hover:scale-105 hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(6,182,212,0.45)] cursor-pointer"
             >
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75" />
@@ -922,7 +922,7 @@ export function ProfessionalBlueHome({
                 playAudio("click");
                 onLaunch3D();
               }}
-              className="font-bold text-cyan-400 hover:underline cursor-pointer"
+              className="hidden sm:inline-block font-bold text-cyan-400 hover:underline cursor-pointer"
             >
               Launch 3D Virtual HQ 🌌
             </button>

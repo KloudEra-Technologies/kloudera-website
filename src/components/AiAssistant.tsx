@@ -278,7 +278,7 @@ export const AiAssistant: React.FC = () => {
 
       {/* Holographic Dialog Console */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-[999] flex h-[480px] w-[360px] flex-col rounded-lg border border-purple-500/20 bg-zinc-950/95 shadow-[0_0_40px_rgba(168,85,247,0.2)] backdrop-blur-md overflow-hidden animate-[fadeIn_0.3s_ease-out] font-mono">
+        <div className="fixed bottom-24 right-4 left-4 sm:left-auto sm:right-6 z-[999] flex h-[480px] sm:w-[360px] flex-col rounded-lg border border-purple-500/20 bg-zinc-950/95 shadow-[0_0_40px_rgba(168,85,247,0.2)] backdrop-blur-md overflow-hidden animate-[fadeIn_0.3s_ease-out] font-mono">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-purple-500/20 bg-black/40 p-4">
             <div className="flex items-center gap-2">
