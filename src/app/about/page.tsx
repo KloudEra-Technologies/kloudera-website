@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { getImageStyle } from "@/lib/imageHelper";
+import { getImageStyle, getCleanImageUrl } from "@/lib/imageHelper";
 
 const DEFAULT_WHY_CHOOSE_US = [
   {
@@ -127,7 +127,7 @@ export default function AboutPage() {
               <div key={idx} className="p-6 rounded-2xl border border-blue-500/20 bg-slate-900/60 flex flex-col items-center text-center space-y-4 hover:border-cyan-400/40 transition-all shadow-xl backdrop-blur-xl">
                 {mbr.image ? (
                   <img
-                    src={mbr.image}
+                    src={getCleanImageUrl(mbr.image)}
                     alt={mbr.name}
                     className="w-24 h-24 rounded-full border-2 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)]"
                     style={getImageStyle(mbr.image)}

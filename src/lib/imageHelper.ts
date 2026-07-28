@@ -1,3 +1,10 @@
+export const getCleanImageUrl = (url: string): string => {
+  if (!url) return "";
+  const queryIdx = url.indexOf("?");
+  if (queryIdx === -1) return url;
+  return url.substring(0, queryIdx);
+};
+
 export const getAdjustmentValue = (url: string, param: string, defaultValue: string): string => {
   if (!url) return defaultValue;
   const queryIdx = url.indexOf("?");

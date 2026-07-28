@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import ProfessionalBlueHome from "@/components/ProfessionalBlueHome";
-import { getAdjustmentValue, setAdjustmentValue, getImageStyle } from "@/lib/imageHelper";
+import { getAdjustmentValue, setAdjustmentValue, getImageStyle, getCleanImageUrl } from "@/lib/imageHelper";
 
 type PageKey = "home" | "services" | "products" | "achievements" | "clienteles" | "certifications" | "about" | "careers" | "contact" | "security" | "brand" | "partners";
 
@@ -1983,7 +1983,7 @@ export default function DeveloperPage() {
                                             isProfilePhoto ? "w-24 h-24 rounded-full" : "w-36 h-20 rounded-md"
                                           }`}>
                                             <img
-                                              src={currentUrl}
+                                              src={getCleanImageUrl(currentUrl)}
                                               alt="Visual Preview"
                                               className="w-full h-full"
                                               style={getImageStyle(currentUrl)}
@@ -2004,7 +2004,7 @@ export default function DeveloperPage() {
                                         </div>
                                         <input
                                           type="range"
-                                          min="1"
+                                          min="0.1"
                                           max="3"
                                           step="0.05"
                                           value={scaleVal}

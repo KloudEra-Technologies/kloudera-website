@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
-import { getImageStyle } from "@/lib/imageHelper";
+import { getImageStyle, getCleanImageUrl } from "@/lib/imageHelper";
 
 export default function ClientelesPage() {
   const [data, setData] = useState<any>(null);
@@ -70,7 +70,7 @@ export default function ClientelesPage() {
                   {hasCustomImage ? (
                     <div className="h-16 w-full flex items-center justify-center overflow-hidden relative">
                       <img
-                        src={item.logoType}
+                        src={getCleanImageUrl(item.logoType)}
                         alt={item.name}
                         className="h-full w-auto max-h-16"
                         style={getImageStyle(item.logoType)}
