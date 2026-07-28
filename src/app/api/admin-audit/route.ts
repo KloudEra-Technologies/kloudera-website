@@ -157,7 +157,10 @@ export async function recordAuditNotification(event: string, summary: string, re
       </div>
     `;
 
-    const emailResult = await sendEmailTransport(recipientEmail, subject, htmlBody, emailConfig);
+    const shouldSendEmail = event === "SECURITY_CREDENTIALS_UPDATE";
+    const emailResult = shouldSendEmail 
+      ? await sendEmailTransport(recipientEmail, subject, htmlBody, emailConfig)
+      : { success: true, status: "SKIPPED_EMAIL_NOTIFICATION", message: "Email notifications disabled for general content updates." };
 
     const logs = getAuditLogs();
     const newEntry = {
