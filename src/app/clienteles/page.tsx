@@ -1,8 +1,7 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
+import { getImageStyle } from "@/lib/imageHelper";
 
 export default function ClientelesPage() {
   const [data, setData] = useState<any>(null);
@@ -55,77 +54,99 @@ export default function ClientelesPage() {
 
         {/* Clientele Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-4">
-          {/* IndiaCapital */}
-          <div className="rounded-xl bg-white p-8 shadow-2xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all">
-            <div className="flex flex-col items-center justify-center h-full space-y-2">
-              <div className="bg-[#0b1b1f] text-white px-6 py-3 rounded-xl flex items-center gap-3 border border-slate-800 shadow-md">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 via-emerald-400 to-indigo-500 flex items-center justify-center text-xs font-bold">
-                  ❖
+          {(data?.items || []).map((item: any, idx: number) => {
+            const hasCustomImage = item.logoType && (
+              item.logoType.startsWith("data:") || 
+              item.logoType.includes("/") || 
+              item.logoType.startsWith("http")
+            );
+
+            return (
+              <div 
+                key={idx} 
+                className="rounded-xl bg-white p-8 shadow-2xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all border border-slate-100"
+              >
+                <div className="flex flex-col items-center justify-center h-full w-full overflow-hidden">
+                  {hasCustomImage ? (
+                    <div className="h-16 w-full flex items-center justify-center overflow-hidden relative">
+                      <img
+                        src={item.logoType}
+                        alt={item.name}
+                        className="h-full w-auto max-h-16"
+                        style={getImageStyle(item.logoType)}
+                      />
+                    </div>
+                  ) : (
+                    // Fallback to custom layouts based on name
+                    (() => {
+                      const nameLower = item.name.toLowerCase();
+                      if (nameLower.includes("indiacapital")) {
+                        return (
+                          <div className="bg-[#0b1b1f] text-white px-6 py-3 rounded-xl flex items-center gap-3 border border-slate-800 shadow-md">
+                            <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 via-emerald-400 to-indigo-500 flex items-center justify-center text-xs font-bold">
+                              ❖
+                            </div>
+                            <span className="font-bold text-lg tracking-tight font-sans">IndiaCapital</span>
+                          </div>
+                        );
+                      }
+                      if (nameLower.includes("chikitsak")) {
+                        return (
+                          <div className="text-center">
+                            <div className="flex items-center justify-center gap-1 text-emerald-700 font-extrabold text-2xl tracking-tighter">
+                              <span>F</span>
+                              <span className="text-emerald-500">C</span>
+                            </div>
+                            <span className="font-bold text-base text-emerald-950 tracking-wider block">FIN CHIKITSAK</span>
+                            <span className="text-[10px] text-emerald-700 font-serif italic block mt-0.5">Be Financially Fit</span>
+                          </div>
+                        );
+                      }
+                      if (nameLower.includes("gleeds")) {
+                        return (
+                          <span className="font-sans text-4xl font-extrabold text-slate-900 tracking-tight">gleeds</span>
+                        );
+                      }
+                      if (nameLower.includes("statusneo")) {
+                        return (
+                          <div className="flex items-center text-3xl font-sans text-slate-900">
+                            <span className="font-normal">Status</span>
+                            <span className="font-extrabold">Neo</span>
+                            <span className="w-3 h-3 rounded-full bg-amber-400 ml-0.5" />
+                          </div>
+                        );
+                      }
+                      if (nameLower.includes("sit pune")) {
+                        return (
+                          <div className="bg-[#1a1a1a] p-4 rounded-xl flex items-center gap-3 text-red-500 border border-slate-700 shadow-md">
+                            <div className="w-9 h-9 rounded bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-500 text-sm font-bold">
+                              🌐
+                            </div>
+                            <div className="text-left">
+                              <span className="text-sm font-bold text-white block">SIT PUNE</span>
+                              <span className="text-[8px] text-red-400 font-serif block">वसुधैव कुटुम्बकम्</span>
+                            </div>
+                          </div>
+                        );
+                      }
+                      
+                      // Generic fallback card for any other added clientele
+                      return (
+                        <div className="bg-slate-50 border border-slate-200 p-4 rounded-lg flex items-center gap-2.5 text-slate-700 shadow-sm">
+                          <span className="text-base">💼</span>
+                          <span className="font-bold text-sm uppercase tracking-wide">{item.name}</span>
+                        </div>
+                      );
+                    })()
+                  )}
                 </div>
-                <span className="font-bold text-lg tracking-tight font-sans">IndiaCapital</span>
+                
+                <span className="text-xs font-bold text-blue-900 bg-blue-100/90 px-5 py-1 rounded-md border border-blue-200">
+                  {item.sector || "Client Partner"}
+                </span>
               </div>
-            </div>
-            <span className="text-xs font-bold text-blue-900 bg-blue-100/90 px-5 py-1 rounded-md border border-blue-200">
-              FinTech
-            </span>
-          </div>
-
-          {/* FIN CHIKITSAK */}
-          <div className="rounded-xl bg-white p-8 shadow-2xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all">
-            <div className="flex flex-col items-center justify-center h-full text-center">
-              <div className="flex items-center gap-1 text-emerald-700 font-extrabold text-2xl tracking-tighter">
-                <span>F</span>
-                <span className="text-emerald-500">C</span>
-              </div>
-              <span className="font-bold text-base text-emerald-950 tracking-wider block">FIN CHIKITSAK</span>
-              <span className="text-[10px] text-emerald-700 font-serif italic block mt-0.5">Be Financially Fit</span>
-            </div>
-            <span className="text-xs font-bold text-blue-900 bg-blue-100/90 px-5 py-1 rounded-md border border-blue-200">
-              FinTech
-            </span>
-          </div>
-
-          {/* gleeds */}
-          <div className="rounded-xl bg-white p-8 shadow-2xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all">
-            <div className="flex items-center justify-center h-full">
-              <span className="font-sans text-4xl font-extrabold text-slate-900 tracking-tight">gleeds</span>
-            </div>
-            <span className="text-xs font-bold text-blue-900 bg-blue-100/90 px-5 py-1 rounded-md border border-blue-200">
-              Construction Consultancy
-            </span>
-          </div>
-
-          {/* StatusNeo */}
-          <div className="rounded-xl bg-white p-8 shadow-2xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all">
-            <div className="flex items-center justify-center h-full">
-              <div className="flex items-center text-3xl font-sans text-slate-900">
-                <span className="font-normal">Status</span>
-                <span className="font-extrabold">Neo</span>
-                <span className="w-3 h-3 rounded-full bg-amber-400 ml-0.5" />
-              </div>
-            </div>
-            <span className="text-xs font-bold text-blue-900 bg-blue-100/90 px-5 py-1 rounded-md border border-blue-200">
-              MNC IT
-            </span>
-          </div>
-
-          {/* SIT PUNE */}
-          <div className="rounded-xl bg-white p-8 shadow-2xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center justify-center h-full">
-              <div className="bg-[#1a1a1a] p-4 rounded-xl flex items-center gap-3 text-red-500 border border-slate-700 shadow-md">
-                <div className="w-9 h-9 rounded bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-500 text-sm font-bold">
-                  🌐
-                </div>
-                <div className="text-left">
-                  <span className="text-sm font-bold text-white block">SIT PUNE</span>
-                  <span className="text-[8px] text-red-400 font-serif block">वसुधैव कुटुम्बकम्</span>
-                </div>
-              </div>
-            </div>
-            <span className="text-xs font-bold text-blue-900 bg-blue-100/90 px-5 py-1 rounded-md border border-blue-200">
-              SIT PUNE
-            </span>
-          </div>
+            );
+          })}
         </div>
       </main>
     </div>

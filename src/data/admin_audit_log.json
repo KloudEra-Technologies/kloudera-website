@@ -1,5 +1,18 @@
 [
   {
+    "id": "audit_1785225685645_8gz40",
+    "timestamp": "2026-07-28T08:01:25.645Z",
+    "formattedTime": "7/28/2026, 1:31:24 PM IST",
+    "event": "WEBSITE_CONTENT_PUBLISHED",
+    "recipientEmail": "info@kloudera.ai",
+    "summary": "Website content packets were updated and published live.",
+    "details": {
+      "publishedBy": "Ultimate Master Admin"
+    },
+    "status": "SENT_VIA_RESEND_API",
+    "smtpMessage": "Successfully delivered email via Resend API to info@kloudera.ai!"
+  },
+  {
     "id": "audit_1784871480760_tjl1q",
     "timestamp": "2026-07-24T05:38:00.760Z",
     "formattedTime": "7/24/2026, 11:07:59 AM IST",
