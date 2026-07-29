@@ -83,6 +83,18 @@ export function ProfessionalBlueHome({
     }
   ];
 
+  const partnersData = fullData.partners || {};
+  const partnersList = partnersData.featured || [
+    { name: "Microsoft", tagline: "Cloud & Identity Partner", logoColor: "#3b82f6" },
+    { name: "AWS", tagline: "Infrastructure & Compute", logoColor: "#f59e0b" },
+    { name: "MongoDB", tagline: "Enterprise Database Core", logoColor: "#10b981" },
+    { name: "Fortinet", tagline: "Next-Gen Firewall Alliance", logoColor: "#f43f5e" },
+    { name: "Google Cloud", tagline: "AI & BigQuery Engine", logoColor: "#60a5fa" },
+    { name: "Sprinto", tagline: "SOC2 Compliance Platform", logoColor: "#8b5cf6" },
+    { name: "Trend Micro", tagline: "Endpoint Threat Defense", logoColor: "#6366f1" },
+    { name: "Cross Cipher", tagline: "Hardware Security Modules", logoColor: "#06b6d4" }
+  ];
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!contactForm.name || !contactForm.email) return;
@@ -128,6 +140,22 @@ export function ProfessionalBlueHome({
     const updated = [...achievementsList];
     updated.splice(idx, 1);
     updateNestedValue(["achievements", "items"], updated);
+  };
+
+  const addPartner = () => {
+    const updated = [...partnersList];
+    updated.push({
+      name: "New Partner",
+      tagline: "Partner Subtitle",
+      logoColor: "#3b82f6"
+    });
+    updateNestedValue(["partners", "featured"], updated);
+  };
+
+  const deletePartner = (idx: number) => {
+    const updated = [...partnersList];
+    updated.splice(idx, 1);
+    updateNestedValue(["partners", "featured"], updated);
   };
 
   return (
@@ -477,25 +505,58 @@ export function ProfessionalBlueHome({
           </div>
 
           <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {[
-              { name: "Microsoft", role: "Cloud & Identity Partner", color: "border-blue-500/40" },
-              { name: "AWS", role: "Infrastructure & Compute", color: "border-amber-500/40" },
-              { name: "MongoDB", role: "Enterprise Database Core", color: "border-emerald-500/40" },
-              { name: "Fortinet", role: "Next-Gen Firewall Alliance", color: "border-rose-500/40" },
-              { name: "Google Cloud", role: "AI & BigQuery Engine", color: "border-blue-400/40" },
-              { name: "Sprinto", role: "SOC2 Compliance Platform", color: "border-purple-500/40" },
-              { name: "Trend Micro", role: "Endpoint Threat Defense", color: "border-indigo-500/40" },
-              { name: "Cross Cipher", role: "Hardware Security Modules", color: "border-cyan-500/40" }
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                className={`rounded-xl border bg-slate-900/40 p-5 backdrop-blur-md transition-all hover:scale-105 hover:bg-blue-950/40 ${item.color}`}
+            {partnersList.map((item: any, idx: number) => {
+              const borderColors: Record<string, string> = {
+                microsoft: "border-blue-500/40",
+                aws: "border-amber-500/40",
+                mongodb: "border-emerald-500/40",
+                fortinet: "border-rose-500/40",
+                google: "border-blue-400/40",
+                sprinto: "border-purple-500/40",
+                trend: "border-indigo-500/40",
+                cross: "border-cyan-500/40"
+              };
+              const nameLower = item.name.toLowerCase();
+              let borderColor = "border-teal-500/20";
+              for (const [k, v] of Object.entries(borderColors)) {
+                if (nameLower.includes(k)) {
+                  borderColor = v;
+                  break;
+                }
+              }
+
+              return (
+                <div
+                  key={idx}
+                  className={`rounded-xl border bg-slate-900/40 p-5 backdrop-blur-md transition-all hover:scale-105 hover:bg-blue-950/40 relative ${borderColor}`}
+                >
+                  {/* Delete Button */}
+                  {isEditActive && (
+                    <button
+                      onClick={() => deletePartner(idx)}
+                      className="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold"
+                      title="Delete partner"
+                    >
+                      ✕
+                    </button>
+                  )}
+                  <div className="h-2 w-8 rounded-full bg-blue-500/60 mb-3" />
+                  <InlineText as="h3" className="font-bold text-white text-base block" path={["partners", "featured", String(idx), "name"]} fallback={item.name} />
+                  <InlineText as="p" className="text-xs text-slate-400 mt-1 block" path={["partners", "featured", String(idx), "tagline"]} fallback={item.tagline || item.role} />
+                </div>
+              );
+            })}
+
+            {/* Add New Partner Card */}
+            {isEditActive && (
+              <button
+                onClick={addPartner}
+                className="rounded-xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-5 flex flex-col items-center justify-center space-y-2 transition-all min-h-[110px] font-bold text-teal-400 uppercase tracking-widest text-[10px]"
               >
-                <div className="h-2 w-8 rounded-full bg-blue-500/60 mb-3" />
-                <h3 className="font-bold text-white text-base">{item.name}</h3>
-                <p className="text-xs text-slate-400 mt-1">{item.role}</p>
-              </div>
-            ))}
+                <span>➕</span>
+                <span>Add Partner</span>
+              </button>
+            )}
           </div>
         </div>
       </section>

@@ -3,10 +3,18 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
-import { InlineText } from "@/components/editor";
+import { InlineText, useEditor } from "@/components/editor";
 
 export default function ProductsPage() {
   const [productsData, setProductsData] = useState<any>(null);
+
+  let editorContext: any;
+  try {
+    editorContext = useEditor();
+  } catch (e) {
+    editorContext = { isEditMode: false, siteData: null, updateNestedValue: () => {} };
+  }
+  const { isEditMode: isEditActive, updateNestedValue, siteData } = editorContext;
 
   useEffect(() => {
     fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
@@ -19,7 +27,26 @@ export default function ProductsPage() {
       .catch((err) => console.error("Failed to load products data", err));
   }, []);
 
-  const items = productsData?.items || [];
+  const productsList = siteData?.products?.items || productsData?.items || [];
+
+  const addProduct = () => {
+    const updated = [...productsList];
+    updated.push({
+      name: "New Product",
+      category: "ENTERPRISE",
+      badge: "STAGING",
+      tagline: "Product Tagline",
+      desc: "Double click to edit details.",
+      features: ["Feature Highlight A", "Feature Highlight B"]
+    });
+    updateNestedValue(["products", "items"], updated);
+  };
+
+  const deleteProduct = (idx: number) => {
+    const updated = [...productsList];
+    updated.splice(idx, 1);
+    updateNestedValue(["products", "items"], updated);
+  };
 
   return (
     <div className="min-h-screen bg-[#030712] text-zinc-100 flex flex-col font-sans selection:bg-cyan-500/30">
@@ -61,11 +88,22 @@ export default function ProductsPage() {
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {items.map((prod: any, idx: number) => (
+          {productsList.map((prod: any, idx: number) => (
             <div
               key={idx}
               className="group relative rounded-2xl border border-blue-900/40 bg-gradient-to-b from-[#090e1a] via-[#050811] to-[#030712] p-6 sm:p-8 space-y-6 shadow-xl hover:border-cyan-500/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] transition-all duration-300"
             >
+              {/* Delete Button */}
+              {isEditActive && (
+                <button
+                  onClick={() => deleteProduct(idx)}
+                  className="absolute top-4 right-4 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-2 rounded-full transition-all z-10 font-bold text-xs"
+                  title="Delete card"
+                >
+                  ✕
+                </button>
+              )}
+
               <div className="flex justify-between items-start gap-4 border-b border-blue-900/30 pb-4">
                 <div>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-cyan-400 block mb-1">
@@ -108,6 +146,17 @@ export default function ProductsPage() {
               </div>
             </div>
           ))}
+
+          {/* Add Product Card */}
+          {isEditActive && (
+            <button
+              onClick={addProduct}
+              className="rounded-2xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-6 sm:p-8 flex flex-col items-center justify-center space-y-2 transition-all min-h-[280px] font-bold text-teal-400 uppercase tracking-widest text-xs"
+            >
+              <span>➕</span>
+              <span>Add New Product</span>
+            </button>
+          )}
         </div>
       </main>
     </div>

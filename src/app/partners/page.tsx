@@ -200,7 +200,7 @@ const getPartnerIcon = (name: string, color: string) => {
 export default function PartnersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [partnersData, setPartnersData] = useState<any>(null);
-  const { isEditMode } = useEditor();
+  const { isEditMode: isEditActive, updateNestedValue, siteData } = useEditor();
 
   useEffect(() => {
     fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
@@ -213,8 +213,38 @@ export default function PartnersPage() {
       .catch((err) => console.error("Failed to load partners database", err));
   }, []);
 
-  const featured = partnersData?.featured || FEATURED_PARTNERS;
-  const alliances = partnersData?.alliances || OTHER_ALLIANCES;
+  const featured = siteData?.partners?.featured || partnersData?.featured || FEATURED_PARTNERS;
+  const alliances = siteData?.partners?.alliances || partnersData?.alliances || OTHER_ALLIANCES;
+
+  const addFeatured = () => {
+    const updated = [...featured];
+    updated.push({
+      name: "New Partner",
+      logoColor: "#0ea5e9",
+      logoUrl: "",
+      tagline: "Partner Subtitle",
+      details: "Double click to edit details."
+    });
+    updateNestedValue(["partners", "featured"], updated);
+  };
+
+  const deleteFeatured = (idx: number) => {
+    const updated = [...featured];
+    updated.splice(idx, 1);
+    updateNestedValue(["partners", "featured"], updated);
+  };
+
+  const addAlliance = () => {
+    const updated = [...alliances];
+    updated.push("New Alliance");
+    updateNestedValue(["partners", "alliances"], updated);
+  };
+
+  const deleteAlliance = (idx: number) => {
+    const updated = [...alliances];
+    updated.splice(idx, 1);
+    updateNestedValue(["partners", "alliances"], updated);
+  };
 
   const filteredFeatured = featured.filter((p: any) => 
     p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -271,13 +301,24 @@ export default function PartnersPage() {
           {filteredFeatured.map((partner: any, idx: number) => (
             <div 
               key={idx}
-              className="cyber-panel p-6 rounded-lg border border-teal-500/10 bg-zinc-950/30 hover:border-teal-500/30 transition-all flex flex-col justify-between space-y-4"
+              className="cyber-panel p-6 rounded-lg border border-teal-500/10 bg-zinc-950/30 hover:border-teal-500/30 transition-all flex flex-col justify-between space-y-4 relative"
               style={{ boxShadow: `0 0 10px ${partner.logoColor || "#14b8a6"}08` }}
             >
+              {/* Delete Button */}
+              {isEditActive && (
+                <button
+                  onClick={() => deleteFeatured(idx)}
+                  className="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold"
+                  title="Delete partner"
+                >
+                  ✕
+                </button>
+              )}
+
               <div className="space-y-3">
                 <div className="flex items-center gap-3 border-b border-teal-500/5 pb-3">
                   <div className="p-2 rounded bg-zinc-900 border border-zinc-800 flex items-center justify-center w-12 h-12 overflow-hidden relative">
-                    {isEditMode || partner.logoUrl ? (
+                    {isEditActive || partner.logoUrl ? (
                       <InlineImage 
                         path={["partners", "featured", String(idx), "logoUrl"]} 
                         fallback={partner.logoUrl || "/logo.png"} 
@@ -303,27 +344,54 @@ export default function PartnersPage() {
               </div>
             </div>
           ))}
+
+          {/* Add Featured Partner Card */}
+          {isEditActive && (
+            <button
+              onClick={addFeatured}
+              className="rounded-lg border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-6 flex flex-col items-center justify-center space-y-2 transition-all min-h-[160px] font-bold text-teal-400 uppercase tracking-widest"
+            >
+              <span>➕</span>
+              <span>Add Featured Partner</span>
+            </button>
+          )}
         </div>
 
         {/* Other Alliances Grid */}
-        {filteredAlliances.length > 0 && (
-          <div className="space-y-6 pt-12 border-t border-teal-500/10">
-            <h3 className="text-center text-[10px] font-bold text-white uppercase tracking-widest">
-              Extended Network & Client Alliances
-            </h3>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-              {filteredAlliances.map((name: string, i: number) => (
-                <div 
-                  key={i}
-                  className="p-3 border border-zinc-800 bg-zinc-950/40 rounded text-center text-[9px] font-bold text-zinc-400 hover:text-teal-400 hover:border-teal-500/30 transition-all"
-                >
-                  📁 // {name.toUpperCase()}
-                </div>
-              ))}
-            </div>
+        <div className="space-y-6 pt-12 border-t border-teal-500/10">
+          <h3 className="text-center text-[10px] font-bold text-white uppercase tracking-widest">
+            Extended Network & Client Alliances
+          </h3>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+            {alliances.map((name: string, i: number) => (
+              <div 
+                key={i}
+                className="p-3 border border-zinc-800 bg-zinc-950/40 rounded text-center text-[9px] font-bold text-zinc-400 hover:text-teal-400 hover:border-teal-500/30 transition-all relative group"
+              >
+                {/* Delete Alliance Tag */}
+                {isEditActive && (
+                  <button
+                    onClick={() => deleteAlliance(i)}
+                    className="absolute -top-1.5 -right-1.5 text-[8px] text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 px-1 rounded-full transition-all z-10 font-bold"
+                  >
+                    ✕
+                  </button>
+                )}
+                📁 // <InlineText as="span" path={["partners", "alliances", String(i)]} fallback={name} />
+              </div>
+            ))}
+
+            {isEditActive && (
+              <button
+                onClick={addAlliance}
+                className="p-3 border border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 rounded text-center text-[9px] font-bold text-teal-400 transition-all"
+              >
+                ➕ Add Alliance
+              </button>
+            )}
           </div>
-        )}
+        </div>
 
       </main>
     </div>

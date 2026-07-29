@@ -3,12 +3,18 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
-import { getImageStyle, getCleanImageUrl } from "@/lib/imageHelper";
 import { InlineText, InlineImage, useEditor } from "@/components/editor";
 
 export default function ClientelesPage() {
   const [data, setData] = useState<any>(null);
-  const { isEditMode } = useEditor();
+
+  let editorContext: any;
+  try {
+    editorContext = useEditor();
+  } catch (e) {
+    editorContext = { isEditMode: false, siteData: null, updateNestedValue: () => {} };
+  }
+  const { isEditMode: isEditActive, updateNestedValue, siteData } = editorContext;
 
   useEffect(() => {
     fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
@@ -18,6 +24,32 @@ export default function ClientelesPage() {
       })
       .catch((err) => console.error("Failed to load clienteles data", err));
   }, []);
+
+  const clientelesList = siteData?.clienteles?.items || data?.items || [
+    { name: "IndiaCapital", sector: "FinTech", category: "FINANCIAL SERVICES", logoType: "indiacapital", desc: "Enterprise financial technology and capital management solutions." },
+    { name: "Fin Chikitsak", sector: "FinTech", category: "FINANCIAL WELLNESS", logoType: "finchikitsak", desc: "Comprehensive financial wellness and advisory platform." },
+    { name: "gleeds", sector: "Construction Consultancy", category: "GLOBAL INFRASTRUCTURE", logoType: "gleeds", desc: "International property and construction management consultancy." },
+    { name: "StatusNeo", sector: "MNC IT", category: "ENTERPRISE IT CONSULTING", logoType: "statusneo", desc: "Global digital transformation and enterprise IT consultancy." },
+    { name: "SIT PUNE", sector: "Academic Institution", category: "EDUCATION & RESEARCH", logoType: "sitpune", desc: "Premier engineering and technological research institute." }
+  ];
+
+  const addClientele = () => {
+    const updated = [...clientelesList];
+    updated.push({
+      name: "New Clientele",
+      sector: "FinTech",
+      category: "SERVICES",
+      logoType: "/logo.png",
+      desc: "Double click to edit details."
+    });
+    updateNestedValue(["clienteles", "items"], updated);
+  };
+
+  const deleteClientele = (idx: number) => {
+    const updated = [...clientelesList];
+    updated.splice(idx, 1);
+    updateNestedValue(["clienteles", "items"], updated);
+  };
 
   return (
     <div className="min-h-screen bg-[#030712] text-zinc-100 flex flex-col font-sans selection:bg-blue-500/30">
@@ -63,7 +95,7 @@ export default function ClientelesPage() {
 
         {/* Clientele Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-4">
-          {(data?.items || []).map((item: any, idx: number) => {
+          {clientelesList.map((item: any, idx: number) => {
             const hasCustomImage = item.logoType && (
               item.logoType.startsWith("data:") || 
               item.logoType.includes("/") || 
@@ -73,10 +105,21 @@ export default function ClientelesPage() {
             return (
               <div 
                 key={idx} 
-                className="rounded-xl bg-white p-8 shadow-2xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all border border-slate-100"
+                className="rounded-xl bg-white p-8 shadow-2xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all border border-slate-100 relative text-black"
               >
+                {/* Delete Button */}
+                {isEditActive && (
+                  <button
+                    onClick={() => deleteClientele(idx)}
+                    className="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-full transition-all z-10 font-bold text-xs"
+                    title="Delete card"
+                  >
+                    ✕
+                  </button>
+                )}
+
                 <div className="flex flex-col items-center justify-center h-full w-full overflow-hidden">
-                  {isEditMode || hasCustomImage ? (
+                  {isEditActive || hasCustomImage ? (
                     <div className="h-16 w-full flex items-center justify-center overflow-hidden relative">
                       <InlineImage 
                         path={["clienteles", "items", String(idx), "logoType"]} 
@@ -91,7 +134,7 @@ export default function ClientelesPage() {
                       const nameLower = item.name.toLowerCase();
                       if (nameLower.includes("indiacapital")) {
                         return (
-                          <div className="bg-[#0b1b1f] text-white px-6 py-3 rounded-xl flex items-center gap-3 border border-slate-800 shadow-md">
+                          <div className="bg-[#0b1b1f] text-white px-6 py-3 rounded-xl flex items-center gap-3 border border-slate-800 shadow-sm">
                             <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 via-emerald-400 to-indigo-500 flex items-center justify-center text-xs font-bold">
                               ❖
                             </div>
@@ -161,6 +204,17 @@ export default function ClientelesPage() {
               </div>
             );
           })}
+
+          {/* Add New Clientele Card */}
+          {isEditActive && (
+            <button
+              onClick={addClientele}
+              className="rounded-xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-8 flex flex-col items-center justify-center space-y-2 transition-all h-56 font-bold text-teal-400 uppercase tracking-widest text-xs"
+            >
+              <span>➕</span>
+              <span>Add New Clientele</span>
+            </button>
+          )}
         </div>
       </main>
     </div>
