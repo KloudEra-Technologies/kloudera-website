@@ -9,30 +9,17 @@ export const revalidate = 0;
 
 const FILE_PATH = path.join(process.cwd(), "src", "data", "website_content.json");
 
-// In-memory cache fallback for serverless environments with read-only file systems
-let memoryCache: any = null;
+
 
 export async function GET() {
   try {
-    // 1. Check in-memory cache first
-    if (memoryCache) {
-      return NextResponse.json(memoryCache, {
-        headers: {
-          "Cache-Control": "no-store, max-age=0, must-revalidate",
-          "Pragma": "no-cache"
-        }
-      });
-    }
-
-    // 2. Try to load from database next
+    // 1. Try to load from database first
     try {
       const config = await prisma.systemConfig.findUnique({
         where: { key: "website_content" }
       });
       if (config) {
         const parsed = JSON.parse(config.value);
-        // Sync to memory cache for quick future accesses
-        memoryCache = parsed;
         return NextResponse.json(parsed, {
           headers: {
             "Cache-Control": "no-store, max-age=0, must-revalidate",
@@ -67,23 +54,19 @@ export async function POST(req: NextRequest) {
 
     // Retrieve current credentials using our fallback priority system
     let currentContent: any = null;
-    if (memoryCache) {
-      currentContent = memoryCache;
-    } else {
-      try {
-        const config = await prisma.systemConfig.findUnique({
-          where: { key: "website_content" }
-        });
-        if (config) {
-          currentContent = JSON.parse(config.value);
-        }
-      } catch (dbErr) {
-        console.warn("DB read error in credentials check", dbErr);
+    try {
+      const config = await prisma.systemConfig.findUnique({
+        where: { key: "website_content" }
+      });
+      if (config) {
+        currentContent = JSON.parse(config.value);
       }
-      
-      if (!currentContent && fs.existsSync(FILE_PATH)) {
-        currentContent = JSON.parse(fs.readFileSync(FILE_PATH, "utf8"));
-      }
+    } catch (dbErr) {
+      console.warn("DB read error in credentials check", dbErr);
+    }
+    
+    if (!currentContent && fs.existsSync(FILE_PATH)) {
+      currentContent = JSON.parse(fs.readFileSync(FILE_PATH, "utf8"));
     }
 
     const currentCredentials = currentContent?.credentials || { 
@@ -144,7 +127,6 @@ export async function POST(req: NextRequest) {
     }
 
     // Save updates
-    memoryCache = body; // Sync memory cache
 
     // 1. Save to Database (Prisma SystemConfig table)
     try {
