@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "./KloudEraLogo";
 import { useAccessibility } from "./AccessibilityContext";
-import { InlineText } from "@/components/editor";
+import { InlineText, InlineImage, useEditor } from "@/components/editor";
 
 interface ProfessionalBlueHomeProps {
   onLaunch3D?: () => void;
@@ -22,6 +22,7 @@ export function ProfessionalBlueHome({
   selectedElementPath 
 }: ProfessionalBlueHomeProps) {
   const { playAudio } = useAccessibility();
+  const { isEditMode: isEditActive } = useEditor();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("cyber");
   const [fetchedData, setFetchedData] = useState<any>({});
@@ -36,14 +37,16 @@ export function ProfessionalBlueHome({
         throw new Error("Failed to fetch");
       })
       .then((data) => {
-        if (data && data.home) {
-          setFetchedData(data.home);
+        if (data) {
+          setFetchedData(data);
         }
       })
       .catch((err) => console.log("Using fallback blue home data:", err.message));
   }, [initialSiteData]);
 
-  const homeData = initialSiteData?.home || fetchedData || {};
+  const fullData = initialSiteData || fetchedData || {};
+  const homeData = fullData.home || {};
+  const clienteleData = fullData.clienteles || {};
 
   const heroHighlightGradient = homeData.heroHighlightGradient ?? true;
 
@@ -52,6 +55,14 @@ export function ProfessionalBlueHome({
     { category: "CLOUD & INFRA", title: "Simplified Multi-Cloud", desc: "Cloud migration, serverless management, and cost optimization.", color: "#3b82f6" },
     { category: "AI COE & AUTOMATION", title: "Custom LLM Rigs", desc: "Gen-AI pipelines, RPA process automation, and MLSecOps workflows.", color: "#818cf8" },
     { category: "NEXT-GEN HARDWARE", title: "AI-Ready Compute", desc: "Enterprise GPU systems, servers, storage, and datacenter hardware.", color: "#10b981" }
+  ];
+
+  const clientelesList = clienteleData.items || [
+    { name: "IndiaCapital", sector: "FinTech", category: "FINANCIAL SERVICES", logoType: "indiacapital", desc: "Enterprise financial technology and capital management solutions." },
+    { name: "Fin Chikitsak", sector: "FinTech", category: "FINANCIAL WELLNESS", logoType: "finchikitsak", desc: "Comprehensive financial wellness and advisory platform." },
+    { name: "gleeds", sector: "Construction Consultancy", category: "GLOBAL INFRASTRUCTURE", logoType: "gleeds", desc: "International property and construction management consultancy." },
+    { name: "StatusNeo", sector: "MNC IT", category: "ENTERPRISE IT CONSULTING", logoType: "statusneo", desc: "Global digital transformation and enterprise IT consultancy." },
+    { name: "SIT PUNE", sector: "Academic Institution", category: "EDUCATION & RESEARCH", logoType: "sitpune", desc: "Premier engineering and technological research institute." }
   ];
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -572,7 +583,7 @@ export function ProfessionalBlueHome({
       </section>
 
       {/* ----------------- Clientele & Verticals Section ----------------- */}
-      <section id="clienteles" className="py-24 border-b border-blue-900/20 bg-[#020a24]">
+      <section id="clienteles" className="py-24 border-b border-blue-900/20 bg-[#030712]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8 mb-12">
             <div>
@@ -589,77 +600,102 @@ export function ProfessionalBlueHome({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* IndiaCapital */}
-            <div className="rounded-xl bg-white p-8 shadow-xl flex flex-col items-center justify-between h-48 hover:scale-105 transition-all">
-              <div className="flex items-center justify-center h-full">
-                <div className="bg-[#0b1b1f] text-white px-5 py-2.5 rounded-lg flex items-center gap-2.5 border border-slate-800">
-                  <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-400 via-emerald-400 to-indigo-500 flex items-center justify-center text-[10px] font-bold">
-                    ❖
+            {clientelesList.map((item: any, idx: number) => {
+              const hasCustomImage = item.logoType && (
+                item.logoType.startsWith("data:") || 
+                item.logoType.includes("/") || 
+                item.logoType.startsWith("http")
+              );
+
+              return (
+                <div 
+                  key={idx} 
+                  className="rounded-xl bg-white p-8 shadow-xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all border border-slate-100"
+                >
+                  <div className="flex flex-col items-center justify-center h-full w-full overflow-hidden">
+                    {isEditActive || hasCustomImage ? (
+                      <div className="h-16 w-full flex items-center justify-center overflow-hidden relative">
+                        <InlineImage 
+                          path={["clienteles", "items", String(idx), "logoType"]} 
+                          fallback={hasCustomImage ? item.logoType : "/logo.png"} 
+                          className="h-full w-auto max-h-16"
+                          alt={item.name}
+                        />
+                      </div>
+                    ) : (
+                      // Fallback to custom layouts based on name
+                      (() => {
+                        const nameLower = item.name.toLowerCase();
+                        if (nameLower.includes("indiacapital")) {
+                          return (
+                            <div className="bg-[#0b1b1f] text-white px-5 py-2.5 rounded-lg flex items-center gap-2.5 border border-slate-800 shadow-sm">
+                              <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-400 via-emerald-400 to-indigo-500 flex items-center justify-center text-[10px] font-bold">
+                                ❖
+                              </div>
+                              <span className="font-bold text-base tracking-tight font-sans">IndiaCapital</span>
+                            </div>
+                          );
+                        }
+                        if (nameLower.includes("chikitsak")) {
+                          return (
+                            <div className="text-center">
+                              <div className="flex items-center justify-center gap-1 text-emerald-700 font-extrabold text-xl tracking-tighter">
+                                <span>F</span>
+                                <span className="text-emerald-500">C</span>
+                              </div>
+                              <span className="font-bold text-sm text-emerald-950 tracking-wider block">FIN CHIKITSAK</span>
+                              <span className="text-[9px] text-emerald-700 font-serif italic block">Be Financially Fit</span>
+                            </div>
+                          );
+                        }
+                        if (nameLower.includes("gleeds")) {
+                          return (
+                            <span className="font-sans text-4xl font-extrabold text-slate-900 tracking-tight">gleeds</span>
+                          );
+                        }
+                        if (nameLower.includes("statusneo")) {
+                          return (
+                            <div className="flex items-center text-2xl font-sans text-slate-900">
+                              <span className="font-normal">Status</span>
+                              <span className="font-extrabold">Neo</span>
+                              <span className="w-2.5 h-2.5 rounded-full bg-amber-400 ml-0.5" />
+                            </div>
+                          );
+                        }
+                        if (nameLower.includes("sit pune")) {
+                          return (
+                            <div className="bg-[#1a1a1a] p-3 rounded-lg flex items-center gap-3 text-red-500 border border-slate-700">
+                              <div className="w-8 h-8 rounded bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-500 text-xs font-bold">
+                                🌐
+                              </div>
+                              <div className="text-left">
+                                <span className="text-xs font-bold text-white block">SIT PUNE</span>
+                                <span className="text-[7px] text-red-400 font-serif block">वसुधैव कुटुम्बकम्</span>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return (
+                          <div className="bg-slate-50 border border-slate-200 p-3 rounded flex items-center gap-2 text-slate-700">
+                            <span>💼</span>
+                            <span className="font-bold text-xs uppercase">{item.name}</span>
+                          </div>
+                        );
+                      })()
+                    )}
                   </div>
-                  <span className="font-bold text-base tracking-tight font-sans">IndiaCapital</span>
-                </div>
-              </div>
-              <span className="text-[11px] font-bold text-blue-900 bg-blue-100/80 px-4 py-1 rounded-md border border-blue-200">
-                FinTech
-              </span>
-            </div>
-
-            {/* FIN CHIKITSAK */}
-            <div className="rounded-xl bg-white p-8 shadow-xl flex flex-col items-center justify-between h-48 hover:scale-105 transition-all">
-              <div className="flex flex-col items-center justify-center h-full text-center">
-                <div className="flex items-center gap-1 text-emerald-700 font-extrabold text-xl tracking-tighter">
-                  <span>F</span>
-                  <span className="text-emerald-500">C</span>
-                </div>
-                <span className="font-bold text-sm text-emerald-950 tracking-wider block">FIN CHIKITSAK</span>
-                <span className="text-[9px] text-emerald-700 font-serif italic block">Be Financially Fit</span>
-              </div>
-              <span className="text-[11px] font-bold text-blue-900 bg-blue-100/80 px-4 py-1 rounded-md border border-blue-200">
-                FinTech
-              </span>
-            </div>
-
-            {/* gleeds */}
-            <div className="rounded-xl bg-white p-8 shadow-xl flex flex-col items-center justify-between h-48 hover:scale-105 transition-all">
-              <div className="flex items-center justify-center h-full">
-                <span className="font-sans text-3xl font-extrabold text-slate-900 tracking-tight">gleeds</span>
-              </div>
-              <span className="text-[11px] font-bold text-blue-900 bg-blue-100/80 px-4 py-1 rounded-md border border-blue-200">
-                Construction Consultancy
-              </span>
-            </div>
-
-            {/* StatusNeo */}
-            <div className="rounded-xl bg-white p-8 shadow-xl flex flex-col items-center justify-between h-48 hover:scale-105 transition-all">
-              <div className="flex items-center justify-center h-full">
-                <div className="flex items-center text-2xl font-sans text-slate-900">
-                  <span className="font-normal">Status</span>
-                  <span className="font-extrabold">Neo</span>
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400 ml-0.5" />
-                </div>
-              </div>
-              <span className="text-[11px] font-bold text-blue-900 bg-blue-100/80 px-4 py-1 rounded-md border border-blue-200">
-                MNC IT
-              </span>
-            </div>
-
-            {/* SIT PUNE */}
-            <div className="rounded-xl bg-white p-8 shadow-xl flex flex-col items-center justify-between h-48 hover:scale-105 transition-all sm:col-span-2 lg:col-span-1">
-              <div className="flex items-center justify-center h-full">
-                <div className="bg-[#1a1a1a] p-3 rounded-lg flex items-center gap-3 text-red-500 border border-slate-700">
-                  <div className="w-8 h-8 rounded bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-500 text-xs font-bold">
-                    🌐
-                  </div>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-white block">SIT PUNE</span>
-                    <span className="text-[7px] text-red-400 font-serif block">वसुधैव कुटुम्बकम्</span>
+                  
+                  <div className="text-center space-y-1 mt-4 w-full">
+                    <div className="flex justify-between items-center w-full mb-1">
+                      <InlineText as="span" className="text-[8px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded" path={["clienteles", "items", String(idx), "sector"]} fallback={item.sector} />
+                      <InlineText as="span" className="text-[8px] font-bold text-blue-500 uppercase tracking-widest" path={["clienteles", "items", String(idx), "category"]} fallback={item.category} />
+                    </div>
+                    <InlineText as="h3" className="text-base font-black text-slate-800 tracking-tight" path={["clienteles", "items", String(idx), "name"]} fallback={item.name} />
+                    <InlineText as="p" multiline className="text-[10px] text-slate-500 leading-relaxed" path={["clienteles", "items", String(idx), "desc"]} fallback={item.desc} />
                   </div>
                 </div>
-              </div>
-              <span className="text-[11px] font-bold text-blue-900 bg-blue-100/80 px-4 py-1 rounded-md border border-blue-200">
-                SIT PUNE
-              </span>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>

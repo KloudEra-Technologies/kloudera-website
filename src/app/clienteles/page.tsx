@@ -20,9 +20,9 @@ export default function ClientelesPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#001060] text-zinc-100 flex flex-col font-sans selection:bg-blue-500/30">
+    <div className="min-h-screen bg-[#030712] text-zinc-100 flex flex-col font-sans selection:bg-blue-500/30">
       {/* Header */}
-      <header className="border-b border-blue-900/30 bg-[#000a40]/90 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-teal-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-3">
           <Link href="/">
             <KloudEraLogo className="h-8 w-auto text-blue-400" />
