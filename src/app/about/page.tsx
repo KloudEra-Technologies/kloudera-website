@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getImageStyle, getCleanImageUrl } from "@/lib/imageHelper";
-import { InlineText, InlineImage } from "@/components/editor";
+import { InlineText, InlineImage, useEditor } from "@/components/editor";
 
 const DEFAULT_WHY_CHOOSE_US = [
   {
@@ -45,6 +45,14 @@ export default function AboutPage() {
   const [whyChooseUs, setWhyChooseUs] = useState<any[]>(DEFAULT_WHY_CHOOSE_US);
   const [team, setTeam] = useState<any[]>(DEFAULT_TEAM);
 
+  let editorContext: any;
+  try {
+    editorContext = useEditor();
+  } catch (e) {
+    editorContext = { isEditMode: false, siteData: null, updateNestedValue: () => {} };
+  }
+  const { isEditMode: isEditActive, updateNestedValue, siteData } = editorContext;
+
   useEffect(() => {
     fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
       .then(res => {
@@ -59,6 +67,33 @@ export default function AboutPage() {
       })
       .catch(err => console.log("Using fallback static copy:", err.message));
   }, []);
+
+  const whyChooseUsData = siteData?.about?.whyChooseUs || whyChooseUs;
+  const teamData = siteData?.about?.team || team;
+
+  const addWhyChooseUs = () => {
+    const updated = [...whyChooseUsData];
+    updated.push({ title: "New Benefit", desc: "Double click to edit details." });
+    updateNestedValue(["about", "whyChooseUs"], updated);
+  };
+
+  const deleteWhyChooseUs = (idx: number) => {
+    const updated = [...whyChooseUsData];
+    updated.splice(idx, 1);
+    updateNestedValue(["about", "whyChooseUs"], updated);
+  };
+
+  const addTeamMbr = () => {
+    const updated = [...teamData];
+    updated.push({ name: "New Member", role: "Team Role", initials: "N", image: "/logo.png" });
+    updateNestedValue(["about", "team"], updated);
+  };
+
+  const deleteTeamMbr = (idx: number) => {
+    const updated = [...teamData];
+    updated.splice(idx, 1);
+    updateNestedValue(["about", "team"], updated);
+  };
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 flex flex-col font-sans selection:bg-teal-500/30">
@@ -101,14 +136,32 @@ export default function AboutPage() {
             Why Choose Us?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {whyChooseUs.map((item, i) => (
-              <div key={i} className="p-5 rounded-xl border border-blue-500/20 bg-slate-900/50 hover:border-cyan-400/40 transition-all backdrop-blur-md">
+            {whyChooseUsData.map((item: any, i: number) => (
+              <div key={i} className="p-5 rounded-xl border border-blue-500/20 bg-slate-900/50 hover:border-cyan-400/40 transition-all backdrop-blur-md relative">
+                {isEditActive && (
+                  <button
+                    onClick={() => deleteWhyChooseUs(i)}
+                    className="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold"
+                  >
+                    ✕
+                  </button>
+                )}
                 <span className="text-[9.5px] font-bold text-cyan-400 block mb-1">
                   ⚡ // <InlineText as="span" path={["about", "whyChooseUs", String(i), "title"]} fallback={item.title} />
                 </span>
                 <InlineText as="p" multiline className="text-slate-300 text-xs leading-relaxed" path={["about", "whyChooseUs", String(i), "desc"]} fallback={item.desc} />
               </div>
             ))}
+
+            {isEditActive && (
+              <button
+                onClick={addWhyChooseUs}
+                className="p-5 rounded-xl border border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 flex flex-col items-center justify-center space-y-1 transition-all h-[120px] font-bold text-teal-400 uppercase tracking-widest text-[9px]"
+              >
+                <span>➕</span>
+                <span>Add Benefit Card</span>
+              </button>
+            )}
           </div>
         </section>
 
@@ -122,13 +175,22 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((mbr, idx) => (
-              <div key={idx} className="p-6 rounded-2xl border border-blue-500/20 bg-slate-900/60 flex flex-col items-center text-center space-y-4 hover:border-cyan-400/40 transition-all shadow-xl backdrop-blur-xl">
-                <div className="w-24 h-24 rounded-full border-2 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)] overflow-hidden">
+            {teamData.map((mbr: any, idx: number) => (
+              <div key={idx} className="p-6 rounded-2xl border border-blue-500/20 bg-slate-900/60 flex flex-col items-center text-center space-y-4 hover:border-cyan-400/40 transition-all shadow-xl backdrop-blur-xl relative">
+                {isEditActive && (
+                  <button
+                    onClick={() => deleteTeamMbr(idx)}
+                    className="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold"
+                  >
+                    ✕
+                  </button>
+                )}
+                <div className="w-24 h-24 rounded-full border-2 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)] overflow-hidden relative">
                   <InlineImage 
                     path={["about", "team", String(idx), "image"]} 
-                    fallback={mbr.image || ""} 
-                    className="w-full h-full"
+                    fallback={mbr.image || "/logo.png"} 
+                    className="w-full h-full object-cover"
+                    alt={mbr.name}
                   />
                 </div>
                 <div className="space-y-2 w-full">
@@ -139,6 +201,16 @@ export default function AboutPage() {
                 </div>
               </div>
             ))}
+
+            {isEditActive && (
+              <button
+                onClick={addTeamMbr}
+                className="p-6 rounded-2xl border border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 flex flex-col items-center justify-center space-y-2 transition-all min-h-[220px] font-bold text-teal-400 uppercase tracking-widest text-[9px]"
+              >
+                <span>➕</span>
+                <span>Add Team Member</span>
+              </button>
+            )}
           </div>
         </section>
 

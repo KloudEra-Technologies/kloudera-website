@@ -22,7 +22,7 @@ export function ProfessionalBlueHome({
   selectedElementPath 
 }: ProfessionalBlueHomeProps) {
   const { playAudio } = useAccessibility();
-  const { isEditMode: isEditActive, updateNestedValue } = useEditor();
+  const { isEditMode: isEditActive, updateNestedValue, siteData } = useEditor();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("cyber");
   const [fetchedData, setFetchedData] = useState<any>({});
@@ -44,7 +44,7 @@ export function ProfessionalBlueHome({
       .catch((err) => console.log("Using fallback blue home data:", err.message));
   }, [initialSiteData]);
 
-  const fullData = initialSiteData || fetchedData || {};
+  const fullData = siteData || initialSiteData || fetchedData || {};
   const homeData = fullData.home || {};
   const clienteleData = fullData.clienteles || {};
 
@@ -542,16 +542,16 @@ export function ProfessionalBlueHome({
               <InlineText as="p" multiline className="mt-4 text-sm text-slate-300 leading-relaxed" path={["home", "aboutDesc"]} fallback="Kloudera Technologies provides Fortune 500 organizations with end-to-end security posture optimization, compute hardware procurement, and cloud modernization strategies." />
               <div className="mt-6 space-y-3">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold">✓</span>
-                  <span className="text-xs text-slate-200">ISO 27001 & SOC2 Type II Certified Infrastructure</span>
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold shrink-0">✓</span>
+                  <InlineText as="span" className="text-xs text-slate-200" path={["home", "aboutBullets", "0"]} fallback="ISO 27001 & SOC2 Type II Certified Infrastructure" />
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold">✓</span>
-                  <span className="text-xs text-slate-200">Dedicated Hardware Rig Procurement & Benchmarking</span>
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold shrink-0">✓</span>
+                  <InlineText as="span" className="text-xs text-slate-200" path={["home", "aboutBullets", "1"]} fallback="Dedicated Hardware Rig Procurement & Benchmarking" />
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold">✓</span>
-                  <span className="text-xs text-slate-200">Direct Microsoft Tier-1 Solutions Partner</span>
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold shrink-0">✓</span>
+                  <InlineText as="span" className="text-xs text-slate-200" path={["home", "aboutBullets", "2"]} fallback="Direct Microsoft Tier-1 Solutions Partner" />
                 </div>
               </div>
               <div className="mt-8">
@@ -563,19 +563,19 @@ export function ProfessionalBlueHome({
 
             <div className="rounded-2xl border border-blue-500/20 bg-slate-900/60 p-8 backdrop-blur-xl shadow-2xl relative">
               <div className="text-xs font-mono text-cyan-400 mb-2">SYSTEM_FRAMEWORK</div>
-              <h4 className="text-xl font-bold text-white mb-4">Zero-Trust Command Principles</h4>
+              <InlineText as="h4" className="text-xl font-bold text-white mb-4 block" path={["home", "valuesTitle"]} fallback="Zero-Trust Command Principles" />
               <div className="space-y-4 text-xs text-slate-300">
                 <div className="border-l-2 border-blue-500 pl-4 py-1">
-                  <span className="font-bold text-white block">1. Explicit Verification</span>
-                  <span>Always authenticate and authorize based on all available data points.</span>
+                  <InlineText as="span" className="font-bold text-white block" path={["home", "values", "0", "title"]} fallback="1. Explicit Verification" />
+                  <InlineText as="span" className="block text-slate-400 mt-1" path={["home", "values", "0", "desc"]} fallback="Always authenticate and authorize based on all available data points." />
                 </div>
                 <div className="border-l-2 border-cyan-500 pl-4 py-1">
-                  <span className="font-bold text-white block">2. Least Privilege Access</span>
-                  <span>Limit user access with Just-In-Time and Just-Enough-Access (JIT/JEA) policies.</span>
+                  <InlineText as="span" className="font-bold text-white block" path={["home", "values", "1", "title"]} fallback="2. Least Privilege Access" />
+                  <InlineText as="span" className="block text-slate-400 mt-1" path={["home", "values", "1", "desc"]} fallback="Limit user access with Just-In-Time and Just-Enough-Access (JIT/JEA) policies." />
                 </div>
                 <div className="border-l-2 border-indigo-500 pl-4 py-1">
-                  <span className="font-bold text-white block">3. Assume Breach Mindset</span>
-                  <span>Minimize blast radius and segment access. Verify end-to-end encryption.</span>
+                  <InlineText as="span" className="font-bold text-white block" path={["home", "values", "2", "title"]} fallback="3. Assume Breach Mindset" />
+                  <InlineText as="span" className="block text-slate-400 mt-1" path={["home", "values", "2", "desc"]} fallback="Minimize blast radius and segment access. Verify end-to-end encryption." />
                 </div>
               </div>
             </div>
