@@ -98,14 +98,8 @@ export function ProfessionalBlueHome({
   ];
 
   const certificationsData = getSectionData("certifications");
-  const certificationsList = certificationsData.items || [
-    { code: "ISO 27001:2022", title: "Security Management" },
-    { code: "SOC 2 TYPE II", title: "Trust Services" },
-    { code: "NIST CSF 2.0", title: "Cyber Framework" },
-    { code: "CMMI LEVEL 5", title: "Process Optimization" },
-    { code: "GDPR COMPLIANT", title: "Data Protection" },
-    { code: "HIPAA COMPLIANT", title: "Healthcare Security" }
-  ];
+  // Show only the first 6 certifications from the certifications page list
+  const certificationsList = (certificationsData.items || []).slice(0, 6);
 
   const careersData = getSectionData("careers");
   const jobsList = careersData.jobs || [
@@ -177,21 +171,6 @@ export function ProfessionalBlueHome({
     updateNestedValue(["about", "whyChooseUs"], updated);
   };
 
-  const addCert = () => {
-    const updated = [...certificationsList];
-    updated.push({
-      code: "NEW STANDARD",
-      title: "Security Framework",
-      status: "ACTIVE"
-    });
-    updateNestedValue(["certifications", "items"], updated);
-  };
-
-  const deleteCert = (idx: number) => {
-    const updated = [...certificationsList];
-    updated.splice(idx, 1);
-    updateNestedValue(["certifications", "items"], updated);
-  };
 
   const addJob = () => {
     const updated = [...jobsList];
@@ -973,35 +952,48 @@ export function ProfessionalBlueHome({
             </Link>
           </div>
 
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {certificationsList.map((item: any, idx: number) => (
-              <div 
-                key={idx} 
-                className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 text-center space-y-1 relative"
-              >
-                {/* Delete Button */}
-                {isEditActive && (
-                  <button
-                    onClick={() => deleteCert(idx)}
-                    className="absolute -top-1.5 -right-1.5 text-[8px] text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 px-1 rounded-full transition-all z-10 font-bold"
-                    title="Delete card"
-                  >
-                    ✕
-                  </button>
-                )}
-                <InlineText as="span" className="text-emerald-400 font-mono font-extrabold text-xs block" path={["certifications", "items", String(idx), "code"]} fallback={item.code} />
-                <InlineText as="span" className="text-[9px] text-slate-400 font-mono block" path={["certifications", "items", String(idx), "title"]} fallback={item.title} />
+          <div className="mt-12">
+            {certificationsList.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
+                <div className="w-16 h-16 rounded-full bg-emerald-950/20 border border-emerald-800/30 flex items-center justify-center mb-2">
+                  <svg className="w-8 h-8 text-emerald-900" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                  </svg>
+                </div>
+                <p className="text-slate-500 text-sm font-mono">No certifications added yet.</p>
+                <p className="text-slate-600 text-xs font-mono">Visit the Certifications page in editor mode to add badges.</p>
               </div>
-            ))}
-
-            {/* Add Certification Badge */}
-            {isEditActive && (
-              <button
-                onClick={addCert}
-                className="rounded-xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-4 flex flex-col items-center justify-center space-y-1 transition-all min-h-[70px] font-bold text-teal-400 uppercase tracking-widest text-[9px]"
-              >
-                <span>➕ Standard</span>
-              </button>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {certificationsList.map((item: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="rounded-xl border border-emerald-500/20 bg-emerald-950/10 overflow-hidden flex flex-col hover:border-emerald-400/40 transition-all"
+                  >
+                    {/* Badge Image Area */}
+                    <div className="flex items-center justify-center bg-[#060c18]/60 w-full" style={{ minHeight: "80px" }}>
+                      {item.imageUrl ? (
+                        <img
+                          src={item.imageUrl}
+                          alt={item.title || "Certification"}
+                          className="w-full h-full object-contain p-3"
+                          style={{ maxHeight: "80px" }}
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center text-emerald-900/60 py-4">
+                          <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    {/* Title */}
+                    <div className="p-3 border-t border-emerald-900/20 text-center">
+                      <p className="text-emerald-400 font-mono font-bold text-[10px] leading-tight">{item.title || "Certification"}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>

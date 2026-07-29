@@ -434,50 +434,7 @@
   "certifications": {
     "title": "Security Compliance & Global Standards",
     "intro": "Kloudera operates under audited global security frameworks, data privacy laws, and quality management protocols.",
-    "items": [
-      {
-        "code": "ISO 27001:2022",
-        "title": "Information Security Management System",
-        "issuer": "International Organization for Standardization",
-        "desc": "Certified governance over information security controls, risk management, and physical/digital asset protection.",
-        "status": "VERIFIED & ACTIVE"
-      },
-      {
-        "code": "SOC 2 TYPE II",
-        "title": "Trust Services Criteria Security & Confidentiality",
-        "issuer": "American Institute of CPAs (AICPA)",
-        "desc": "Independently audited operational effectiveness across security, availability, processing integrity, and privacy.",
-        "status": "VERIFIED & ACTIVE"
-      },
-      {
-        "code": "NIST CSF 2.0",
-        "title": "National Institute of Standards Cybersecurity Framework",
-        "issuer": "NIST Security Standards",
-        "desc": "Comprehensive alignment across Identify, Protect, Detect, Respond, and Recover cybersecurity functions.",
-        "status": "VERIFIED & ACTIVE"
-      },
-      {
-        "code": "CMMI LEVEL 5",
-        "title": "Capability Maturity Model Integration (Optimizing)",
-        "issuer": "CMMI Institute",
-        "desc": "Highest level of software engineering process optimization, quality assurance, and quantitative management.",
-        "status": "VERIFIED & ACTIVE"
-      },
-      {
-        "code": "HIPAA COMPLIANT",
-        "title": "Health Insurance Portability & Accountability Act",
-        "issuer": "US Department of Health & Human Services",
-        "desc": "Rigorous administrative, physical, and technical safeguards for protected health information (PHI).",
-        "status": "VERIFIED & ACTIVE"
-      },
-      {
-        "code": "PCI-DSS v4.0",
-        "title": "Payment Card Industry Data Security Standard",
-        "issuer": "PCI Security Standards Council",
-        "desc": "Maximum level security for processing, storing, and transmitting sensitive payment cardholder data.",
-        "status": "VERIFIED & ACTIVE"
-      }
-    ]
+    "items": []
   },
   "partners": {
     "title": "OUR STRATEGIC PARTNERS",
