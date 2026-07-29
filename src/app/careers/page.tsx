@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAccessibility } from "@/components/AccessibilityContext";
-import { InlineText } from "@/components/editor";
+import { InlineText, useEditor } from "@/components/editor";
 
 interface Job {
   id: string;
@@ -58,9 +58,39 @@ const JOBS_CATALOG: Job[] = [
 
 export default function CareersPage() {
   const { playAudio } = useAccessibility();
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [selectedJob, setSelectedJob] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [deptFilter, setDeptFilter] = useState("ALL");
+
+  let editorContext: any;
+  try {
+    editorContext = useEditor();
+  } catch (e) {
+    editorContext = { isEditMode: false, siteData: null, updateNestedValue: () => {} };
+  }
+  const { isEditMode: isEditActive, updateNestedValue, siteData } = editorContext;
+
+  const jobsList = siteData?.careers?.jobs || [
+    { title: "Cyber Security Auditor", category: "SECURITY", desc: "Lead VAPT penetration tests and threat vector assessments across client cloud environments." },
+    { title: "AI Compute Pipeline Lead", category: "HARDWARE", desc: "Architect Nvidia HGX H100 cluster deployments and benchmark deep learning model inference speed." },
+    { title: "MS Solutions Architect", category: "MICROSOFT", desc: "Design Microsoft Entra ID security policies, M365 migrations, and automated Power RPA workflows." }
+  ];
+
+  const addJob = () => {
+    const updated = [...jobsList];
+    updated.push({
+      title: "New Position",
+      category: "ENGINEERING",
+      desc: "Double click to edit details."
+    });
+    updateNestedValue(["careers", "jobs"], updated);
+  };
+
+  const deleteJob = (idx: number) => {
+    const updated = [...jobsList];
+    updated.splice(idx, 1);
+    updateNestedValue(["careers", "jobs"], updated);
+  };
   
   // Dynamic page content states
   const [timeline, setTimeline] = useState<any[]>([
@@ -173,9 +203,9 @@ export default function CareersPage() {
     }
   };
 
-  const filteredJobs = JOBS_CATALOG.filter(job => {
+  const filteredJobs = jobsList.filter((job: any) => {
     const matchSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) || job.desc.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchDept = deptFilter === "ALL" || job.department === deptFilter;
+    const matchDept = deptFilter === "ALL" || (job.department || job.category) === deptFilter;
     return matchSearch && matchDept;
   });
 
@@ -269,26 +299,53 @@ export default function CareersPage() {
 
           {/* Job grids */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 font-mono text-xs">
-            {filteredJobs.map((job) => (
-              <div key={job.id} className="cyber-panel p-5 rounded-lg border border-teal-500/20 flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between text-[9px] text-zinc-500 border-b border-teal-500/10 pb-2 mb-4">
-                    <span>{job.department}</span>
-                    <span>{job.location}</span>
-                  </div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wide">{job.title}</h3>
-                  <span className="text-[10px] text-teal-400 mt-1 block">{job.experience}</span>
-                  <p className="text-zinc-400 mt-3 leading-relaxed text-[11px]">{job.desc}</p>
-                </div>
+            {filteredJobs.map((job: any, idx: number) => {
+              // Find the true index in jobsList for editing paths
+              const originalIndex = jobsList.findIndex((j: any) => j.title === job.title);
+              const pathIdx = originalIndex !== -1 ? originalIndex : idx;
 
-                <button
-                  onClick={() => { setSelectedJob(job); playAudio("click"); }}
-                  className="w-full mt-6 py-2 bg-teal-500 hover:bg-teal-400 text-black font-bold uppercase rounded cursor-none transition-all"
-                >
-                  Initiate Application
-                </button>
-              </div>
-            ))}
+              return (
+                <div key={idx} className="cyber-panel p-5 rounded-lg border border-teal-500/20 flex flex-col justify-between relative">
+                  {/* Delete Button */}
+                  {isEditActive && (
+                    <button
+                      onClick={() => deleteJob(pathIdx)}
+                      className="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold text-xs cursor-pointer"
+                      title="Delete card"
+                    >
+                      ✕
+                    </button>
+                  )}
+                  <div>
+                    <div className="flex justify-between text-[9px] text-zinc-500 border-b border-teal-500/10 pb-2 mb-4">
+                      <InlineText as="span" path={["careers", "jobs", String(pathIdx), "category"]} fallback={job.category || job.department || "ENGINEERING"} />
+                      <InlineText as="span" path={["careers", "jobs", String(pathIdx), "location"]} fallback={job.location || "Remote"} />
+                    </div>
+                    <InlineText as="h3" className="text-sm font-bold text-white uppercase tracking-wide block" path={["careers", "jobs", String(pathIdx), "title"]} fallback={job.title} />
+                    <InlineText as="span" className="text-[10px] text-teal-400 mt-1 block" path={["careers", "jobs", String(pathIdx), "experience"]} fallback={job.experience || "Mid-level"} />
+                    <InlineText as="p" multiline className="text-zinc-400 mt-3 leading-relaxed text-[11px] block" path={["careers", "jobs", String(pathIdx), "desc"]} fallback={job.desc} />
+                  </div>
+
+                  <button
+                    onClick={() => { setSelectedJob(job); playAudio("click"); }}
+                    className="w-full mt-6 py-2 bg-teal-500 hover:bg-teal-400 text-black font-bold uppercase rounded cursor-pointer transition-all"
+                  >
+                    Initiate Application
+                  </button>
+                </div>
+              );
+            })}
+
+            {/* Add New Job Card */}
+            {isEditActive && (
+              <button
+                onClick={addJob}
+                className="rounded-lg border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-6 flex flex-col items-center justify-center space-y-2 transition-all min-h-[220px] font-bold text-teal-400 uppercase tracking-widest text-xs cursor-pointer"
+              >
+                <span>➕</span>
+                <span>Add Position</span>
+              </button>
+            )}
           </div>
         </section>
       </main>

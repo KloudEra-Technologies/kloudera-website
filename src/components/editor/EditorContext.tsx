@@ -75,8 +75,8 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
 
   const updateNestedValue = (pathArray: string[], newValue: any) => {
     setSiteData((prev: any) => {
-      if (!prev) return prev;
-      const copy = JSON.parse(JSON.stringify(prev));
+      const base = prev || {};
+      const copy = JSON.parse(JSON.stringify(base));
       let current = copy;
       for (let i = 0; i < pathArray.length - 1; i++) {
         if (current[pathArray[i]] === undefined) {

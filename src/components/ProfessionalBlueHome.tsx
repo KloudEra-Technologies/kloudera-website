@@ -44,10 +44,12 @@ export function ProfessionalBlueHome({
       .catch((err) => console.log("Using fallback blue home data:", err.message));
   }, [initialSiteData]);
 
-  const fullData = siteData || initialSiteData || fetchedData || {};
-  const homeData = fullData.home || {};
-  const clienteleData = fullData.clienteles || {};
+  const getSectionData = (sectionKey: string) => {
+    return siteData?.[sectionKey] || fetchedData?.[sectionKey] || initialSiteData?.[sectionKey] || {};
+  };
 
+  const homeData = getSectionData("home");
+  const clienteleData = getSectionData("clienteles");
   const heroHighlightGradient = homeData.heroHighlightGradient ?? true;
 
   const solutionCards = homeData.solutionCards || [
@@ -65,7 +67,7 @@ export function ProfessionalBlueHome({
     { name: "SIT PUNE", sector: "Academic Institution", category: "EDUCATION & RESEARCH", logoType: "sitpune", desc: "Premier engineering and technological research institute." }
   ];
 
-  const achievementsData = fullData.achievements || {};
+  const achievementsData = getSectionData("achievements");
   const achievementsList = achievementsData.items || [
     {
       name: "MSME Certified Enterprise",
@@ -83,7 +85,7 @@ export function ProfessionalBlueHome({
     }
   ];
 
-  const partnersData = fullData.partners || {};
+  const partnersData = getSectionData("partners");
   const partnersList = partnersData.featured || [
     { name: "Microsoft", tagline: "Cloud & Identity Partner", logoColor: "#3b82f6" },
     { name: "AWS", tagline: "Infrastructure & Compute", logoColor: "#f59e0b" },
@@ -93,6 +95,31 @@ export function ProfessionalBlueHome({
     { name: "Sprinto", tagline: "SOC2 Compliance Platform", logoColor: "#8b5cf6" },
     { name: "Trend Micro", tagline: "Endpoint Threat Defense", logoColor: "#6366f1" },
     { name: "Cross Cipher", tagline: "Hardware Security Modules", logoColor: "#06b6d4" }
+  ];
+
+  const aboutData = getSectionData("about");
+  const whyChooseUsList = aboutData.whyChooseUs || [
+    { title: "Proactive Defense", desc: "Identify risks early and protect critical digital assets with enterprise resilience." },
+    { title: "Process Automation", desc: "Eliminate repetitive tasks and optimize workflows with intelligent DevOps & RPA." },
+    { title: "Optimized IT Costs", desc: "Maximize cloud ROI, prevent budget waste, and streamline multi-cloud environments." },
+    { title: "Data Innovation", desc: "Leverage custom LLM developments and high-density hardware for future growth." }
+  ];
+
+  const certificationsData = getSectionData("certifications");
+  const certificationsList = certificationsData.items || [
+    { code: "ISO 27001:2022", title: "Security Management" },
+    { code: "SOC 2 TYPE II", title: "Trust Services" },
+    { code: "NIST CSF 2.0", title: "Cyber Framework" },
+    { code: "CMMI LEVEL 5", title: "Process Optimization" },
+    { code: "GDPR COMPLIANT", title: "Data Protection" },
+    { code: "HIPAA COMPLIANT", title: "Healthcare Security" }
+  ];
+
+  const careersData = getSectionData("careers");
+  const jobsList = careersData.jobs || [
+    { title: "Cyber Security Auditor", category: "SECURITY", desc: "Lead VAPT penetration tests and threat vector assessments across client cloud environments." },
+    { title: "AI Compute Pipeline Lead", category: "HARDWARE", desc: "Architect Nvidia HGX H100 cluster deployments and benchmark deep learning model inference speed." },
+    { title: "MS Solutions Architect", category: "MICROSOFT", desc: "Design Microsoft Entra ID security policies, M365 migrations, and automated Power RPA workflows." }
   ];
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -156,6 +183,53 @@ export function ProfessionalBlueHome({
     const updated = [...partnersList];
     updated.splice(idx, 1);
     updateNestedValue(["partners", "featured"], updated);
+  };
+
+  const addBenefit = () => {
+    const updated = [...whyChooseUsList];
+    updated.push({
+      title: "New Benefit Card",
+      desc: "Double click to edit details."
+    });
+    updateNestedValue(["about", "whyChooseUs"], updated);
+  };
+
+  const deleteBenefit = (idx: number) => {
+    const updated = [...whyChooseUsList];
+    updated.splice(idx, 1);
+    updateNestedValue(["about", "whyChooseUs"], updated);
+  };
+
+  const addCert = () => {
+    const updated = [...certificationsList];
+    updated.push({
+      code: "NEW STANDARD",
+      title: "Security Framework",
+      status: "ACTIVE"
+    });
+    updateNestedValue(["certifications", "items"], updated);
+  };
+
+  const deleteCert = (idx: number) => {
+    const updated = [...certificationsList];
+    updated.splice(idx, 1);
+    updateNestedValue(["certifications", "items"], updated);
+  };
+
+  const addJob = () => {
+    const updated = [...jobsList];
+    updated.push({
+      title: "New Position",
+      category: "ENGINEERING",
+      desc: "Double click to edit details."
+    });
+    updateNestedValue(["careers", "jobs"], updated);
+  };
+
+  const deleteJob = (idx: number) => {
+    const updated = [...jobsList];
+    updated.splice(idx, 1);
+    updateNestedValue(["careers", "jobs"], updated);
   };
 
   return (
@@ -569,26 +643,39 @@ export function ProfessionalBlueHome({
             <InlineText as="p" className="mt-2 text-3xl font-extrabold text-white" path={["home", "benefitsTitle"]} fallback="How Your Organization Benefits" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-left">
-            <div className="rounded-xl border border-blue-500/20 bg-blue-950/20 p-6 backdrop-blur-lg">
-              <div className="h-2 w-8 rounded-full bg-cyan-400 mb-3" />
-              <h3 className="font-bold text-white text-base">Proactive Defense</h3>
-              <p className="text-xs text-slate-400 mt-2">Identify risks early and protect critical digital assets with enterprise resilience.</p>
-            </div>
-            <div className="rounded-xl border border-blue-500/20 bg-blue-950/20 p-6 backdrop-blur-lg">
-              <div className="h-2 w-8 rounded-full bg-blue-400 mb-3" />
-              <h3 className="font-bold text-white text-base">Process Automation</h3>
-              <p className="text-xs text-slate-400 mt-2">Eliminate repetitive tasks and optimize workflows with intelligent DevOps & RPA.</p>
-            </div>
-            <div className="rounded-xl border border-blue-500/20 bg-blue-950/20 p-6 backdrop-blur-lg">
-              <div className="h-2 w-8 rounded-full bg-indigo-400 mb-3" />
-              <h3 className="font-bold text-white text-base">Optimized IT Costs</h3>
-              <p className="text-xs text-slate-400 mt-2">Maximize cloud ROI, prevent budget waste, and streamline multi-cloud environments.</p>
-            </div>
-            <div className="rounded-xl border border-blue-500/20 bg-blue-950/20 p-6 backdrop-blur-lg">
-              <div className="h-2 w-8 rounded-full bg-emerald-400 mb-3" />
-              <h3 className="font-bold text-white text-base">Data Innovation</h3>
-              <p className="text-xs text-slate-400 mt-2">Leverage custom LLM developments and high-density hardware for future growth.</p>
-            </div>
+            {whyChooseUsList.map((item: any, idx: number) => {
+              const bgColors = ["bg-cyan-400", "bg-blue-400", "bg-indigo-400", "bg-emerald-400"];
+              const bgColor = bgColors[idx % bgColors.length];
+
+              return (
+                <div key={idx} className="rounded-xl border border-blue-500/20 bg-blue-950/20 p-6 backdrop-blur-lg relative">
+                  {/* Delete Button */}
+                  {isEditActive && (
+                    <button
+                      onClick={() => deleteBenefit(idx)}
+                      className="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold text-xs"
+                      title="Delete card"
+                    >
+                      ✕
+                    </button>
+                  )}
+                  <div className={`h-2 w-8 rounded-full mb-3 ${bgColor}`} />
+                  <InlineText as="h3" className="font-bold text-white text-base block" path={["about", "whyChooseUs", String(idx), "title"]} fallback={item.title} />
+                  <InlineText as="p" multiline className="text-xs text-slate-400 mt-2 block" path={["about", "whyChooseUs", String(idx), "desc"]} fallback={item.desc} />
+                </div>
+              );
+            })}
+
+            {/* Add New Benefit Card */}
+            {isEditActive && (
+              <button
+                onClick={addBenefit}
+                className="rounded-xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-6 flex flex-col items-center justify-center space-y-2 transition-all min-h-[120px] font-bold text-teal-400 uppercase tracking-widest text-[9px]"
+              >
+                <span>➕</span>
+                <span>Add Benefit</span>
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -917,35 +1004,35 @@ export function ProfessionalBlueHome({
           </div>
 
           <div className="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 text-center space-y-1">
-              <span className="text-emerald-400 font-mono font-extrabold text-xs block">ISO 27001:2022</span>
-              <span className="text-[9px] text-slate-400 font-mono block">Security Management</span>
-            </div>
+            {certificationsList.map((item: any, idx: number) => (
+              <div 
+                key={idx} 
+                className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 text-center space-y-1 relative"
+              >
+                {/* Delete Button */}
+                {isEditActive && (
+                  <button
+                    onClick={() => deleteCert(idx)}
+                    className="absolute -top-1.5 -right-1.5 text-[8px] text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 px-1 rounded-full transition-all z-10 font-bold"
+                    title="Delete card"
+                  >
+                    ✕
+                  </button>
+                )}
+                <InlineText as="span" className="text-emerald-400 font-mono font-extrabold text-xs block" path={["certifications", "items", String(idx), "code"]} fallback={item.code} />
+                <InlineText as="span" className="text-[9px] text-slate-400 font-mono block" path={["certifications", "items", String(idx), "title"]} fallback={item.title} />
+              </div>
+            ))}
 
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 text-center space-y-1">
-              <span className="text-emerald-400 font-mono font-extrabold text-xs block">SOC 2 TYPE II</span>
-              <span className="text-[9px] text-slate-400 font-mono block">Trust Services</span>
-            </div>
-
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 text-center space-y-1">
-              <span className="text-emerald-400 font-mono font-extrabold text-xs block">NIST CSF 2.0</span>
-              <span className="text-[9px] text-slate-400 font-mono block">Cyber Framework</span>
-            </div>
-
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 text-center space-y-1">
-              <span className="text-emerald-400 font-mono font-extrabold text-xs block">CMMI LEVEL 5</span>
-              <span className="text-[9px] text-slate-400 font-mono block">Process Optimization</span>
-            </div>
-
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 text-center space-y-1">
-              <span className="text-emerald-400 font-mono font-extrabold text-xs block">HIPAA</span>
-              <span className="text-[9px] text-slate-400 font-mono block">Healthcare Privacy</span>
-            </div>
-
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 text-center space-y-1">
-              <span className="text-emerald-400 font-mono font-extrabold text-xs block">PCI-DSS v4.0</span>
-              <span className="text-[9px] text-slate-400 font-mono block">Payment Security</span>
-            </div>
+            {/* Add Certification Badge */}
+            {isEditActive && (
+              <button
+                onClick={addCert}
+                className="rounded-xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-4 flex flex-col items-center justify-center space-y-1 transition-all min-h-[70px] font-bold text-teal-400 uppercase tracking-widest text-[9px]"
+              >
+                <span>➕ Standard</span>
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -964,32 +1051,46 @@ export function ProfessionalBlueHome({
           </div>
 
           <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="rounded-xl border border-blue-500/20 bg-slate-900/50 p-6 backdrop-blur-md">
-              <span className="rounded bg-blue-950 px-2.5 py-1 text-[10px] font-mono text-cyan-300 border border-blue-800">SECURITY</span>
-              <h3 className="mt-3 text-lg font-bold text-white">Cyber Security Auditor</h3>
-              <p className="text-xs text-slate-400 mt-2">Lead VAPT penetration tests and threat vector assessments across client cloud environments.</p>
-              <Link href="/careers" className="mt-4 inline-block text-xs font-bold text-blue-400 hover:text-cyan-300">
-                Apply Position →
-              </Link>
-            </div>
+            {jobsList.map((job: any, idx: number) => {
+              const textColors = ["text-cyan-300", "text-blue-300", "text-indigo-300", "text-emerald-300"];
+              const textColor = textColors[idx % textColors.length];
 
-            <div className="rounded-xl border border-blue-500/20 bg-slate-900/50 p-6 backdrop-blur-md">
-              <span className="rounded bg-blue-950 px-2.5 py-1 text-[10px] font-mono text-blue-300 border border-blue-800">HARDWARE</span>
-              <h3 className="mt-3 text-lg font-bold text-white">AI Compute Pipeline Lead</h3>
-              <p className="text-xs text-slate-400 mt-2">Architect Nvidia HGX H100 cluster deployments and benchmark deep learning model inference speed.</p>
-              <Link href="/careers" className="mt-4 inline-block text-xs font-bold text-blue-400 hover:text-cyan-300">
-                Apply Position →
-              </Link>
-            </div>
+              return (
+                <div 
+                  key={idx} 
+                  className="rounded-xl border border-blue-500/20 bg-slate-900/50 p-6 backdrop-blur-md relative flex flex-col justify-between"
+                >
+                  {/* Delete Button */}
+                  {isEditActive && (
+                    <button
+                      onClick={() => deleteJob(idx)}
+                      className="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold text-xs"
+                      title="Delete card"
+                    >
+                      ✕
+                    </button>
+                  )}
+                  <div>
+                    <InlineText as="span" className={`rounded bg-blue-950 px-2.5 py-1 text-[10px] font-mono border border-blue-800 inline-block ${textColor}`} path={["careers", "jobs", String(idx), "category"]} fallback={job.category} />
+                    <InlineText as="h3" className="mt-3 text-lg font-bold text-white block" path={["careers", "jobs", String(idx), "title"]} fallback={job.title} />
+                    <InlineText as="p" multiline className="text-xs text-slate-400 mt-2 block" path={["careers", "jobs", String(idx), "desc"]} fallback={job.desc} />
+                  </div>
+                  <Link href="/careers" className="mt-4 inline-block text-xs font-bold text-blue-400 hover:text-cyan-300">
+                    Apply Position →
+                  </Link>
+                </div>
+              );
+            })}
 
-            <div className="rounded-xl border border-blue-500/20 bg-slate-900/50 p-6 backdrop-blur-md">
-              <span className="rounded bg-blue-950 px-2.5 py-1 text-[10px] font-mono text-indigo-300 border border-blue-800">MICROSOFT</span>
-              <h3 className="mt-3 text-lg font-bold text-white">MS Solutions Architect</h3>
-              <p className="text-xs text-slate-400 mt-2">Design Microsoft Entra ID security policies, M365 migrations, and automated Power RPA workflows.</p>
-              <Link href="/careers" className="mt-4 inline-block text-xs font-bold text-blue-400 hover:text-cyan-300">
-                Apply Position →
-              </Link>
-            </div>
+            {/* Add Career Card */}
+            {isEditActive && (
+              <button
+                onClick={addJob}
+                className="rounded-xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-6 flex flex-col items-center justify-center space-y-2 transition-all min-h-[160px] font-bold text-teal-400 uppercase tracking-widest text-[9px]"
+              >
+                <span>➕ Position</span>
+              </button>
+            )}
           </div>
         </div>
       </section>
