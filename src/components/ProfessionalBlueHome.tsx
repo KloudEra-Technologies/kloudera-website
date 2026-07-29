@@ -22,7 +22,7 @@ export function ProfessionalBlueHome({
   selectedElementPath 
 }: ProfessionalBlueHomeProps) {
   const { playAudio } = useAccessibility();
-  const { isEditMode: isEditActive } = useEditor();
+  const { isEditMode: isEditActive, updateNestedValue } = useEditor();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("cyber");
   const [fetchedData, setFetchedData] = useState<any>({});
@@ -65,6 +65,24 @@ export function ProfessionalBlueHome({
     { name: "SIT PUNE", sector: "Academic Institution", category: "EDUCATION & RESEARCH", logoType: "sitpune", desc: "Premier engineering and technological research institute." }
   ];
 
+  const achievementsData = fullData.achievements || {};
+  const achievementsList = achievementsData.items || [
+    {
+      name: "MSME Certified Enterprise",
+      category: "GOVERNMENT ACCREDITATION",
+      tagline: "सूक्ष्म , लघु एवं मध्यम उद्यम",
+      desc: "Officially certified enterprise under the Ministry of Micro, Small and Medium Enterprises, Government of India.",
+      logoUrl: ""
+    },
+    {
+      name: "#startupindia Recognized Venture",
+      category: "DPIIT RECOGNITION",
+      tagline: "DPIIT Recognized Startup",
+      desc: "Recognized technology startup by the Government of India under the flagship Startup India initiative.",
+      logoUrl: ""
+    }
+  ];
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!contactForm.name || !contactForm.email) return;
@@ -74,6 +92,42 @@ export function ProfessionalBlueHome({
       setFormSubmitted(false);
       setContactForm({ name: "", email: "", company: "", message: "" });
     }, 4000);
+  };
+
+  const addClientele = () => {
+    const updated = [...clientelesList];
+    updated.push({
+      name: "New Clientele",
+      sector: "FinTech",
+      category: "SERVICES",
+      logoType: "/logo.png",
+      desc: "Double click to edit details."
+    });
+    updateNestedValue(["clienteles", "items"], updated);
+  };
+
+  const deleteClientele = (idx: number) => {
+    const updated = [...clientelesList];
+    updated.splice(idx, 1);
+    updateNestedValue(["clienteles", "items"], updated);
+  };
+
+  const addAchievement = () => {
+    const updated = [...achievementsList];
+    updated.push({
+      name: "New Achievement",
+      category: "ACCREDITATION",
+      tagline: "Certification Subtitle",
+      desc: "Double click to edit details.",
+      logoUrl: ""
+    });
+    updateNestedValue(["achievements", "items"], updated);
+  };
+
+  const deleteAchievement = (idx: number) => {
+    const updated = [...achievementsList];
+    updated.splice(idx, 1);
+    updateNestedValue(["achievements", "items"], updated);
   };
 
   return (
@@ -547,37 +601,101 @@ export function ProfessionalBlueHome({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* MSME Achievement Card */}
-            <div className="rounded-2xl border border-blue-900/40 bg-white p-8 text-center flex flex-col items-center justify-center space-y-4 shadow-2xl hover:scale-105 transition-all">
-              <div className="space-y-2">
-                <div className="flex items-center justify-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-600 font-extrabold text-lg">
-                    🇮🇳
+            {achievementsList.map((item: any, idx: number) => {
+              const hasCustomImage = item.logoUrl && (
+                item.logoUrl.startsWith("data:") || 
+                item.logoUrl.includes("/") || 
+                item.logoUrl.startsWith("http")
+              );
+
+              return (
+                <div 
+                  key={idx} 
+                  className="rounded-2xl border border-blue-900/40 bg-white p-8 text-center flex flex-col items-center justify-center space-y-4 shadow-2xl hover:scale-105 transition-all relative"
+                >
+                  {/* Delete Button */}
+                  {isEditActive && (
+                    <button
+                      onClick={() => deleteAchievement(idx)}
+                      className="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-full transition-all z-10 font-bold"
+                      title="Delete card"
+                    >
+                      ✕
+                    </button>
+                  )}
+
+                  {/* Logo or Image Upload slot */}
+                  <div className="w-full flex justify-center">
+                    {isEditActive || hasCustomImage ? (
+                      <div className="h-16 w-full flex items-center justify-center overflow-hidden relative border border-dashed border-teal-500/20 rounded">
+                        <InlineImage 
+                          path={["achievements", "items", String(idx), "logoUrl"]} 
+                          fallback={hasCustomImage ? item.logoUrl : "/logo.png"} 
+                          className="h-full w-auto max-h-16 object-contain"
+                          alt={item.name}
+                        />
+                      </div>
+                    ) : (
+                      // Fallbacks
+                      (() => {
+                        const nameLower = item.name.toLowerCase();
+                        if (nameLower.includes("msme")) {
+                          return (
+                            <div className="flex items-center justify-center gap-3">
+                              <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-600 font-extrabold text-lg">
+                                🇮🇳
+                              </div>
+                              <div className="text-left">
+                                <span className="text-2xl font-black tracking-tight text-red-600 font-sans block">MSME</span>
+                                <span className="text-[10px] text-slate-700 font-semibold block leading-tight">सूक्ष्म , लघु एवं मध्यम उद्यम</span>
+                                <span className="text-[8px] text-slate-500 font-mono block">MICRO, SMALL & MEDIUM ENTERPRISES</span>
+                              </div>
+                            </div>
+                          );
+                        }
+                        if (nameLower.includes("startup")) {
+                          return (
+                            <div className="text-3xl sm:text-4xl font-extrabold tracking-tight font-sans">
+                              <span className="text-orange-500">#startup</span>
+                              <span className="text-cyan-500">ind</span>
+                              <span className="text-yellow-500">i</span>
+                              <span className="text-emerald-500 border-b-4 border-emerald-500 inline-block pb-0.5">a</span>
+                            </div>
+                          );
+                        }
+                        return (
+                          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-lg">
+                            🏆
+                          </div>
+                        );
+                      })()
+                    )}
                   </div>
-                  <div className="text-left">
-                    <span className="text-2xl font-black tracking-tight text-red-600 font-sans block">MSME</span>
-                    <span className="text-[10px] text-slate-700 font-semibold block leading-tight">सूक्ष्म , लघु एवं मध्यम उद्यम</span>
-                    <span className="text-[8px] text-slate-500 font-mono block">MICRO, SMALL & MEDIUM ENTERPRISES</span>
+
+                  <div className="text-center space-y-2 w-full">
+                    <div className="mb-1">
+                      <InlineText as="span" className="text-[10px] font-mono font-bold uppercase text-blue-900 bg-blue-50 px-4 py-1 rounded-full border border-blue-200" path={["achievements", "items", String(idx), "category"]} fallback={item.category} />
+                    </div>
+                    <InlineText as="h3" className="text-lg font-black text-slate-800 tracking-tight block pt-2" path={["achievements", "items", String(idx), "name"]} fallback={item.name} />
+                    {item.tagline && <InlineText as="span" className="text-[10px] text-slate-500 block" path={["achievements", "items", String(idx), "tagline"]} fallback={item.tagline} />}
+                    <InlineText as="p" multiline className="text-xs text-slate-500 leading-relaxed block" path={["achievements", "items", String(idx), "desc"]} fallback={item.desc} />
                   </div>
                 </div>
-              </div>
-              <span className="text-[10px] font-mono font-bold uppercase text-blue-900 bg-blue-50 px-4 py-1 rounded-full border border-blue-200">
-                Government of India Certified
-              </span>
-            </div>
+              );
+            })}
 
-            {/* #startupindia Achievement Card */}
-            <div className="rounded-2xl border border-blue-900/40 bg-white p-8 text-center flex flex-col items-center justify-center space-y-4 shadow-2xl hover:scale-105 transition-all">
-              <div className="text-3xl sm:text-4xl font-extrabold tracking-tight font-sans">
-                <span className="text-orange-500">#startup</span>
-                <span className="text-cyan-500">ind</span>
-                <span className="text-yellow-500">i</span>
-                <span className="text-emerald-500 border-b-4 border-emerald-500 inline-block pb-0.5">a</span>
-              </div>
-              <span className="text-[10px] font-mono font-bold uppercase text-orange-900 bg-orange-50 px-4 py-1 rounded-full border border-orange-200">
-                DPIIT Recognized Startup
-              </span>
-            </div>
+            {/* Add New Card Button */}
+            {isEditActive && (
+              <button
+                onClick={addAchievement}
+                className="rounded-2xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-8 flex flex-col items-center justify-center space-y-2 transition-all min-h-[220px]"
+              >
+                <span className="text-2xl text-teal-400">➕</span>
+                <span className="text-[11px] font-bold font-mono text-teal-400 uppercase tracking-widest">
+                  Add New Achievement
+                </span>
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -610,8 +728,19 @@ export function ProfessionalBlueHome({
               return (
                 <div 
                   key={idx} 
-                  className="rounded-xl bg-white p-8 shadow-xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all border border-slate-100"
+                  className="rounded-xl bg-white p-8 shadow-xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all border border-slate-100 relative"
                 >
+                  {/* Delete Button */}
+                  {isEditActive && (
+                    <button
+                      onClick={() => deleteClientele(idx)}
+                      className="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-full transition-all z-10 font-bold text-xs"
+                      title="Delete card"
+                    >
+                      ✕
+                    </button>
+                  )}
+
                   <div className="flex flex-col items-center justify-center h-full w-full overflow-hidden">
                     {isEditActive || hasCustomImage ? (
                       <div className="h-16 w-full flex items-center justify-center overflow-hidden relative">
@@ -696,6 +825,19 @@ export function ProfessionalBlueHome({
                 </div>
               );
             })}
+
+            {/* Add New Clientele Card */}
+            {isEditActive && (
+              <button
+                onClick={addClientele}
+                className="rounded-xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-8 flex flex-col items-center justify-center space-y-2 transition-all h-56"
+              >
+                <span className="text-2xl text-teal-400">➕</span>
+                <span className="text-[11px] font-bold font-mono text-teal-400 uppercase tracking-widest">
+                  Add New Clientele
+                </span>
+              </button>
+            )}
           </div>
         </div>
       </section>

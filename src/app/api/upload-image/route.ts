@@ -48,30 +48,10 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    const fileExt = path.extname(file.name) || ".png";
-    const sanitizedBase = path.basename(file.name, fileExt).replace(/[^a-zA-Z0-9_-]/g, "_");
-    const fileName = `${Date.now()}_${sanitizedBase}${fileExt}`;
-    const filePath = path.join(uploadsDir, fileName);
-
-    // Save image file to disk (will fail gracefully on serverless but succeed in persistent environments)
-    try {
-      if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
-      }
-      fs.writeFileSync(filePath, buffer);
-    } catch (diskErr: any) {
-      console.warn("Disk image write failed (expected on serverless environments):", diskErr.message);
-      
-      // Fallback base64 representation if disk is unwritable (so uploader still succeeds on Vercel preview!)
-      const base64Data = buffer.toString("base64");
-      const mimeType = file.type || "image/png";
-      const dataUrl = `data:${mimeType};base64,${base64Data}`;
-      return NextResponse.json({ success: true, url: dataUrl, fileName });
-    }
-
-    const publicUrl = `/uploads/${fileName}`;
-    return NextResponse.json({ success: true, url: publicUrl, fileName });
+    const base64Data = buffer.toString("base64");
+    const mimeType = file.type || "image/png";
+    const dataUrl = `data:${mimeType};base64,${base64Data}`;
+    return NextResponse.json({ success: true, url: dataUrl });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
