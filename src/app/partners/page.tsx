@@ -5,7 +5,7 @@ import { InlineText, useEditor } from "@/components/editor";
 
 export default function PartnersPage() {
   const [partnersData, setPartnersData] = useState<any>(null);
-  const { isEditMode: isEditActive, updateNestedValue, siteData } = useEditor();
+  const { isEditMode: isEditActive, updateNestedValue, siteData, authToken } = useEditor();
 
   useEffect(() => {
     fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
@@ -44,20 +44,26 @@ export default function PartnersPage() {
     idx: number,
     file: File
   ) => {
+    const token = authToken || "";
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("token", token);
     try {
       const res = await fetch("/api/upload-image", {
         method: "POST",
+        headers: { "x-developer-token": token },
         body: formData,
       });
       const data = await res.json();
-      if (data.url) {
+      if (res.ok && data.url) {
         const updated = [...partnersList];
         updated[idx] = { ...updated[idx], logoUrl: data.url };
         updateNestedValue(["partners", "featured"], updated);
+      } else {
+        alert(`Upload failed: ${data.error || "Unknown error"}`);
       }
     } catch (err) {
+      alert("Network error during image upload. Please try again.");
       console.error("Image upload failed", err);
     }
   };
