@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { InlineText } from "@/components/editor";
+import { InlineText, InlineImage, useEditor } from "@/components/editor";
 
 const FEATURED_PARTNERS = [
   {
     name: "Microsoft",
     logoColor: "#f25f22",
+    logoUrl: "",
     tagline: "Enterprise Identity & Cloud Core Alliance",
     details: "We co-architect secure directory environments and unified identity governance protocols, integrating Microsoft Entra ID and Active Directory into automated threat defense pipelines.",
     icon: (
@@ -21,6 +22,7 @@ const FEATURED_PARTNERS = [
   {
     name: "MongoDB",
     logoColor: "#10b981",
+    logoUrl: "",
     tagline: "High-Performance Secure Data Clusters",
     details: "Collaborating on encrypted document-model data clusters and telemetry databases to store and audit cyber security logs with zero-leak cryptographic signatures.",
     icon: (
@@ -33,6 +35,7 @@ const FEATURED_PARTNERS = [
   {
     name: "AWS (Amazon Web Services)",
     logoColor: "#ff9900",
+    logoUrl: "",
     tagline: "Global Cloud Resiliency & Infrastructure Security",
     details: "Managed cloud security automation, hybrid architecture configuration, and serverless compute defense systems designed to withstand volumetric DDoS incursions.",
     icon: (
@@ -46,6 +49,7 @@ const FEATURED_PARTNERS = [
   {
     name: "Fortinet",
     logoColor: "#ef4444",
+    logoUrl: "",
     tagline: "Next-Generation Hardware Boundary Firewalls",
     details: "Providing hardware-level boundary inspection, physical perimeter threat monitoring, and automated intrusion prevention systems (IPS) for private enterprise networks.",
     icon: (
@@ -59,6 +63,7 @@ const FEATURED_PARTNERS = [
   {
     name: "Google Cloud",
     logoColor: "#ea4335",
+    logoUrl: "",
     tagline: "MLSecOps & Advanced Threat Intelligence Analytics",
     details: "Harnessing Google Cloud's globally distributed analytics pipelines and security lakes to run machine learning security threat prediction and automated heuristics.",
     icon: (
@@ -72,6 +77,7 @@ const FEATURED_PARTNERS = [
   {
     name: "Sprinto",
     logoColor: "#a855f7",
+    logoUrl: "",
     tagline: "Automated GRC & Compliance Frameworks",
     details: "Continuous integration of audit-ready compliance scripts mapping system operations directly to ISO27001, SOC2, HIPAA, and GDPR standards.",
     icon: (
@@ -83,6 +89,7 @@ const FEATURED_PARTNERS = [
   {
     name: "Trend Micro",
     logoColor: "#f43f5e",
+    logoUrl: "",
     tagline: "Endpoint Detection & Response (EDR) Systems",
     details: "Protecting host endpoints and virtual workstations via proactive sandboxing, behavioral anomaly analysis, and threat patch mitigation.",
     icon: (
@@ -95,6 +102,7 @@ const FEATURED_PARTNERS = [
   {
     name: "Cross Cipher",
     logoColor: "#0ea5e9",
+    logoUrl: "",
     tagline: "Secure Cryptographic Communications Networks",
     details: "Deploying high-speed zero-knowledge communication tunnels, quantum-safe data encryption keys, and distributed transit path privacy routing protocols.",
     icon: (
@@ -192,6 +200,7 @@ const getPartnerIcon = (name: string, color: string) => {
 export default function PartnersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [partnersData, setPartnersData] = useState<any>(null);
+  const { isEditMode } = useEditor();
 
   useEffect(() => {
     fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
@@ -209,8 +218,8 @@ export default function PartnersPage() {
 
   const filteredFeatured = featured.filter((p: any) => 
     p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    p.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.details.toLowerCase().includes(searchQuery.toLowerCase())
+    (p.tagline && p.tagline.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (p.details && p.details.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const filteredAlliances = alliances.filter((name: string) => 
@@ -263,12 +272,21 @@ export default function PartnersPage() {
             <div 
               key={idx}
               className="cyber-panel p-6 rounded-lg border border-teal-500/10 bg-zinc-950/30 hover:border-teal-500/30 transition-all flex flex-col justify-between space-y-4"
-              style={{ boxShadow: `0 0 10px ${partner.logoColor}08` }}
+              style={{ boxShadow: `0 0 10px ${partner.logoColor || "#14b8a6"}08` }}
             >
               <div className="space-y-3">
                 <div className="flex items-center gap-3 border-b border-teal-500/5 pb-3">
-                  <div className="p-2 rounded bg-zinc-900 border border-zinc-800">
-                    {getPartnerIcon(partner.name, partner.logoColor)}
+                  <div className="p-2 rounded bg-zinc-900 border border-zinc-800 flex items-center justify-center w-12 h-12 overflow-hidden relative">
+                    {isEditMode || partner.logoUrl ? (
+                      <InlineImage 
+                        path={["partners", "featured", String(idx), "logoUrl"]} 
+                        fallback={partner.logoUrl || "/logo.png"} 
+                        className="w-10 h-10 object-contain"
+                        alt={partner.name}
+                      />
+                    ) : (
+                      getPartnerIcon(partner.name, partner.logoColor)
+                    )}
                   </div>
                   <div>
                     <InlineText as="h3" className="text-[12px] font-bold text-white uppercase tracking-wider" path={["partners", "featured", String(idx), "name"]} fallback={partner.name} />

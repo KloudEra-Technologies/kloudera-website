@@ -240,11 +240,11 @@ export function ProfessionalBlueHome({
             {solutionCards.map((card: any, idx: number) => (
               <div key={idx} className="rounded-xl border border-blue-500/20 bg-slate-900/50 p-4 sm:p-5 backdrop-blur-xl shadow-[0_0_20px_rgba(37,99,235,0.1)] hover:border-blue-400/40 transition-all text-left">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider">{card.category}</span>
+                  <InlineText as="span" className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider" path={["home", "solutionCards", String(idx), "category"]} fallback={card.category} />
                   <span className="h-2 w-2 rounded-full" style={{ backgroundColor: card.color || "#06b6d4" }} />
                 </div>
-                <h3 className="mt-2 sm:mt-3 text-base sm:text-lg font-bold text-white">{card.title}</h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{card.desc}</p>
+                <InlineText as="h3" className="mt-2 sm:mt-3 text-base sm:text-lg font-bold text-white block" path={["home", "solutionCards", String(idx), "title"]} fallback={card.title} />
+                <InlineText as="p" multiline className="text-xs text-slate-400 mt-1 leading-relaxed block" path={["home", "solutionCards", String(idx), "desc"]} fallback={card.desc} />
               </div>
             ))}
           </div>

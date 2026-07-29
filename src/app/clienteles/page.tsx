@@ -4,10 +4,11 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
 import { getImageStyle, getCleanImageUrl } from "@/lib/imageHelper";
-import { InlineText, InlineImage } from "@/components/editor";
+import { InlineText, InlineImage, useEditor } from "@/components/editor";
 
 export default function ClientelesPage() {
   const [data, setData] = useState<any>(null);
+  const { isEditMode } = useEditor();
 
   useEffect(() => {
     fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
@@ -75,11 +76,11 @@ export default function ClientelesPage() {
                 className="rounded-xl bg-white p-8 shadow-2xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all border border-slate-100"
               >
                 <div className="flex flex-col items-center justify-center h-full w-full overflow-hidden">
-                  {hasCustomImage ? (
+                  {isEditMode || hasCustomImage ? (
                     <div className="h-16 w-full flex items-center justify-center overflow-hidden relative">
                       <InlineImage 
                         path={["clienteles", "items", String(idx), "logoType"]} 
-                        fallback={item.logoType} 
+                        fallback={hasCustomImage ? item.logoType : "/logo.png"} 
                         className="h-full w-auto max-h-16"
                         alt={item.name}
                       />

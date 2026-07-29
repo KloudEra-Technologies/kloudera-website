@@ -92,61 +92,66 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
 
       {showControls && (
         <div 
-          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-zinc-950 border border-teal-500/40 p-4 rounded-xl shadow-2xl z-[100] font-mono text-[9px] w-64 flex flex-col gap-3"
-          onClick={e => e.stopPropagation()}
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] flex items-center justify-center animate-[fadeIn_0.2s_ease-out]"
+          onClick={() => setShowControls(false)}
         >
-          <div className="flex justify-between items-center border-b border-teal-500/20 pb-2">
-            <span className="text-teal-400 font-bold uppercase">Image Controls</span>
-            <button onClick={() => setShowControls(false)} className="text-zinc-500 hover:text-white">✕</button>
-          </div>
-
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="w-full py-1.5 bg-teal-500 hover:bg-teal-400 text-black font-bold uppercase rounded transition-colors"
+          <div 
+            className="bg-zinc-950 border border-teal-500/40 p-5 rounded-2xl shadow-2xl font-mono text-[10px] w-72 flex flex-col gap-4 text-left"
+            onClick={e => e.stopPropagation()}
           >
-            Upload New Image
-          </button>
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            className="hidden" 
-            accept="image/*" 
-            onChange={handleUpload} 
-          />
+            <div className="flex justify-between items-center border-b border-teal-500/20 pb-3">
+              <span className="text-teal-400 font-bold uppercase tracking-wider">Image Settings</span>
+              <button onClick={() => setShowControls(false)} className="text-zinc-500 hover:text-white text-sm">✕</button>
+            </div>
 
-          <div className="space-y-2 mt-2">
-            <div className="flex flex-col gap-1">
-              <div className="flex justify-between text-zinc-400">
-                <span>SCALE / ZOOM</span>
-                <span>{scale.toFixed(2)}x</span>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full py-2 bg-teal-500 hover:bg-teal-400 text-black font-bold uppercase rounded-lg transition-colors text-center text-[10px]"
+            >
+              Upload New Image
+            </button>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              className="hidden" 
+              accept="image/*" 
+              onChange={handleUpload} 
+            />
+
+            <div className="space-y-3 mt-1">
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-zinc-400 text-[9px] uppercase tracking-wider">
+                  <span>SCALE / ZOOM</span>
+                  <span className="text-white font-bold">{scale.toFixed(2)}x</span>
+                </div>
+                <input
+                  type="range" min="0.1" max="3" step="0.05" value={scale}
+                  onChange={(e) => updateNestedValue(path, setAdjustmentValue(currentUrl, "scale", e.target.value))}
+                  className="accent-teal-500 w-full"
+                />
               </div>
-              <input
-                type="range" min="0.1" max="3" step="0.05" value={scale}
-                onChange={(e) => updateNestedValue(path, setAdjustmentValue(currentUrl, "scale", e.target.value))}
-                className="accent-teal-500"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <div className="flex justify-between text-zinc-400">
-                <span>PAN X</span>
-                <span>{x}px</span>
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-zinc-400 text-[9px] uppercase tracking-wider">
+                  <span>PAN X</span>
+                  <span className="text-white font-bold">{x}px</span>
+                </div>
+                <input
+                  type="range" min="-200" max="200" step="1" value={x}
+                  onChange={(e) => updateNestedValue(path, setAdjustmentValue(currentUrl, "x", e.target.value))}
+                  className="accent-teal-500 w-full"
+                />
               </div>
-              <input
-                type="range" min="-200" max="200" step="1" value={x}
-                onChange={(e) => updateNestedValue(path, setAdjustmentValue(currentUrl, "x", e.target.value))}
-                className="accent-teal-500"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <div className="flex justify-between text-zinc-400">
-                <span>PAN Y</span>
-                <span>{y}px</span>
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-zinc-400 text-[9px] uppercase tracking-wider">
+                  <span>PAN Y</span>
+                  <span className="text-white font-bold">{y}px</span>
+                </div>
+                <input
+                  type="range" min="-200" max="200" step="1" value={y}
+                  onChange={(e) => updateNestedValue(path, setAdjustmentValue(currentUrl, "y", e.target.value))}
+                  className="accent-teal-500 w-full"
+                />
               </div>
-              <input
-                type="range" min="-200" max="200" step="1" value={y}
-                onChange={(e) => updateNestedValue(path, setAdjustmentValue(currentUrl, "y", e.target.value))}
-                className="accent-teal-500"
-              />
             </div>
           </div>
         </div>
