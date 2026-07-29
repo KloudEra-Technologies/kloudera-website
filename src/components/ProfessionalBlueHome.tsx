@@ -86,16 +86,8 @@ export function ProfessionalBlueHome({
   ];
 
   const partnersData = getSectionData("partners");
-  const partnersList = partnersData.featured || [
-    { name: "Microsoft", tagline: "Cloud & Identity Partner", logoColor: "#3b82f6" },
-    { name: "AWS", tagline: "Infrastructure & Compute", logoColor: "#f59e0b" },
-    { name: "MongoDB", tagline: "Enterprise Database Core", logoColor: "#10b981" },
-    { name: "Fortinet", tagline: "Next-Gen Firewall Alliance", logoColor: "#f43f5e" },
-    { name: "Google Cloud", tagline: "AI & BigQuery Engine", logoColor: "#60a5fa" },
-    { name: "Sprinto", tagline: "SOC2 Compliance Platform", logoColor: "#8b5cf6" },
-    { name: "Trend Micro", tagline: "Endpoint Threat Defense", logoColor: "#6366f1" },
-    { name: "Cross Cipher", tagline: "Hardware Security Modules", logoColor: "#06b6d4" }
-  ];
+  // Show only the first 8 partners from the partners page list
+  const partnersList = (partnersData.featured || []).slice(0, 8);
 
   const aboutData = getSectionData("about");
   const whyChooseUsList = aboutData.whyChooseUs || [
@@ -169,21 +161,6 @@ export function ProfessionalBlueHome({
     updateNestedValue(["achievements", "items"], updated);
   };
 
-  const addPartner = () => {
-    const updated = [...partnersList];
-    updated.push({
-      name: "New Partner",
-      tagline: "Partner Subtitle",
-      logoColor: "#3b82f6"
-    });
-    updateNestedValue(["partners", "featured"], updated);
-  };
-
-  const deletePartner = (idx: number) => {
-    const updated = [...partnersList];
-    updated.splice(idx, 1);
-    updateNestedValue(["partners", "featured"], updated);
-  };
 
   const addBenefit = () => {
     const updated = [...whyChooseUsList];
@@ -578,58 +555,51 @@ export function ProfessionalBlueHome({
             </Link>
           </div>
 
-          <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {partnersList.map((item: any, idx: number) => {
-              const borderColors: Record<string, string> = {
-                microsoft: "border-blue-500/40",
-                aws: "border-amber-500/40",
-                mongodb: "border-emerald-500/40",
-                fortinet: "border-rose-500/40",
-                google: "border-blue-400/40",
-                sprinto: "border-purple-500/40",
-                trend: "border-indigo-500/40",
-                cross: "border-cyan-500/40"
-              };
-              const nameLower = item.name.toLowerCase();
-              let borderColor = "border-teal-500/20";
-              for (const [k, v] of Object.entries(borderColors)) {
-                if (nameLower.includes(k)) {
-                  borderColor = v;
-                  break;
-                }
-              }
-
-              return (
-                <div
-                  key={idx}
-                  className={`rounded-xl border bg-slate-900/40 p-5 backdrop-blur-md transition-all hover:scale-105 hover:bg-blue-950/40 relative ${borderColor}`}
-                >
-                  {/* Delete Button */}
-                  {isEditActive && (
-                    <button
-                      onClick={() => deletePartner(idx)}
-                      className="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold"
-                      title="Delete partner"
-                    >
-                      ✕
-                    </button>
-                  )}
-                  <div className="h-2 w-8 rounded-full bg-blue-500/60 mb-3" />
-                  <InlineText as="h3" className="font-bold text-white text-base block" path={["partners", "featured", String(idx), "name"]} fallback={item.name} />
-                  <InlineText as="p" className="text-xs text-slate-400 mt-1 block" path={["partners", "featured", String(idx), "tagline"]} fallback={item.tagline || item.role} />
+          <div className="mt-12">
+            {partnersList.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
+                <div className="w-16 h-16 rounded-full bg-slate-900/60 border border-blue-900/40 flex items-center justify-center mb-2">
+                  <svg className="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                  </svg>
                 </div>
-              );
-            })}
-
-            {/* Add New Partner Card */}
-            {isEditActive && (
-              <button
-                onClick={addPartner}
-                className="rounded-xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-5 flex flex-col items-center justify-center space-y-2 transition-all min-h-[110px] font-bold text-teal-400 uppercase tracking-widest text-[10px]"
-              >
-                <span>➕</span>
-                <span>Add Partner</span>
-              </button>
+                <p className="text-slate-500 text-sm font-mono">No partners added yet.</p>
+                <p className="text-slate-600 text-xs font-mono">Visit the Partners page in editor mode to add partners.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                {partnersList.map((item: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="rounded-xl border border-blue-900/30 bg-slate-900/40 backdrop-blur-md transition-all hover:scale-105 hover:border-blue-500/40 hover:bg-blue-950/30 overflow-hidden flex flex-col"
+                  >
+                    {/* Logo / Image Area */}
+                    <div className="flex items-center justify-center bg-zinc-950/60 w-full" style={{ minHeight: "100px" }}>
+                      {item.logoUrl ? (
+                        <img
+                          src={item.logoUrl}
+                          alt={item.name || "Partner"}
+                          className="w-full h-full object-contain p-4"
+                          style={{ maxHeight: "100px" }}
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center text-slate-600 py-6">
+                          <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="3" strokeWidth="1.5" />
+                            <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    {/* Name + Tagline */}
+                    <div className="p-4 border-t border-blue-900/20 flex flex-col gap-1">
+                      <p className="font-bold text-white text-sm truncate">{item.name || "Partner"}</p>
+                      <p className="text-xs text-slate-400 line-clamp-2">{item.tagline || ""}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>

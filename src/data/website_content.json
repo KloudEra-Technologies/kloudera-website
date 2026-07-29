@@ -482,77 +482,9 @@
   "partners": {
     "title": "OUR STRATEGIC PARTNERS",
     "tagline": "KLOUDERA TECHNOLOGIES // GLOBAL ECOSYSTEM",
-    "introTitle": "Enterprise Alliances & Security Nodes",
-    "introDesc": "We integrate with top-tier cybersecurity networks, cloud providers, and hardware infrastructure suppliers to deliver threat-shielded operational stability.",
-    "featured": [
-      {
-        "name": "Microsoft",
-        "logoColor": "#f25f22",
-        "tagline": "Enterprise Identity & Cloud Core Alliance",
-        "details": "We co-architect secure directory environments and unified identity governance protocols, integrating Microsoft Entra ID and Active Directory into automated threat defense pipelines."
-      },
-      {
-        "name": "MongoDB",
-        "logoColor": "#10b981",
-        "tagline": "High-Performance Secure Data Clusters",
-        "details": "Collaborating on encrypted document-model data clusters and telemetry databases to store and audit cyber security logs with zero-leak cryptographic signatures."
-      },
-      {
-        "name": "AWS (Amazon Web Services)",
-        "logoColor": "#ff9900",
-        "tagline": "Global Cloud Resiliency & Infrastructure Security",
-        "details": "Managed cloud security automation, hybrid architecture configuration, and serverless compute defense systems designed to withstand volumetric DDoS incursions."
-      },
-      {
-        "name": "Fortinet",
-        "logoColor": "#ef4444",
-        "tagline": "Next-Generation Hardware Boundary Firewalls",
-        "details": "Providing hardware-level boundary inspection, physical perimeter threat monitoring, and automated intrusion prevention systems (IPS) for private enterprise networks."
-      },
-      {
-        "name": "Google Cloud",
-        "logoColor": "#ea4335",
-        "tagline": "MLSecOps & Advanced Threat Intelligence Analytics",
-        "details": "Harnessing Google Cloud's globally distributed analytics pipelines and security lakes to run machine learning security threat prediction and automated heuristics."
-      },
-      {
-        "name": "Sprinto",
-        "logoColor": "#a855f7",
-        "tagline": "Automated GRC & Compliance Frameworks",
-        "details": "Continuous integration of audit-ready compliance scripts mapping system operations directly to ISO27001, SOC2, HIPAA, and GDPR standards."
-      },
-      {
-        "name": "Trend Micro",
-        "logoColor": "#f43f5e",
-        "tagline": "Endpoint Detection & Response (EDR) Systems",
-        "details": "Protecting host endpoints and virtual workstations via proactive sandboxing, behavioral anomaly analysis, and threat patch mitigation."
-      },
-      {
-        "name": "Cross Cipher",
-        "logoColor": "#0ea5e9",
-        "tagline": "Secure Cryptographic Communications Networks",
-        "details": "Deploying high-speed zero-knowledge communication tunnels, quantum-safe data encryption keys, and distributed transit path privacy routing protocols."
-      }
-    ],
-    "alliances": [
-      "AvePoint",
-      "Axidian",
-      "Ishan Technologies",
-      "Web Werks",
-      "Salesforce",
-      "Seclogic",
-      "Snowflake",
-      "Adobe Enterprise",
-      "Arcon GRC",
-      "CloudBlue",
-      "RAS Infotech",
-      "Databricks",
-      "Zendesk Security",
-      "UiPath RPA",
-      "Zoho ITSM",
-      "ServiceNow Corp",
-      "Tenable Network Security",
-      "Veeam Data Resiliency"
-    ]
+    "introTitle": "Our Technology Partners",
+    "introDesc": "We work with world-class technology partners to deliver secure, scalable, and future-ready enterprise solutions.",
+    "featured": [],
+    "alliances": []
   }
 }

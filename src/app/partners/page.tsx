@@ -1,204 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { InlineText, InlineImage, useEditor } from "@/components/editor";
-
-const FEATURED_PARTNERS = [
-  {
-    name: "Microsoft",
-    logoColor: "#f25f22",
-    logoUrl: "",
-    tagline: "Enterprise Identity & Cloud Core Alliance",
-    details: "We co-architect secure directory environments and unified identity governance protocols, integrating Microsoft Entra ID and Active Directory into automated threat defense pipelines.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="text-[#f25f22] flex-shrink-0">
-        <rect width="11" height="11" fill="currentColor" />
-        <rect x="13" width="11" height="11" fill="currentColor" />
-        <rect y="13" width="11" height="11" fill="currentColor" />
-        <rect x="13" y="13" width="11" height="11" fill="currentColor" />
-      </svg>
-    )
-  },
-  {
-    name: "MongoDB",
-    logoColor: "#10b981",
-    logoUrl: "",
-    tagline: "High-Performance Secure Data Clusters",
-    details: "Collaborating on encrypted document-model data clusters and telemetry databases to store and audit cyber security logs with zero-leak cryptographic signatures.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="text-[#10b981] flex-shrink-0">
-        <path d="M12 2C12 2 5 6 5 12C5 18 12 22 12 22C12 22 19 18 19 12C19 6 12 2 12 2Z" fill="currentColor" opacity="0.15" />
-        <path d="M12 2v20" />
-      </svg>
-    )
-  },
-  {
-    name: "AWS (Amazon Web Services)",
-    logoColor: "#ff9900",
-    logoUrl: "",
-    tagline: "Global Cloud Resiliency & Infrastructure Security",
-    details: "Managed cloud security automation, hybrid architecture configuration, and serverless compute defense systems designed to withstand volumetric DDoS incursions.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#ff9900] flex-shrink-0">
-        <path d="M6 18a6 6 0 0 1 12 0" />
-        <path d="M12 6V3" />
-        <path d="M12 21v-3" />
-      </svg>
-    )
-  },
-  {
-    name: "Fortinet",
-    logoColor: "#ef4444",
-    logoUrl: "",
-    tagline: "Next-Generation Hardware Boundary Firewalls",
-    details: "Providing hardware-level boundary inspection, physical perimeter threat monitoring, and automated intrusion prevention systems (IPS) for private enterprise networks.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#ef4444] flex-shrink-0">
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <path d="M9 12h6" />
-        <path d="M12 9v6" />
-      </svg>
-    )
-  },
-  {
-    name: "Google Cloud",
-    logoColor: "#ea4335",
-    logoUrl: "",
-    tagline: "MLSecOps & Advanced Threat Intelligence Analytics",
-    details: "Harnessing Google Cloud's globally distributed analytics pipelines and security lakes to run machine learning security threat prediction and automated heuristics.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#ea4335] flex-shrink-0">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M8 12h8" />
-        <path d="M12 8v8" />
-      </svg>
-    )
-  },
-  {
-    name: "Sprinto",
-    logoColor: "#a855f7",
-    logoUrl: "",
-    tagline: "Automated GRC & Compliance Frameworks",
-    details: "Continuous integration of audit-ready compliance scripts mapping system operations directly to ISO27001, SOC2, HIPAA, and GDPR standards.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#a855f7] flex-shrink-0">
-        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5" />
-      </svg>
-    )
-  },
-  {
-    name: "Trend Micro",
-    logoColor: "#f43f5e",
-    logoUrl: "",
-    tagline: "Endpoint Detection & Response (EDR) Systems",
-    details: "Protecting host endpoints and virtual workstations via proactive sandboxing, behavioral anomaly analysis, and threat patch mitigation.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#f43f5e] flex-shrink-0">
-        <circle cx="12" cy="12" r="8" />
-        <circle cx="12" cy="12" r="3" />
-      </svg>
-    )
-  },
-  {
-    name: "Cross Cipher",
-    logoColor: "#0ea5e9",
-    logoUrl: "",
-    tagline: "Secure Cryptographic Communications Networks",
-    details: "Deploying high-speed zero-knowledge communication tunnels, quantum-safe data encryption keys, and distributed transit path privacy routing protocols.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#0ea5e9] flex-shrink-0">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    )
-  }
-];
-
-const OTHER_ALLIANCES = [
-  "AvePoint", "Axidian", "Ishan Technologies", "Web Werks", "Salesforce", 
-  "Seclogic", "Snowflake", "Adobe Enterprise", "Arcon GRC", "CloudBlue", 
-  "RAS Infotech", "Databricks", "Zendesk Security", "UiPath RPA", "Zoho ITSM", 
-  "ServiceNow Corp", "Tenable Network Security", "Veeam Data Resiliency"
-];
-
-const getPartnerIcon = (name: string, color: string) => {
-  const n = name.toLowerCase();
-  if (n.includes("microsoft")) {
-    return (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style={{ color }} className="flex-shrink-0">
-        <rect width="11" height="11" fill="currentColor" />
-        <rect x="13" width="11" height="11" fill="currentColor" />
-        <rect y="13" width="11" height="11" fill="currentColor" />
-        <rect x="13" y="13" width="11" height="11" fill="currentColor" />
-      </svg>
-    );
-  }
-  if (n.includes("mongodb")) {
-    return (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{ color }} className="flex-shrink-0">
-        <path d="M12 2C12 2 5 6 5 12C5 18 12 22 12 22C12 22 19 18 19 12C19 6 12 2 12 2Z" fill="currentColor" opacity="0.15" />
-        <path d="M12 2v20" />
-      </svg>
-    );
-  }
-  if (n.includes("aws") || n.includes("amazon")) {
-    return (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ color }} className="flex-shrink-0">
-        <path d="M6 18a6 6 0 0 1 12 0" />
-        <path d="M12 6V3" />
-        <path d="M12 21v-3" />
-      </svg>
-    );
-  }
-  if (n.includes("fortinet")) {
-    return (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ color }} className="flex-shrink-0">
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <path d="M9 12h6" />
-        <path d="M12 9v6" />
-      </svg>
-    );
-  }
-  if (n.includes("google")) {
-    return (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ color }} className="flex-shrink-0">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M8 12h8" />
-        <path d="M12 8v8" />
-      </svg>
-    );
-  }
-  if (n.includes("sprinto")) {
-    return (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ color }} className="flex-shrink-0">
-        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5" />
-      </svg>
-    );
-  }
-  if (n.includes("trend micro")) {
-    return (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ color }} className="flex-shrink-0">
-        <circle cx="12" cy="12" r="8" />
-        <circle cx="12" cy="12" r="3" />
-      </svg>
-    );
-  }
-  if (n.includes("cross cipher") || n.includes("cipher")) {
-    return (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ color }} className="flex-shrink-0">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    );
-  }
-  // Generic network node icon for custom partners
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ color }} className="flex-shrink-0">
-      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-    </svg>
-  );
-};
+import React, { useState, useEffect, useRef } from "react";
+import { InlineText, useEditor } from "@/components/editor";
 
 export default function PartnersPage() {
-  const [searchQuery, setSearchQuery] = useState("");
   const [partnersData, setPartnersData] = useState<any>(null);
   const { isEditMode: isEditActive, updateNestedValue, siteData } = useEditor();
 
@@ -213,187 +18,307 @@ export default function PartnersPage() {
       .catch((err) => console.error("Failed to load partners database", err));
   }, []);
 
-  const featured = siteData?.partners?.featured || partnersData?.featured || FEATURED_PARTNERS;
-  const alliances = siteData?.partners?.alliances || partnersData?.alliances || OTHER_ALLIANCES;
+  // Use siteData first (live edits), then fetched DB data, then empty array
+  const partnersList: any[] = siteData?.partners?.featured || partnersData?.featured || [];
 
-  const addFeatured = () => {
-    const updated = [...featured];
-    updated.push({
-      name: "New Partner",
-      logoColor: "#0ea5e9",
-      logoUrl: "",
-      tagline: "Partner Subtitle",
-      details: "Double click to edit details."
-    });
+  const addPartner = () => {
+    const updated = [
+      ...partnersList,
+      {
+        name: "Partner Name",
+        tagline: "Short description of the partnership",
+        logoUrl: "",
+        logoColor: "#14b8a6",
+      },
+    ];
     updateNestedValue(["partners", "featured"], updated);
   };
 
-  const deleteFeatured = (idx: number) => {
-    const updated = [...featured];
+  const deletePartner = (idx: number) => {
+    const updated = [...partnersList];
     updated.splice(idx, 1);
     updateNestedValue(["partners", "featured"], updated);
   };
 
-  const addAlliance = () => {
-    const updated = [...alliances];
-    updated.push("New Alliance");
-    updateNestedValue(["partners", "alliances"], updated);
+  const handleImageUpload = async (
+    idx: number,
+    file: File
+  ) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await fetch("/api/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.url) {
+        const updated = [...partnersList];
+        updated[idx] = { ...updated[idx], logoUrl: data.url };
+        updateNestedValue(["partners", "featured"], updated);
+      }
+    } catch (err) {
+      console.error("Image upload failed", err);
+    }
   };
-
-  const deleteAlliance = (idx: number) => {
-    const updated = [...alliances];
-    updated.splice(idx, 1);
-    updateNestedValue(["partners", "alliances"], updated);
-  };
-
-  const filteredFeatured = featured.filter((p: any) => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    (p.tagline && p.tagline.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    (p.details && p.details.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
-
-  const filteredAlliances = alliances.filter((name: string) => 
-    name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 flex flex-col font-sans selection:bg-teal-500/30">
-      
-      {/* Header Section */}
-      <header className="border-b border-teal-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
+    <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col font-sans">
+
+      {/* Header */}
+      <header className="border-b border-teal-500/20 bg-zinc-950/80 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md sticky top-0 z-20">
         <div className="font-mono">
-          <InlineText as="span" className="text-[10px] font-bold text-teal-400 tracking-widest uppercase" path={["partners", "tagline"]} fallback="KLOUDERA TECHNOLOGIES // GLOBAL ECOSYSTEM" />
-          <InlineText as="h1" className="text-xl font-bold tracking-widest text-white uppercase mt-1 glow-text-teal" path={["partners", "title"]} fallback="OUR STRATEGIC PARTNERS" />
+          <InlineText
+            as="span"
+            className="text-[10px] font-bold text-teal-400 tracking-widest uppercase"
+            path={["partners", "tagline"]}
+            fallback="KLOUDERA TECHNOLOGIES // GLOBAL ECOSYSTEM"
+          />
+          <InlineText
+            as="h1"
+            className="text-xl font-bold tracking-widest text-white uppercase mt-1"
+            path={["partners", "title"]}
+            fallback="OUR STRATEGIC PARTNERS"
+          />
         </div>
 
-        <div className="flex gap-4 mt-4 sm:mt-0 items-center font-mono">
-          <input
-            type="text"
-            placeholder="Search partners..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-zinc-950 border border-teal-500/20 rounded px-3 py-1 text-white focus:outline-none focus:border-teal-500 text-[10px] uppercase w-48 tracking-wider"
-          />
-          
+        <div className="flex gap-3 mt-4 sm:mt-0 items-center">
           <button
-            onClick={() => window.location.href = "/"}
-            className="px-4 py-1 border border-teal-500/30 text-teal-400 text-[10px] tracking-wider rounded hover:bg-teal-500/10 transition-all"
+            onClick={() => (window.location.href = "/")}
+            className="px-4 py-1.5 border border-teal-500/30 text-teal-400 text-[11px] font-mono tracking-wider rounded hover:bg-teal-500/10 transition-all"
           >
-            DISCONNECT
+            ← BACK TO HOME
           </button>
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <main className="flex-1 p-6 max-w-5xl mx-auto w-full space-y-16 py-16 font-mono text-xs">
-        
-        {/* Intro */}
-        <div className="text-center space-y-4 max-w-xl mx-auto">
-          <span className="text-[8px] font-bold text-teal-400 tracking-widest uppercase bg-teal-500/10 px-2.5 py-1 rounded border border-teal-500/10">
-            INTEGRATED COGNITIVE CORE
-          </span>
-          <InlineText as="h2" className="text-lg font-bold text-white uppercase mt-2" path={["partners", "introTitle"]} fallback="Enterprise Alliances & Security Nodes" />
-          <InlineText as="p" multiline className="text-zinc-500 text-[10.5px] leading-relaxed" path={["partners", "introDesc"]} fallback="We integrate with top-tier cybersecurity networks, cloud providers, and hardware infrastructure suppliers to deliver threat-shielded operational stability." />
-        </div>
+      {/* Page intro */}
+      <div className="text-center py-16 px-6 max-w-2xl mx-auto space-y-4">
+        <span className="inline-block text-[9px] font-bold text-teal-400 tracking-widest uppercase bg-teal-500/10 px-3 py-1 rounded-full border border-teal-500/20 font-mono">
+          INTEGRATED PARTNER NETWORK
+        </span>
+        <InlineText
+          as="h2"
+          className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-3"
+          path={["partners", "introTitle"]}
+          fallback="Our Technology Partners"
+        />
+        <InlineText
+          as="p"
+          multiline
+          className="text-zinc-400 text-sm leading-relaxed"
+          path={["partners", "introDesc"]}
+          fallback="We work with world-class technology partners to deliver secure, scalable, and future-ready enterprise solutions."
+        />
+      </div>
 
-        {/* Featured Partners Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredFeatured.map((partner: any, idx: number) => (
-            <div 
-              key={idx}
-              className="cyber-panel p-6 rounded-lg border border-teal-500/10 bg-zinc-950/30 hover:border-teal-500/30 transition-all flex flex-col justify-between space-y-4 relative"
-              style={{ boxShadow: `0 0 10px ${partner.logoColor || "#14b8a6"}08` }}
-            >
-              {/* Delete Button */}
-              {isEditActive && (
-                <button
-                  onClick={() => deleteFeatured(idx)}
-                  className="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold"
-                  title="Delete partner"
-                >
-                  ✕
-                </button>
-              )}
+      {/* Partners Grid */}
+      <main className="flex-1 max-w-6xl mx-auto w-full px-6 pb-20">
 
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 border-b border-teal-500/5 pb-3">
-                  <div className="p-2 rounded bg-zinc-900 border border-zinc-800 flex items-center justify-center w-12 h-12 overflow-hidden relative">
-                    {isEditActive || partner.logoUrl ? (
-                      <InlineImage 
-                        path={["partners", "featured", String(idx), "logoUrl"]} 
-                        fallback={partner.logoUrl || "/logo.png"} 
-                        className="w-10 h-10 object-contain"
-                        alt={partner.name}
-                      />
-                    ) : (
-                      getPartnerIcon(partner.name, partner.logoColor)
-                    )}
-                  </div>
-                  <div>
-                    <InlineText as="h3" className="text-[12px] font-bold text-white uppercase tracking-wider" path={["partners", "featured", String(idx), "name"]} fallback={partner.name} />
-                    <InlineText as="span" className="text-[8px] font-semibold text-zinc-500 block uppercase mt-0.5 tracking-tight" path={["partners", "featured", String(idx), "tagline"]} fallback={partner.tagline} />
-                  </div>
-                </div>
-
-                <InlineText as="p" multiline className="text-zinc-400 text-[10px] leading-relaxed" path={["partners", "featured", String(idx), "details"]} fallback={partner.details} />
-              </div>
-
-              <div className="pt-2 flex justify-between items-center text-[8.5px] text-zinc-500 font-bold border-t border-teal-500/5">
-                <span>NODE INTERFACES: OK</span>
-                <span style={{ color: partner.logoColor }}>INTEGRATED</span>
-              </div>
+        {partnersList.length === 0 && !isEditActive && (
+          <div className="flex flex-col items-center justify-center py-24 text-center space-y-4">
+            <div className="w-20 h-20 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-4">
+              <svg className="w-10 h-10 text-zinc-600" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+              </svg>
             </div>
+            <p className="text-zinc-500 font-mono text-sm">No partners added yet.</p>
+            <p className="text-zinc-600 text-xs font-mono">Use editor mode (Ctrl+Shift+E) to add partner cards.</p>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {partnersList.map((partner: any, idx: number) => (
+            <PartnerCard
+              key={idx}
+              partner={partner}
+              idx={idx}
+              isEditActive={isEditActive}
+              onDelete={() => deletePartner(idx)}
+              onImageUpload={(file) => handleImageUpload(idx, file)}
+              onNameChange={(val) => {
+                const updated = [...partnersList];
+                updated[idx] = { ...updated[idx], name: val };
+                updateNestedValue(["partners", "featured"], updated);
+              }}
+              onTaglineChange={(val) => {
+                const updated = [...partnersList];
+                updated[idx] = { ...updated[idx], tagline: val };
+                updateNestedValue(["partners", "featured"], updated);
+              }}
+            />
           ))}
 
-          {/* Add Featured Partner Card */}
+          {/* Add Card Button — only in edit mode */}
           {isEditActive && (
             <button
-              onClick={addFeatured}
-              className="rounded-lg border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 p-6 flex flex-col items-center justify-center space-y-2 transition-all min-h-[160px] font-bold text-teal-400 uppercase tracking-widest"
+              onClick={addPartner}
+              className="rounded-2xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 flex flex-col items-center justify-center gap-3 transition-all min-h-[260px] font-mono text-teal-400 group"
             >
-              <span>➕</span>
-              <span>Add Featured Partner</span>
+              <div className="w-12 h-12 rounded-full border-2 border-dashed border-teal-500/50 group-hover:border-teal-400 flex items-center justify-center transition-all">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+              </div>
+              <span className="text-xs font-bold uppercase tracking-widest">Add Partner</span>
             </button>
           )}
         </div>
-
-        {/* Other Alliances Grid */}
-        <div className="space-y-6 pt-12 border-t border-teal-500/10">
-          <h3 className="text-center text-[10px] font-bold text-white uppercase tracking-widest">
-            Extended Network & Client Alliances
-          </h3>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-            {alliances.map((name: string, i: number) => (
-              <div 
-                key={i}
-                className="p-3 border border-zinc-800 bg-zinc-950/40 rounded text-center text-[9px] font-bold text-zinc-400 hover:text-teal-400 hover:border-teal-500/30 transition-all relative group"
-              >
-                {/* Delete Alliance Tag */}
-                {isEditActive && (
-                  <button
-                    onClick={() => deleteAlliance(i)}
-                    className="absolute -top-1.5 -right-1.5 text-[8px] text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 px-1 rounded-full transition-all z-10 font-bold"
-                  >
-                    ✕
-                  </button>
-                )}
-                📁 // <InlineText as="span" path={["partners", "alliances", String(i)]} fallback={name} />
-              </div>
-            ))}
-
-            {isEditActive && (
-              <button
-                onClick={addAlliance}
-                className="p-3 border border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 rounded text-center text-[9px] font-bold text-teal-400 transition-all"
-              >
-                ➕ Add Alliance
-              </button>
-            )}
-          </div>
-        </div>
-
       </main>
+    </div>
+  );
+}
+
+// ----- Partner Card Component -----
+
+interface PartnerCardProps {
+  partner: any;
+  idx: number;
+  isEditActive: boolean;
+  onDelete: () => void;
+  onImageUpload: (file: File) => void;
+  onNameChange: (val: string) => void;
+  onTaglineChange: (val: string) => void;
+}
+
+function PartnerCard({
+  partner,
+  idx,
+  isEditActive,
+  onDelete,
+  onImageUpload,
+  onNameChange,
+  onTaglineChange,
+}: PartnerCardProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [editingName, setEditingName] = useState(false);
+  const [editingTagline, setEditingTagline] = useState(false);
+  const [nameVal, setNameVal] = useState(partner.name || "");
+  const [taglineVal, setTaglineVal] = useState(partner.tagline || "");
+
+  // Keep local state in sync when partner data updates from above
+  React.useEffect(() => {
+    setNameVal(partner.name || "");
+    setTaglineVal(partner.tagline || "");
+  }, [partner.name, partner.tagline]);
+
+  return (
+    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 overflow-hidden flex flex-col hover:border-teal-500/30 transition-all hover:shadow-lg hover:shadow-teal-500/5 relative group">
+      {/* Delete Button */}
+      {isEditActive && (
+        <button
+          onClick={onDelete}
+          className="absolute top-3 right-3 z-20 w-7 h-7 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-lg transition-all opacity-0 group-hover:opacity-100"
+          title="Remove partner"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      )}
+
+      {/* Image Area — large, covers most of the card */}
+      <div
+        className="relative w-full bg-zinc-950 flex items-center justify-center overflow-hidden"
+        style={{ minHeight: "180px" }}
+      >
+        {partner.logoUrl ? (
+          <img
+            src={partner.logoUrl}
+            alt={partner.name || "Partner logo"}
+            className="w-full h-full object-contain p-4"
+            style={{ maxHeight: "180px" }}
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-zinc-600 gap-2 py-10 px-4">
+            <svg className="w-12 h-12" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="3" strokeWidth="1.5" />
+              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
+            </svg>
+            <span className="text-[10px] font-mono text-zinc-700 tracking-wider">NO IMAGE</span>
+          </div>
+        )}
+
+        {/* Edit Overlay: click to upload */}
+        {isEditActive && (
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) onImageUpload(file);
+              }}
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-2 text-white text-xs font-bold font-mono"
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              </svg>
+              <span>Upload Logo</span>
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Description Box */}
+      <div className="p-4 flex flex-col gap-1 flex-1 border-t border-zinc-800">
+        {/* Partner Name */}
+        {editingName && isEditActive ? (
+          <input
+            autoFocus
+            className="bg-zinc-800 text-white text-sm font-bold w-full rounded px-2 py-1 outline-none border border-teal-500/50 focus:border-teal-400"
+            value={nameVal}
+            onChange={(e) => setNameVal(e.target.value)}
+            onBlur={() => {
+              setEditingName(false);
+              onNameChange(nameVal);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setEditingName(false);
+                onNameChange(nameVal);
+              }
+            }}
+          />
+        ) : (
+          <p
+            className={`text-sm font-bold text-white truncate ${isEditActive ? "cursor-text hover:text-teal-300 transition-colors" : ""}`}
+            title={isEditActive ? "Click to edit name" : undefined}
+            onClick={() => isEditActive && setEditingName(true)}
+          >
+            {partner.name || "Partner Name"}
+          </p>
+        )}
+
+        {/* Partner Tagline / Description */}
+        {editingTagline && isEditActive ? (
+          <textarea
+            autoFocus
+            className="bg-zinc-800 text-zinc-300 text-xs w-full rounded px-2 py-1 outline-none border border-teal-500/50 focus:border-teal-400 resize-none"
+            rows={3}
+            value={taglineVal}
+            onChange={(e) => setTaglineVal(e.target.value)}
+            onBlur={() => {
+              setEditingTagline(false);
+              onTaglineChange(taglineVal);
+            }}
+          />
+        ) : (
+          <p
+            className={`text-xs text-zinc-400 leading-relaxed line-clamp-3 ${isEditActive ? "cursor-text hover:text-zinc-300 transition-colors" : ""}`}
+            title={isEditActive ? "Click to edit description" : undefined}
+            onClick={() => isEditActive && setEditingTagline(true)}
+          >
+            {partner.tagline || "Click to add a description"}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
