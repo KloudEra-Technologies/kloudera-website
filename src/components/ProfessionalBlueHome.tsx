@@ -218,7 +218,7 @@ export function ProfessionalBlueHome({
         <BgAnimation variant="home" />
       </div>
       {/* ----------------- Top Header Navbar ----------------- */}
-      <header className="sticky top-0 z-50 border-b border-blue-900/40 bg-[#030712]/95 backdrop-blur-xl">
+      <header className="w-full sticky top-0 z-50 border-b border-blue-900/40 bg-[#030712]/95 backdrop-blur-xl">
         <div className="mx-auto flex max-w-full items-center justify-between px-6 sm:px-12 py-4">
           <Link href="/" className="flex items-center gap-3">
             <KloudEraLogo className="h-8 sm:h-10 w-auto text-blue-400" />
