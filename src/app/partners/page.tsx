@@ -203,6 +203,7 @@ function PartnerCard({
   const [editingTagline, setEditingTagline] = useState(false);
   const [nameVal, setNameVal] = useState(partner.name || "");
   const [taglineVal, setDescVal] = useState(partner.tagline || "");
+  const [isFlipped, setIsFlipped] = useState(false);
 
   React.useEffect(() => {
     setNameVal(partner.name || "");
@@ -214,9 +215,21 @@ function PartnerCard({
       className={`${isEditActive ? "" : "flip-card"} relative group`}
       style={{ minHeight: "260px" }}
     >
-      <div className="flip-inner w-full h-full absolute inset-0">
+      <div 
+        className="flip-inner w-full h-full absolute inset-0"
+        style={isEditActive && isFlipped ? { transform: "rotateY(180deg)" } : {}}
+      >
         {/* Front */}
         <div className="flip-front absolute inset-0 rounded-2xl border border-zinc-800 bg-gradient-to-b from-zinc-900 to-zinc-950 flex flex-col">
+          {/* Flip Manual Button */}
+          {isEditActive && (
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsFlipped(true); }}
+              className="absolute bottom-3 right-3 z-30 px-2 py-0.5 bg-teal-500/80 hover:bg-teal-400 text-black text-[9px] font-bold font-mono rounded shadow transition-all"
+            >
+              EDIT DETAILS 🔄
+            </button>
+          )}
           {/* Delete Button */}
           {isEditActive && (
             <button
@@ -334,11 +347,21 @@ function PartnerCard({
                 {partner.tagline || (isEditActive ? "Click to add description" : "No description provided.")}
               </p>
             )}
-            <div className="pt-2 border-t border-cyan-900/40 flex items-center gap-1.5 text-[9px] font-mono text-cyan-500">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-              </svg>
-              AUTHENTICATED STRATEGIC ALLIANCE
+            <div className="pt-2 border-t border-cyan-900/40 flex items-center justify-between text-[9px] font-mono text-cyan-500">
+              <div className="flex items-center gap-1.5">
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+                <span>AUTHENTICATED STRATEGIC ALLIANCE</span>
+              </div>
+              {isEditActive && (
+                <button
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsFlipped(false); }}
+                  className="px-2 py-0.5 bg-teal-500/80 hover:bg-teal-400 text-black text-[9px] font-bold font-mono rounded shadow transition-all"
+                >
+                  SHOW FRONT 🔄
+                </button>
+              )}
             </div>
           </div>
         </div>

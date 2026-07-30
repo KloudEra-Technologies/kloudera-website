@@ -367,9 +367,21 @@ function CertCard({ cert, idx, isEditActive, onDelete, onImageUpload, onTitleCha
         className="cert-card-wrap relative group"
         style={{ perspective: "1000px", minHeight: "240px" }}
       >
-        <div className="cert-card-inner w-full h-full absolute inset-0">
+        <div 
+          className="cert-card-inner w-full h-full absolute inset-0"
+          style={isEditActive && flipped ? { transform: "rotateY(180deg)" } : {}}
+        >
           {/* Front */}
           <div className="cert-card-front absolute inset-0 rounded-2xl border border-blue-900/40 bg-gradient-to-b from-[#090e1a] to-[#030712] overflow-hidden flex flex-col">
+            {/* Flip Manual Button */}
+            {isEditActive && (
+              <button
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setFlipped(true); }}
+                className="absolute bottom-3 right-3 z-30 px-2 py-0.5 bg-emerald-500/80 hover:bg-emerald-400 text-black text-[9px] font-bold font-mono rounded shadow transition-all"
+              >
+                EDIT DETAILS 🔄
+              </button>
+            )}
             {/* Delete button */}
             {isEditActive && (
               <button
@@ -433,11 +445,21 @@ function CertCard({ cert, idx, isEditActive, onDelete, onImageUpload, onTitleCha
                   {cert.description || (isEditActive ? "Click to add description" : "No description provided.")}
                 </p>
               )}
-              <div className="pt-2 border-t border-emerald-900/40 flex items-center gap-1.5 text-[9px] font-mono text-emerald-500">
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                </svg>
-                AUDITED &amp; VERIFIED
+              <div className="pt-2 border-t border-emerald-900/40 flex items-center justify-between text-[9px] font-mono text-emerald-500">
+                <div className="flex items-center gap-1.5">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                  </svg>
+                  <span>AUDITED &amp; VERIFIED</span>
+                </div>
+                {isEditActive && (
+                  <button
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); setFlipped(false); }}
+                    className="px-2 py-0.5 bg-emerald-500/80 hover:bg-emerald-400 text-black text-[9px] font-bold font-mono rounded shadow transition-all"
+                  >
+                    SHOW FRONT 🔄
+                  </button>
+                )}
               </div>
             </div>
           </div>
