@@ -202,130 +202,146 @@ function PartnerCard({
   const [editingName, setEditingName] = useState(false);
   const [editingTagline, setEditingTagline] = useState(false);
   const [nameVal, setNameVal] = useState(partner.name || "");
-  const [taglineVal, setTaglineVal] = useState(partner.tagline || "");
+  const [taglineVal, setDescVal] = useState(partner.tagline || "");
 
-  // Keep local state in sync when partner data updates from above
   React.useEffect(() => {
     setNameVal(partner.name || "");
-    setTaglineVal(partner.tagline || "");
+    setDescVal(partner.tagline || "");
   }, [partner.name, partner.tagline]);
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 overflow-hidden flex flex-col hover:border-teal-500/30 transition-all hover:shadow-lg hover:shadow-teal-500/5 relative group">
-      {/* Delete Button */}
-      {isEditActive && (
-        <button
-          onClick={onDelete}
-          className="absolute top-3 right-3 z-20 w-7 h-7 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-lg transition-all opacity-0 group-hover:opacity-100"
-          title="Remove partner"
-        >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      )}
-
-      {/* Image Area — large, covers most of the card */}
-      <div
-        className="relative w-full bg-zinc-950 flex items-center justify-center overflow-hidden"
-        style={{ minHeight: "180px" }}
-      >
-        {partner.logoUrl ? (
-          <img
-            src={partner.logoUrl}
-            alt={partner.name || "Partner logo"}
-            className="w-full h-full object-contain p-4"
-            style={{ maxHeight: "180px" }}
-          />
-        ) : (
-          <div className="flex flex-col items-center justify-center text-zinc-600 gap-2 py-10 px-4">
-            <svg className="w-12 h-12" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
-              <rect x="3" y="3" width="18" height="18" rx="3" strokeWidth="1.5" />
-              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
-            </svg>
-            <span className="text-[10px] font-mono text-zinc-700 tracking-wider">NO IMAGE</span>
-          </div>
-        )}
-
-        {/* Edit Overlay: click to upload */}
-        {isEditActive && (
-          <>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) onImageUpload(file);
-              }}
-            />
+    <div
+      className="flip-card relative group"
+      style={{ minHeight: "260px" }}
+    >
+      <div className="flip-inner w-full h-full absolute inset-0">
+        {/* Front */}
+        <div className="flip-front absolute inset-0 rounded-2xl border border-zinc-800 bg-gradient-to-b from-zinc-900 to-zinc-950 flex flex-col">
+          {/* Delete Button */}
+          {isEditActive && (
             <button
-              onClick={() => fileInputRef.current?.click()}
-              className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-2 text-white text-xs font-bold font-mono"
+              onClick={onDelete}
+              className="absolute top-3 right-3 z-30 w-7 h-7 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-lg transition-all opacity-0 group-hover:opacity-100"
+              title="Remove partner"
             >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
-              <span>Upload Logo</span>
             </button>
-          </>
-        )}
-      </div>
+          )}
 
-      {/* Description Box */}
-      <div className="p-4 flex flex-col gap-1 flex-1 border-t border-zinc-800">
-        {/* Partner Name */}
-        {editingName && isEditActive ? (
-          <input
-            autoFocus
-            className="bg-zinc-800 text-white text-sm font-bold w-full rounded px-2 py-1 outline-none border border-teal-500/50 focus:border-teal-400"
-            value={nameVal}
-            onChange={(e) => setNameVal(e.target.value)}
-            onBlur={() => {
-              setEditingName(false);
-              onNameChange(nameVal);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                setEditingName(false);
-                onNameChange(nameVal);
-              }
-            }}
-          />
-        ) : (
-          <p
-            className={`text-sm font-bold text-white truncate ${isEditActive ? "cursor-text hover:text-teal-300 transition-colors" : ""}`}
-            title={isEditActive ? "Click to edit name" : undefined}
-            onClick={() => isEditActive && setEditingName(true)}
-          >
-            {partner.name || "Partner Name"}
-          </p>
-        )}
+          {/* Image Area */}
+          <div className="relative w-full bg-zinc-950/80 flex items-center justify-center overflow-hidden" style={{ minHeight: "180px" }}>
+            {partner.logoUrl ? (
+              <img
+                src={partner.logoUrl}
+                alt={partner.name || "Partner logo"}
+                className="w-full h-full object-contain p-4"
+                style={{ maxHeight: "180px" }}
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center text-zinc-700 gap-2 py-10 px-4">
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="18" height="18" rx="3" strokeWidth="1.5" />
+                  <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
+                </svg>
+                <span className="text-[10px] font-mono tracking-wider">NO IMAGE</span>
+              </div>
+            )}
 
-        {/* Partner Tagline / Description */}
-        {editingTagline && isEditActive ? (
-          <textarea
-            autoFocus
-            className="bg-zinc-800 text-zinc-300 text-xs w-full rounded px-2 py-1 outline-none border border-teal-500/50 focus:border-teal-400 resize-none"
-            rows={3}
-            value={taglineVal}
-            onChange={(e) => setTaglineVal(e.target.value)}
-            onBlur={() => {
-              setEditingTagline(false);
-              onTaglineChange(taglineVal);
-            }}
-          />
-        ) : (
-          <p
-            className={`text-xs text-zinc-400 leading-relaxed line-clamp-3 ${isEditActive ? "cursor-text hover:text-zinc-300 transition-colors" : ""}`}
-            title={isEditActive ? "Click to edit description" : undefined}
-            onClick={() => isEditActive && setEditingTagline(true)}
-          >
-            {partner.tagline || "Click to add a description"}
-          </p>
-        )}
+            {isEditActive && (
+              <>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) onImageUpload(file);
+                  }}
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-2 text-white text-xs font-bold font-mono"
+                >
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                  </svg>
+                  <span>Upload Logo</span>
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Description / Name Box */}
+          <div className="p-4 flex flex-col gap-1 border-t border-zinc-800 bg-zinc-900/60">
+            {editingName && isEditActive ? (
+              <input
+                autoFocus
+                className="bg-zinc-800 text-white text-sm font-bold w-full rounded px-2 py-1 outline-none border border-teal-500/50 focus:border-teal-400"
+                value={nameVal}
+                onChange={(e) => setNameVal(e.target.value)}
+                onBlur={() => {
+                  setEditingName(false);
+                  onNameChange(nameVal);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setEditingName(false);
+                    onNameChange(nameVal);
+                  }
+                }}
+              />
+            ) : (
+              <p
+                className={`text-sm font-bold text-white truncate ${isEditActive ? "cursor-text hover:text-teal-300 transition-colors" : ""}`}
+                onClick={() => isEditActive && setEditingName(true)}
+              >
+                {partner.name || "Partner Name"}
+              </p>
+            )}
+            <p className="text-[9px] font-mono text-cyan-400 mt-1 tracking-widest">HOVER TO VIEW DETAILS →</p>
+          </div>
+        </div>
+
+        {/* Back */}
+        <div className="flip-back absolute inset-0 rounded-2xl border border-cyan-500/20 bg-gradient-to-b from-[#0a1420] to-zinc-950 overflow-hidden flex flex-col p-5 justify-center">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="h-1 w-6 rounded-full bg-cyan-500" />
+              <span className="text-[9px] font-mono text-cyan-400 tracking-widest uppercase">System Partner</span>
+            </div>
+            <p className="text-sm font-bold text-white">{partner.name || "Partner Name"}</p>
+            {editingTagline && isEditActive ? (
+              <textarea
+                autoFocus
+                className="bg-zinc-900 text-slate-300 text-xs w-full rounded px-2 py-1 outline-none border border-teal-500/50 focus:border-teal-400 resize-none"
+                rows={4}
+                value={taglineVal}
+                onChange={(e) => setDescVal(e.target.value)}
+                onBlur={() => {
+                  setEditingTagline(false);
+                  onTaglineChange(taglineVal);
+                }}
+              />
+            ) : (
+              <p
+                className={`text-xs text-slate-400 leading-relaxed ${isEditActive ? "cursor-text hover:text-slate-300 transition-colors" : ""}`}
+                onClick={() => isEditActive && setEditingTagline(true)}
+              >
+                {partner.tagline || (isEditActive ? "Click to add description" : "No description provided.")}
+              </p>
+            )}
+            <div className="pt-2 border-t border-cyan-900/40 flex items-center gap-1.5 text-[9px] font-mono text-cyan-500">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+              </svg>
+              AUTHENTICATED STRATEGIC ALLIANCE
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
