@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "./KloudEraLogo";
 import { useAccessibility } from "./AccessibilityContext";
 import { InlineText, InlineImage, useEditor } from "@/components/editor";
+import { BgAnimation } from "./BgAnimation";
 
 interface ProfessionalBlueHomeProps {
   onLaunch3D?: () => void;
@@ -86,8 +87,13 @@ export function ProfessionalBlueHome({
   ];
 
   const partnersData = getSectionData("partners");
-  // Show only the first 8 partners from the partners page list
-  const partnersList = (partnersData.featured || []).slice(0, 8);
+  // Show 8 random partners on each page load (shuffled on mount)
+  const partnersList = useMemo(() => {
+    const all = partnersData.featured || [];
+    const shuffled = [...all].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 8);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const aboutData = getSectionData("about");
   const whyChooseUsList = aboutData.whyChooseUs || [
@@ -98,8 +104,13 @@ export function ProfessionalBlueHome({
   ];
 
   const certificationsData = getSectionData("certifications");
-  // Show only the first 6 certifications from the certifications page list
-  const certificationsList = (certificationsData.items || []).slice(0, 6);
+  // Show 4 random certifications on each page load (shuffled on mount)
+  const certificationsList = useMemo(() => {
+    const all = certificationsData.items || [];
+    const shuffled = [...all].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 4);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const careersData = getSectionData("careers");
   const jobsList = careersData.jobs || [
@@ -189,7 +200,8 @@ export function ProfessionalBlueHome({
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#030712] text-slate-100 font-sans selection:bg-blue-500 selection:text-white">
+    <div className="min-h-screen w-full bg-[#030712] text-slate-100 font-sans selection:bg-blue-500 selection:text-white relative overflow-hidden">
+      <BgAnimation variant="home" />
       {/* ----------------- Top Header Navbar ----------------- */}
       <header className="sticky top-0 z-50 border-b border-blue-900/40 bg-[#030712]/95 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-4">
@@ -964,7 +976,7 @@ export function ProfessionalBlueHome({
                 <p className="text-slate-600 text-xs font-mono">Visit the Certifications page in editor mode to add badges.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                 {certificationsList.map((item: any, idx: number) => (
                   <div
                     key={idx}

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { getImageStyle, getCleanImageUrl } from "@/lib/imageHelper";
 import { InlineText, InlineImage, useEditor } from "@/components/editor";
+import { BgAnimation } from "@/components/BgAnimation";
 
 const DEFAULT_WHY_CHOOSE_US = [
   {
@@ -96,7 +97,8 @@ export default function AboutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 flex flex-col font-sans selection:bg-teal-500/30">
+    <div className="min-h-screen bg-black text-zinc-100 flex flex-col font-sans selection:bg-teal-500/30 relative overflow-hidden">
+      <BgAnimation variant="about" />
       {/* Header */}
       <header className="border-b border-teal-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
         <div className="font-mono">

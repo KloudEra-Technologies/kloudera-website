@@ -434,6 +434,7 @@
   "certifications": {
     "title": "Security Compliance & Global Standards",
     "intro": "Kloudera operates under audited global security frameworks, data privacy laws, and quality management protocols.",
+    "subSections": ["General"],
     "items": []
   },
   "partners": {

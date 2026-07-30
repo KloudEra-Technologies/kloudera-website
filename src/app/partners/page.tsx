@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { InlineText, useEditor } from "@/components/editor";
+import { BgAnimation } from "@/components/BgAnimation";
 
 export default function PartnersPage() {
   const [partnersData, setPartnersData] = useState<any>(null);
@@ -69,7 +70,8 @@ export default function PartnersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col font-sans relative overflow-hidden">
+      <BgAnimation variant="partners" />
 
       {/* Header */}
       <header className="border-b border-teal-500/20 bg-zinc-950/80 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md sticky top-0 z-20">

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAccessibility } from "@/components/AccessibilityContext";
 import { InlineText, useEditor } from "@/components/editor";
+import { BgAnimation } from "@/components/BgAnimation";
 
 interface Job {
   id: string;
@@ -210,7 +211,8 @@ export default function CareersPage() {
   });
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 flex flex-col font-sans selection:bg-teal-500/30">
+    <div className="min-h-screen bg-black text-zinc-100 flex flex-col font-sans selection:bg-teal-500/30 relative overflow-hidden">
+      <BgAnimation variant="careers" />
       {/* Header */}
       <header className="border-b border-teal-500/20 bg-zinc-950/60 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md">
         <div className="font-mono">
