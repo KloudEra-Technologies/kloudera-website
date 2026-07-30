@@ -211,7 +211,7 @@ function PartnerCard({
 
   return (
     <div
-      className="flip-card relative group"
+      className={`${isEditActive ? "" : "flip-card"} relative group`}
       style={{ minHeight: "260px" }}
     >
       <div className="flip-inner w-full h-full absolute inset-0">

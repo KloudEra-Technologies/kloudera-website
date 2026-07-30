@@ -359,7 +359,7 @@ function CertCard({ cert, idx, isEditActive, onDelete, onImageUpload, onTitleCha
     <>
       <style>{`
         .cert-card-inner { transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); transform-style: preserve-3d; }
-        .cert-card-wrap:hover .cert-card-inner { transform: rotateY(180deg); }
+        ${!isEditActive ? '.cert-card-wrap:hover .cert-card-inner { transform: rotateY(180deg); }' : ''}
         .cert-card-front, .cert-card-back { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
         .cert-card-back { transform: rotateY(180deg); }
       `}</style>
