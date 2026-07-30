@@ -167,7 +167,7 @@ export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", icon
         alt="KloudEra Technologies"
         style={{ 
           height: iconOnly ? "44px" : logoHeight, 
-          maxHeight: "38px",
+          maxHeight: "48px",
           width: "auto"
         }}
         className="object-contain"
