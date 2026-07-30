@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   title: "Kloudera Technologies | Secure Enterprise AI Command Center",
   description: "Future-proof your enterprise with world-class Cyber Security, cognitive AI workflows, Microsoft solutions, and premium GPU systems.",
   metadataBase: new URL("https://kloudera.tech"),
+  verification: {
+    google: "pRWllGWgk6Lq_VratDGf3nwXPLpJbkmTMPdVkrrDscg",
+  },
 };
 
 export default function RootLayout({
