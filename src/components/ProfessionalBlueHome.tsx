@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "./KloudEraLogo";
 import { useAccessibility } from "./AccessibilityContext";
 import { InlineText, InlineImage, useEditor } from "@/components/editor";
 import { BgAnimation } from "./BgAnimation";
+import { ScrollReveal } from "./ScrollReveal";
 
 interface ProfessionalBlueHomeProps {
   onLaunch3D?: () => void;
@@ -29,6 +30,11 @@ export function ProfessionalBlueHome({
   const [fetchedData, setFetchedData] = useState<any>({});
   const [contactForm, setContactForm] = useState({ name: "", email: "", company: "", message: "" });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  // Random display state — shuffled once on first data arrival
+  const [partnersList, setPartnersList] = useState<any[]>([]);
+  const [certificationsList, setCertificationsList] = useState<any[]>([]);
+  const partnersInitRef = useRef(false);
+  const certsInitRef = useRef(false);
 
   useEffect(() => {
     if (initialSiteData) return;
@@ -86,14 +92,27 @@ export function ProfessionalBlueHome({
     }
   ];
 
+  // Shuffle partners once when data first arrives
+  useEffect(() => {
+    const all = (siteData?.partners?.featured || fetchedData?.partners?.featured || []);
+    if (all.length > 0 && !partnersInitRef.current) {
+      partnersInitRef.current = true;
+      const shuffled = [...all].sort(() => Math.random() - 0.5);
+      setPartnersList(shuffled.slice(0, 8));
+    }
+  }, [siteData, fetchedData]);
+
+  // Shuffle certs once when data first arrives
+  useEffect(() => {
+    const all = (siteData?.certifications?.items || fetchedData?.certifications?.items || []);
+    if (all.length > 0 && !certsInitRef.current) {
+      certsInitRef.current = true;
+      const shuffled = [...all].sort(() => Math.random() - 0.5);
+      setCertificationsList(shuffled.slice(0, 4));
+    }
+  }, [siteData, fetchedData]);
+
   const partnersData = getSectionData("partners");
-  // Show 8 random partners on each page load (shuffled on mount)
-  const partnersList = useMemo(() => {
-    const all = partnersData.featured || [];
-    const shuffled = [...all].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 8);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const aboutData = getSectionData("about");
   const whyChooseUsList = aboutData.whyChooseUs || [
@@ -104,13 +123,6 @@ export function ProfessionalBlueHome({
   ];
 
   const certificationsData = getSectionData("certifications");
-  // Show 4 random certifications on each page load (shuffled on mount)
-  const certificationsList = useMemo(() => {
-    const all = certificationsData.items || [];
-    const shuffled = [...all].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 4);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const careersData = getSectionData("careers");
   const jobsList = careersData.jobs || [
@@ -200,8 +212,11 @@ export function ProfessionalBlueHome({
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#030712] text-slate-100 font-sans selection:bg-blue-500 selection:text-white relative overflow-hidden">
-      <BgAnimation variant="home" />
+    <div className="min-h-screen w-full bg-[#030712] text-slate-100 font-sans selection:bg-blue-500 selection:text-white">
+      {/* Fixed matrix rain behind entire page */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+        <BgAnimation variant="home" />
+      </div>
       {/* ----------------- Top Header Navbar ----------------- */}
       <header className="sticky top-0 z-50 border-b border-blue-900/40 bg-[#030712]/95 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-4">
@@ -321,79 +336,91 @@ export function ProfessionalBlueHome({
       </header>
 
       {/* ----------------- Hero Section ----------------- */}
-      <section className="relative overflow-hidden pt-16 pb-24 md:pt-24 md:pb-32 border-b border-blue-900/20 bg-gradient-to-b from-[#030712] via-[#090e1a] to-[#030712]">
+      <section className="relative overflow-hidden pt-16 pb-24 md:pt-24 md:pb-32 border-b border-blue-900/20 bg-gradient-to-b from-[#030712]/90 via-[#090e1a]/90 to-[#030712]/90" style={{ position: 'relative', zIndex: 1 }}>
         {/* Glowing Background Radial Effects */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[800px] rounded-full bg-gradient-to-tr from-blue-600/15 via-cyan-500/10 to-indigo-600/15 blur-3xl pointer-events-none" />
         
         <div className="mx-auto max-w-7xl px-4 sm:px-6 relative z-10">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/60 px-3.5 py-1 text-[10px] sm:text-xs font-semibold tracking-wider text-cyan-300 backdrop-blur-md mb-6 max-w-full">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
-              <InlineText as="span" className="truncate" path={["home", "heroBadge"]} fallback="ENTERPRISE CYBERSECURITY & HARDWARE PLATFORM" />
-            </div>
+            <ScrollReveal variant="fade-down" delay={0}>
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/60 px-3.5 py-1 text-[10px] sm:text-xs font-semibold tracking-wider text-cyan-300 backdrop-blur-md mb-6 max-w-full">
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
+                <InlineText as="span" className="truncate" path={["home", "heroBadge"]} fallback="ENTERPRISE CYBERSECURITY & HARDWARE PLATFORM" />
+              </div>
+            </ScrollReveal>
 
-            <h1 className="text-2xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight break-words">
-              <InlineText as="span" path={["home", "heroTitlePrefix"]} fallback="Architecting " />
+            <ScrollReveal variant="fade-up" delay={80}>
+              <h1 className="text-2xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight break-words">
+                <InlineText as="span" path={["home", "heroTitlePrefix"]} fallback="Architecting " />
+                <InlineText 
+                  as="span" 
+                  className={heroHighlightGradient ? "bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent" : "text-white"}
+                  path={["home", "heroTitleHighlight"]} 
+                  fallback="Zero-Trust" 
+                />
+                <InlineText as="span" path={["home", "heroTitleSuffix"]} fallback=" Digital Enterprises" />
+              </h1>
+            </ScrollReveal>
+
+            <ScrollReveal variant="fade-up" delay={160}>
               <InlineText 
-                as="span" 
-                className={heroHighlightGradient ? "bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent" : "text-white"}
-                path={["home", "heroTitleHighlight"]} 
-                fallback="Zero-Trust" 
+                as="p" 
+                multiline
+                className="mt-4 sm:mt-6 text-xs sm:text-base md:text-lg text-slate-300 leading-relaxed px-2 sm:px-0"
+                path={["home", "heroSubtitle"]} 
+                fallback="Empowering Fortune 500 infrastructure with 24/7 Security Operations Surveillance, custom GPU AI compute clusters, and seamless Microsoft Cloud ecosystem governance." 
               />
-              <InlineText as="span" path={["home", "heroTitleSuffix"]} fallback=" Digital Enterprises" />
-            </h1>
+            </ScrollReveal>
 
-            <InlineText 
-              as="p" 
-              multiline
-              className="mt-4 sm:mt-6 text-xs sm:text-base md:text-lg text-slate-300 leading-relaxed px-2 sm:px-0"
-              path={["home", "heroSubtitle"]} 
-              fallback="Empowering Fortune 500 infrastructure with 24/7 Security Operations Surveillance, custom GPU AI compute clusters, and seamless Microsoft Cloud ecosystem governance." 
-            />
-
-            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto">
-              <a
-                href="#services"
-                className="rounded-lg bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-[0_0_25px_rgba(37,99,235,0.4)] transition-all hover:scale-[1.02] text-center cursor-pointer"
-              >
-                Explore Infrastructure Services
-              </a>
-              <button
-                onClick={() => {
-                  playAudio("click");
-                  onLaunch3D();
-                }}
-                className="rounded-lg border border-blue-500/30 bg-slate-900/80 px-6 py-3 text-xs sm:text-sm font-bold text-cyan-300 shadow-lg backdrop-blur-md transition-all hover:bg-blue-900/40 text-center cursor-pointer"
-              >
-                Launch Interactive 3D HQ 🌐
-              </button>
-            </div>
+            <ScrollReveal variant="scale" delay={240}>
+              <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto">
+                <a
+                  href="#services"
+                  className="rounded-lg bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-[0_0_25px_rgba(37,99,235,0.4)] transition-all hover:scale-[1.02] text-center cursor-pointer"
+                >
+                  Explore Infrastructure Services
+                </a>
+                <button
+                  onClick={() => {
+                    playAudio("click");
+                    onLaunch3D();
+                  }}
+                  className="rounded-lg border border-blue-500/30 bg-slate-900/80 px-6 py-3 text-xs sm:text-sm font-bold text-cyan-300 shadow-lg backdrop-blur-md transition-all hover:bg-blue-900/40 text-center cursor-pointer"
+                >
+                  Launch Interactive 3D HQ 🌐
+                </button>
+              </div>
+            </ScrollReveal>
           </div>
 
           {/* Official Kloudera Solutions Feature Cards */}
-          <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
+          <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto stagger-group">
             {solutionCards.map((card: any, idx: number) => (
-              <div key={idx} className="rounded-xl border border-blue-500/20 bg-slate-900/50 p-4 sm:p-5 backdrop-blur-xl shadow-[0_0_20px_rgba(37,99,235,0.1)] hover:border-blue-400/40 transition-all text-left">
-                <div className="flex items-center justify-between">
-                  <InlineText as="span" className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider" path={["home", "solutionCards", String(idx), "category"]} fallback={card.category} />
-                  <span className="h-2 w-2 rounded-full" style={{ backgroundColor: card.color || "#06b6d4" }} />
+              <ScrollReveal key={idx} variant="flip-up" delay={idx * 90}>
+                <div className="rounded-xl border border-blue-500/20 bg-slate-900/70 p-4 sm:p-5 backdrop-blur-xl shadow-[0_0_20px_rgba(37,99,235,0.1)] hover:border-blue-400/40 transition-all text-left hover-card-3d h-full">
+                  <div className="flex items-center justify-between">
+                    <InlineText as="span" className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider" path={["home", "solutionCards", String(idx), "category"]} fallback={card.category} />
+                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: card.color || "#06b6d4" }} />
+                  </div>
+                  <InlineText as="h3" className="mt-2 sm:mt-3 text-base sm:text-lg font-bold text-white block" path={["home", "solutionCards", String(idx), "title"]} fallback={card.title} />
+                  <InlineText as="p" multiline className="text-xs text-slate-400 mt-1 leading-relaxed block" path={["home", "solutionCards", String(idx), "desc"]} fallback={card.desc} />
                 </div>
-                <InlineText as="h3" className="mt-2 sm:mt-3 text-base sm:text-lg font-bold text-white block" path={["home", "solutionCards", String(idx), "title"]} fallback={card.title} />
-                <InlineText as="p" multiline className="text-xs text-slate-400 mt-1 leading-relaxed block" path={["home", "solutionCards", String(idx), "desc"]} fallback={card.desc} />
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
       {/* ----------------- Interactive Services Section ----------------- */}
-      <section id="services" className="py-24 border-b border-blue-900/20 bg-[#030712] relative">
+      <section id="services" className="py-24 border-b border-blue-900/20 bg-[#030712]/95 relative" style={{ zIndex: 1 }}>
         <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">CORE CAPABILITIES</h2>
-            <InlineText as="p" className="mt-2 text-3xl font-extrabold text-white sm:text-4xl" path={["home", "servicesTitle"]} fallback="Enterprise Solution Architecture" />
-            <InlineText as="p" multiline className="mt-4 text-slate-400 text-sm" path={["home", "servicesDesc"]} fallback="Explore our core operational wings. Select a domain below to review hardware specs and security frameworks." />
-          </div>
+          <ScrollReveal variant="fade-up">
+            <div className="text-center max-w-2xl mx-auto">
+              <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">CORE CAPABILITIES</h2>
+              <InlineText as="p" className="mt-2 text-3xl font-extrabold text-white sm:text-4xl" path={["home", "servicesTitle"]} fallback="Enterprise Solution Architecture" />
+              <InlineText as="p" multiline className="mt-4 text-slate-400 text-sm" path={["home", "servicesDesc"]} fallback="Explore our core operational wings. Select a domain below to review hardware specs and security frameworks." />
+            </div>
+          </ScrollReveal>
 
           {/* Tab Selection */}
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
@@ -534,17 +561,19 @@ export function ProfessionalBlueHome({
       </section>
 
       {/* ----------------- Technology Partners Section ----------------- */}
-      <section id="partners" className="py-24 border-b border-blue-900/20 bg-gradient-to-b from-[#030712] via-[#080d19] to-[#030712]">
+      <section id="partners" className="py-24 border-b border-blue-900/20 bg-gradient-to-b from-[#030712]/90 via-[#080d19]/90 to-[#030712]/90 relative" style={{ zIndex: 1 }}>
         <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8">
-            <div>
-              <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">STRATEGIC ECOSYSTEM</h2>
-              <InlineText as="p" className="mt-1 text-3xl font-extrabold text-white" path={["home", "partnersTitle"]} fallback="Technology Partner Directory" />
+          <ScrollReveal variant="fade-up">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8">
+              <div>
+                <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">STRATEGIC ECOSYSTEM</h2>
+                <InlineText as="p" className="mt-1 text-3xl font-extrabold text-white" path={["home", "partnersTitle"]} fallback="Technology Partner Directory" />
+              </div>
+              <Link href="/partners" className="rounded-lg bg-blue-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-blue-500 transition-colors">
+                Explore All Partners →
+              </Link>
             </div>
-            <Link href="/partners" className="rounded-lg bg-blue-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-blue-500 transition-colors">
-              Explore All Partners →
-            </Link>
-          </div>
+          </ScrollReveal>
 
           <div className="mt-12">
             {partnersList.length === 0 ? (
@@ -560,35 +589,36 @@ export function ProfessionalBlueHome({
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                 {partnersList.map((item: any, idx: number) => (
-                  <div
-                    key={idx}
-                    className="rounded-xl border border-blue-900/30 bg-slate-900/40 backdrop-blur-md transition-all hover:scale-105 hover:border-blue-500/40 hover:bg-blue-950/30 overflow-hidden flex flex-col"
-                  >
-                    {/* Logo / Image Area */}
-                    <div className="flex items-center justify-center bg-zinc-950/60 w-full" style={{ minHeight: "100px" }}>
-                      {item.logoUrl ? (
-                        <img
-                          src={item.logoUrl}
-                          alt={item.name || "Partner"}
-                          className="w-full h-full object-contain p-4"
-                          style={{ maxHeight: "100px" }}
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center text-slate-600 py-6">
-                          <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
-                            <rect x="3" y="3" width="18" height="18" rx="3" strokeWidth="1.5" />
-                            <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
-                          </svg>
-                        </div>
-                      )}
+                  <ScrollReveal key={idx} variant="flip-left" delay={idx * 80}>
+                    <div
+                      className="rounded-xl border border-blue-900/30 bg-slate-900/45 backdrop-blur-md transition-all hover:scale-105 hover:border-blue-500/40 hover:bg-blue-950/30 overflow-hidden flex flex-col hover-card-3d h-full"
+                    >
+                      {/* Logo / Image Area */}
+                      <div className="flex items-center justify-center bg-zinc-950/60 w-full" style={{ minHeight: "100px" }}>
+                        {item.logoUrl ? (
+                          <img
+                            src={item.logoUrl}
+                            alt={item.name || "Partner"}
+                            className="w-full h-full object-contain p-4"
+                            style={{ maxHeight: "100px" }}
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center text-slate-600 py-6">
+                            <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                              <rect x="3" y="3" width="18" height="18" rx="3" strokeWidth="1.5" />
+                              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      {/* Name + Tagline */}
+                      <div className="p-4 border-t border-blue-900/20 flex flex-col gap-1">
+                        <p className="font-bold text-white text-sm truncate">{item.name || "Partner"}</p>
+                        <p className="text-xs text-slate-400 line-clamp-2">{item.tagline || ""}</p>
+                      </div>
                     </div>
-                    {/* Name + Tagline */}
-                    <div className="p-4 border-t border-blue-900/20 flex flex-col gap-1">
-                      <p className="font-bold text-white text-sm truncate">{item.name || "Partner"}</p>
-                      <p className="text-xs text-slate-400 line-clamp-2">{item.tagline || ""}</p>
-                    </div>
-                  </div>
+                  </ScrollReveal>
                 ))}
               </div>
             )}
@@ -597,33 +627,37 @@ export function ProfessionalBlueHome({
       </section>
 
       {/* ----------------- Enterprise Benefits Section ----------------- */}
-      <section className="py-20 border-b border-blue-900/20 bg-[#030712] relative overflow-hidden">
+      <section className="py-20 border-b border-blue-900/20 bg-[#030712]/95 relative overflow-hidden" style={{ zIndex: 1 }}>
         <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">WHY ENTERPRISES CHOOSE US</h2>
-            <InlineText as="p" className="mt-2 text-3xl font-extrabold text-white" path={["home", "benefitsTitle"]} fallback="How Your Organization Benefits" />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-left">
+          <ScrollReveal variant="fade-up">
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">WHY ENTERPRISES CHOOSE US</h2>
+              <InlineText as="p" className="mt-2 text-3xl font-extrabold text-white" path={["home", "benefitsTitle"]} fallback="How Your Organization Benefits" />
+            </div>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-left stagger-group">
             {whyChooseUsList.map((item: any, idx: number) => {
               const bgColors = ["bg-cyan-400", "bg-blue-400", "bg-indigo-400", "bg-emerald-400"];
               const bgColor = bgColors[idx % bgColors.length];
 
               return (
-                <div key={idx} className="rounded-xl border border-blue-500/20 bg-blue-950/20 p-6 backdrop-blur-lg relative">
-                  {/* Delete Button */}
-                  {isEditActive && (
-                    <button
-                      onClick={() => deleteBenefit(idx)}
-                      className="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold text-xs"
-                      title="Delete card"
-                    >
-                      ✕
-                    </button>
-                  )}
-                  <div className={`h-2 w-8 rounded-full mb-3 ${bgColor}`} />
-                  <InlineText as="h3" className="font-bold text-white text-base block" path={["about", "whyChooseUs", String(idx), "title"]} fallback={item.title} />
-                  <InlineText as="p" multiline className="text-xs text-slate-400 mt-2 block" path={["about", "whyChooseUs", String(idx), "desc"]} fallback={item.desc} />
-                </div>
+                <ScrollReveal key={idx} variant="scale" delay={idx * 80}>
+                  <div className="rounded-xl border border-blue-500/20 bg-blue-950/20 p-6 backdrop-blur-lg relative hover-card-3d h-full">
+                    {/* Delete Button */}
+                    {isEditActive && (
+                      <button
+                        onClick={() => deleteBenefit(idx)}
+                        className="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold text-xs"
+                        title="Delete card"
+                      >
+                        ✕
+                      </button>
+                    )}
+                    <div className={`h-2 w-8 rounded-full mb-3 ${bgColor}`} />
+                    <InlineText as="h3" className="font-bold text-white text-base block" path={["about", "whyChooseUs", String(idx), "title"]} fallback={item.title} />
+                    <InlineText as="p" multiline className="text-xs text-slate-400 mt-2 block" path={["about", "whyChooseUs", String(idx), "desc"]} fallback={item.desc} />
+                  </div>
+                </ScrollReveal>
               );
             })}
 
@@ -642,74 +676,80 @@ export function ProfessionalBlueHome({
       </section>
 
       {/* ----------------- About & Values Section ----------------- */}
-      <section id="about" className="py-24 border-b border-blue-900/20 bg-[#060a14]">
+      <section id="about" className="py-24 border-b border-blue-900/20 bg-[#060a14]/90 relative" style={{ zIndex: 1 }}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">ABOUT KLOUDERA</h2>
-              <InlineText as="h3" className="mt-2 text-3xl font-extrabold text-white sm:text-4xl" path={["home", "aboutTitle"]} fallback="Built for High-Stakes Enterprise Resilience" />
-              <InlineText as="p" multiline className="mt-4 text-sm text-slate-300 leading-relaxed" path={["home", "aboutDesc"]} fallback="Kloudera Technologies provides Fortune 500 organizations with end-to-end security posture optimization, compute hardware procurement, and cloud modernization strategies." />
-              <div className="mt-6 space-y-3">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold shrink-0">✓</span>
-                  <InlineText as="span" className="text-xs text-slate-200" path={["home", "aboutBullets", "0"]} fallback="ISO 27001 & SOC2 Type II Certified Infrastructure" />
+            <ScrollReveal variant="fade-left">
+              <div>
+                <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">ABOUT KLOUDERA</h2>
+                <InlineText as="h3" className="mt-2 text-3xl font-extrabold text-white sm:text-4xl" path={["home", "aboutTitle"]} fallback="Built for High-Stakes Enterprise Resilience" />
+                <InlineText as="p" multiline className="mt-4 text-sm text-slate-300 leading-relaxed" path={["home", "aboutDesc"]} fallback="Kloudera Technologies provides Fortune 500 organizations with end-to-end security posture optimization, compute hardware procurement, and cloud modernization strategies." />
+                <div className="mt-6 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold shrink-0">✓</span>
+                    <InlineText as="span" className="text-xs text-slate-200" path={["home", "aboutBullets", "0"]} fallback="ISO 27001 & SOC2 Type II Certified Infrastructure" />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold shrink-0">✓</span>
+                    <InlineText as="span" className="text-xs text-slate-200" path={["home", "aboutBullets", "1"]} fallback="Dedicated Hardware Rig Procurement & Benchmarking" />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold shrink-0">✓</span>
+                    <InlineText as="span" className="text-xs text-slate-200" path={["home", "aboutBullets", "2"]} fallback="Direct Microsoft Tier-1 Solutions Partner" />
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold shrink-0">✓</span>
-                  <InlineText as="span" className="text-xs text-slate-200" path={["home", "aboutBullets", "1"]} fallback="Dedicated Hardware Rig Procurement & Benchmarking" />
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20 text-xs text-cyan-400 font-bold shrink-0">✓</span>
-                  <InlineText as="span" className="text-xs text-slate-200" path={["home", "aboutBullets", "2"]} fallback="Direct Microsoft Tier-1 Solutions Partner" />
+                <div className="mt-8">
+                  <Link href="/about" className="rounded-lg bg-blue-950 px-5 py-2.5 text-xs font-bold text-cyan-300 border border-blue-800 hover:border-cyan-400">
+                    Read Company Mission →
+                  </Link>
                 </div>
               </div>
-              <div className="mt-8">
-                <Link href="/about" className="rounded-lg bg-blue-950 px-5 py-2.5 text-xs font-bold text-cyan-300 border border-blue-800 hover:border-cyan-400">
-                  Read Company Mission →
-                </Link>
-              </div>
-            </div>
+            </ScrollReveal>
 
-            <div className="rounded-2xl border border-blue-500/20 bg-slate-900/60 p-8 backdrop-blur-xl shadow-2xl relative">
-              <div className="text-xs font-mono text-cyan-400 mb-2">SYSTEM_FRAMEWORK</div>
-              <InlineText as="h4" className="text-xl font-bold text-white mb-4 block" path={["home", "valuesTitle"]} fallback="Zero-Trust Command Principles" />
-              <div className="space-y-4 text-xs text-slate-300">
-                <div className="border-l-2 border-blue-500 pl-4 py-1">
-                  <InlineText as="span" className="font-bold text-white block" path={["home", "values", "0", "title"]} fallback="1. Explicit Verification" />
-                  <InlineText as="span" className="block text-slate-400 mt-1" path={["home", "values", "0", "desc"]} fallback="Always authenticate and authorize based on all available data points." />
-                </div>
-                <div className="border-l-2 border-cyan-500 pl-4 py-1">
-                  <InlineText as="span" className="font-bold text-white block" path={["home", "values", "1", "title"]} fallback="2. Least Privilege Access" />
-                  <InlineText as="span" className="block text-slate-400 mt-1" path={["home", "values", "1", "desc"]} fallback="Limit user access with Just-In-Time and Just-Enough-Access (JIT/JEA) policies." />
-                </div>
-                <div className="border-l-2 border-indigo-500 pl-4 py-1">
-                  <InlineText as="span" className="font-bold text-white block" path={["home", "values", "2", "title"]} fallback="3. Assume Breach Mindset" />
-                  <InlineText as="span" className="block text-slate-400 mt-1" path={["home", "values", "2", "desc"]} fallback="Minimize blast radius and segment access. Verify end-to-end encryption." />
+            <ScrollReveal variant="fade-right">
+              <div className="rounded-2xl border border-blue-500/20 bg-slate-900/60 p-8 backdrop-blur-xl shadow-2xl relative hover-card-3d">
+                <div className="text-xs font-mono text-cyan-400 mb-2">SYSTEM_FRAMEWORK</div>
+                <InlineText as="h4" className="text-xl font-bold text-white mb-4 block" path={["home", "valuesTitle"]} fallback="Zero-Trust Command Principles" />
+                <div className="space-y-4 text-xs text-slate-300">
+                  <div className="border-l-2 border-blue-500 pl-4 py-1">
+                    <InlineText as="span" className="font-bold text-white block" path={["home", "values", "0", "title"]} fallback="1. Explicit Verification" />
+                    <InlineText as="span" className="block text-slate-400 mt-1" path={["home", "values", "0", "desc"]} fallback="Always authenticate and authorize based on all available data points." />
+                  </div>
+                  <div className="border-l-2 border-cyan-500 pl-4 py-1">
+                    <InlineText as="span" className="font-bold text-white block" path={["home", "values", "1", "title"]} fallback="2. Least Privilege Access" />
+                    <InlineText as="span" className="block text-slate-400 mt-1" path={["home", "values", "1", "desc"]} fallback="Limit user access with Just-In-Time and Just-Enough-Access (JIT/JEA) policies." />
+                  </div>
+                  <div className="border-l-2 border-indigo-500 pl-4 py-1">
+                    <InlineText as="span" className="font-bold text-white block" path={["home", "values", "2", "title"]} fallback="3. Assume Breach Mindset" />
+                    <InlineText as="span" className="block text-slate-400 mt-1" path={["home", "values", "2", "desc"]} fallback="Minimize blast radius and segment access. Verify end-to-end encryption." />
+                  </div>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
       {/* ----------------- Achievements & Recognition Section ----------------- */}
-      <section id="achievements" className="py-24 border-b border-blue-900/20 bg-[#030712]">
+      <section id="achievements" className="py-24 border-b border-blue-900/20 bg-[#030712]/95 relative" style={{ zIndex: 1 }}>
         <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8 mb-12">
-            <div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-                Our <span className="text-blue-500">Achievements</span>
-              </h2>
-              <p className="mt-2 text-xs sm:text-sm text-slate-400 font-mono">
-                Official accreditation and government recognition under key national initiatives.
-              </p>
+          <ScrollReveal variant="fade-up">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8 mb-12">
+              <div>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+                  Our <span className="text-blue-500">Achievements</span>
+                </h2>
+                <p className="mt-2 text-xs sm:text-sm text-slate-400 font-mono">
+                  Official accreditation and government recognition under key national initiatives.
+                </p>
+              </div>
+              <Link href="/achievements" className="rounded-full border border-blue-500/30 bg-blue-950/40 px-5 py-2.5 text-xs font-mono font-bold text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 transition-all">
+                View All Accreditations →
+              </Link>
             </div>
-            <Link href="/achievements" className="rounded-full border border-blue-500/30 bg-blue-950/40 px-5 py-2.5 text-xs font-mono font-bold text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 transition-all">
-              View All Accreditations →
-            </Link>
-          </div>
+          </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto stagger-group">
             {achievementsList.map((item: any, idx: number) => {
               const hasCustomImage = item.logoUrl && (
                 item.logoUrl.startsWith("data:") || 
@@ -718,78 +758,79 @@ export function ProfessionalBlueHome({
               );
 
               return (
-                <div 
-                  key={idx} 
-                  className="rounded-2xl border border-blue-900/40 bg-white p-8 text-center flex flex-col items-center justify-center space-y-4 shadow-2xl hover:scale-105 transition-all relative"
-                >
-                  {/* Delete Button */}
-                  {isEditActive && (
-                    <button
-                      onClick={() => deleteAchievement(idx)}
-                      className="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-full transition-all z-10 font-bold"
-                      title="Delete card"
-                    >
-                      ✕
-                    </button>
-                  )}
-
-                  {/* Logo or Image Upload slot */}
-                  <div className="w-full flex justify-center">
-                    {isEditActive || hasCustomImage ? (
-                      <div className="h-16 w-full flex items-center justify-center overflow-hidden relative border border-dashed border-teal-500/20 rounded">
-                        <InlineImage 
-                          path={["achievements", "items", String(idx), "logoUrl"]} 
-                          fallback={hasCustomImage ? item.logoUrl : "/logo.png"} 
-                          className="h-full w-auto max-h-16 object-contain"
-                          alt={item.name}
-                        />
-                      </div>
-                    ) : (
-                      // Fallbacks
-                      (() => {
-                        const nameLower = item.name.toLowerCase();
-                        if (nameLower.includes("msme")) {
-                          return (
-                            <div className="flex items-center justify-center gap-3">
-                              <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-600 font-extrabold text-lg">
-                                🇮🇳
-                              </div>
-                              <div className="text-left">
-                                <span className="text-2xl font-black tracking-tight text-red-600 font-sans block">MSME</span>
-                                <span className="text-[10px] text-slate-700 font-semibold block leading-tight">सूक्ष्म , लघु एवं मध्यम उद्यम</span>
-                                <span className="text-[8px] text-slate-500 font-mono block">MICRO, SMALL & MEDIUM ENTERPRISES</span>
-                              </div>
-                            </div>
-                          );
-                        }
-                        if (nameLower.includes("startup")) {
-                          return (
-                            <div className="text-3xl sm:text-4xl font-extrabold tracking-tight font-sans">
-                              <span className="text-orange-500">#startup</span>
-                              <span className="text-cyan-500">ind</span>
-                              <span className="text-yellow-500">i</span>
-                              <span className="text-emerald-500 border-b-4 border-emerald-500 inline-block pb-0.5">a</span>
-                            </div>
-                          );
-                        }
-                        return (
-                          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-lg">
-                            🏆
-                          </div>
-                        );
-                      })()
+                <ScrollReveal key={idx} variant="flip-right" delay={idx * 100}>
+                  <div 
+                    className="rounded-2xl border border-blue-900/40 bg-white p-8 text-center flex flex-col items-center justify-center space-y-4 shadow-2xl hover:scale-105 transition-all relative hover-card-3d h-full"
+                  >
+                    {/* Delete Button */}
+                    {isEditActive && (
+                      <button
+                        onClick={() => deleteAchievement(idx)}
+                        className="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-full transition-all z-10 font-bold"
+                        title="Delete card"
+                      >
+                        ✕
+                      </button>
                     )}
-                  </div>
 
-                  <div className="text-center space-y-2 w-full">
-                    <div className="mb-1">
-                      <InlineText as="span" className="text-[10px] font-mono font-bold uppercase text-blue-900 bg-blue-50 px-4 py-1 rounded-full border border-blue-200" path={["achievements", "items", String(idx), "category"]} fallback={item.category} />
+                    {/* Logo or Image Upload slot */}
+                    <div className="w-full flex justify-center">
+                      {isEditActive || hasCustomImage ? (
+                        <div className="h-16 w-full flex items-center justify-center overflow-hidden relative border border-dashed border-teal-500/20 rounded">
+                          <InlineImage 
+                            path={["achievements", "items", String(idx), "logoUrl"]} 
+                            fallback={hasCustomImage ? item.logoUrl : "/logo.png"} 
+                            className="h-full w-auto max-h-16 object-contain"
+                            alt={item.name}
+                          />
+                        </div>
+                      ) : (
+                        // Fallbacks
+                        (() => {
+                          const nameLower = item.name.toLowerCase();
+                          if (nameLower.includes("msme")) {
+                            return (
+                              <div className="flex items-center justify-center gap-3">
+                                <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-600 font-extrabold text-lg">
+                                  🇮🇳
+                                </div>
+                                <div className="text-left">
+                                  <span className="text-2xl font-black tracking-tight text-red-600 font-sans block">MSME</span>
+                                  <span className="text-[10px] text-slate-700 font-semibold block leading-tight">सूक्ष्म , लघु एवं मध्यम उद्यम</span>
+                                  <span className="text-[8px] text-slate-500 font-mono block">MICRO, SMALL & MEDIUM ENTERPRISES</span>
+                                </div>
+                              </div>
+                            );
+                          }
+                          if (nameLower.includes("startup")) {
+                            return (
+                              <div className="text-3xl sm:text-4xl font-extrabold tracking-tight font-sans">
+                                <span className="text-orange-500">#startup</span>
+                                <span className="text-cyan-500">ind</span>
+                                <span className="text-yellow-500">i</span>
+                                <span className="text-emerald-500 border-b-4 border-emerald-500 inline-block pb-0.5">a</span>
+                              </div>
+                            );
+                          }
+                          return (
+                            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-lg">
+                              🏆
+                            </div>
+                          );
+                        })()
+                      )}
                     </div>
-                    <InlineText as="h3" className="text-lg font-black text-slate-800 tracking-tight block pt-2" path={["achievements", "items", String(idx), "name"]} fallback={item.name} />
-                    {item.tagline && <InlineText as="span" className="text-[10px] text-slate-500 block" path={["achievements", "items", String(idx), "tagline"]} fallback={item.tagline} />}
-                    <InlineText as="p" multiline className="text-xs text-slate-500 leading-relaxed block" path={["achievements", "items", String(idx), "desc"]} fallback={item.desc} />
+
+                    <div className="text-center space-y-2 w-full">
+                      <div className="mb-1">
+                        <InlineText as="span" className="text-[10px] font-mono font-bold uppercase text-blue-900 bg-blue-50 px-4 py-1 rounded-full border border-blue-200" path={["achievements", "items", String(idx), "category"]} fallback={item.category} />
+                      </div>
+                      <InlineText as="h3" className="text-lg font-black text-slate-800 tracking-tight block pt-2" path={["achievements", "items", String(idx), "name"]} fallback={item.name} />
+                      {item.tagline && <InlineText as="span" className="text-[10px] text-slate-500 block" path={["achievements", "items", String(idx), "tagline"]} fallback={item.tagline} />}
+                      <InlineText as="p" multiline className="text-xs text-slate-500 leading-relaxed block" path={["achievements", "items", String(idx), "desc"]} fallback={item.desc} />
+                    </div>
                   </div>
-                </div>
+                </ScrollReveal>
               );
             })}
 
@@ -810,23 +851,25 @@ export function ProfessionalBlueHome({
       </section>
 
       {/* ----------------- Clientele & Verticals Section ----------------- */}
-      <section id="clienteles" className="py-24 border-b border-blue-900/20 bg-[#030712]">
+      <section id="clienteles" className="py-24 border-b border-blue-900/20 bg-[#030712]/95 relative" style={{ zIndex: 1 }}>
         <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8 mb-12">
-            <div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-                Our <span className="text-blue-500">Clienteles</span>
-              </h2>
-              <p className="mt-2 text-xs sm:text-sm text-slate-300 font-mono">
-                Engineered for industry-leading financial, IT, construction, and educational enterprises.
-              </p>
+          <ScrollReveal variant="fade-up">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8 mb-12">
+              <div>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+                  Our <span className="text-blue-500">Clienteles</span>
+                </h2>
+                <p className="mt-2 text-xs sm:text-sm text-slate-300 font-mono">
+                  Engineered for industry-leading financial, IT, construction, and educational enterprises.
+                </p>
+              </div>
+              <Link href="/clienteles" className="rounded-full border border-blue-500/30 bg-blue-950/40 px-5 py-2.5 text-xs font-mono font-bold text-cyan-300 hover:bg-blue-900/60 transition-all">
+                View Clientele Details →
+              </Link>
             </div>
-            <Link href="/clienteles" className="rounded-full border border-blue-500/30 bg-blue-950/40 px-5 py-2.5 text-xs font-mono font-bold text-cyan-300 hover:bg-blue-900/60 transition-all">
-              View Clientele Details →
-            </Link>
-          </div>
+          </ScrollReveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 stagger-group">
             {clientelesList.map((item: any, idx: number) => {
               const hasCustomImage = item.logoType && (
                 item.logoType.startsWith("data:") || 
@@ -835,103 +878,104 @@ export function ProfessionalBlueHome({
               );
 
               return (
-                <div 
-                  key={idx} 
-                  className="rounded-xl bg-white p-8 shadow-xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all border border-slate-100 relative"
-                >
-                  {/* Delete Button */}
-                  {isEditActive && (
-                    <button
-                      onClick={() => deleteClientele(idx)}
-                      className="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-full transition-all z-10 font-bold text-xs"
-                      title="Delete card"
-                    >
-                      ✕
-                    </button>
-                  )}
-
-                  <div className="flex flex-col items-center justify-center h-full w-full overflow-hidden">
-                    {isEditActive || hasCustomImage ? (
-                      <div className="h-16 w-full flex items-center justify-center overflow-hidden relative">
-                        <InlineImage 
-                          path={["clienteles", "items", String(idx), "logoType"]} 
-                          fallback={hasCustomImage ? item.logoType : "/logo.png"} 
-                          className="h-full w-auto max-h-16"
-                          alt={item.name}
-                        />
-                      </div>
-                    ) : (
-                      // Fallback to custom layouts based on name
-                      (() => {
-                        const nameLower = item.name.toLowerCase();
-                        if (nameLower.includes("indiacapital")) {
-                          return (
-                            <div className="bg-[#0b1b1f] text-white px-5 py-2.5 rounded-lg flex items-center gap-2.5 border border-slate-800 shadow-sm">
-                              <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-400 via-emerald-400 to-indigo-500 flex items-center justify-center text-[10px] font-bold">
-                                ❖
-                              </div>
-                              <span className="font-bold text-base tracking-tight font-sans">IndiaCapital</span>
-                            </div>
-                          );
-                        }
-                        if (nameLower.includes("chikitsak")) {
-                          return (
-                            <div className="text-center">
-                              <div className="flex items-center justify-center gap-1 text-emerald-700 font-extrabold text-xl tracking-tighter">
-                                <span>F</span>
-                                <span className="text-emerald-500">C</span>
-                              </div>
-                              <span className="font-bold text-sm text-emerald-950 tracking-wider block">FIN CHIKITSAK</span>
-                              <span className="text-[9px] text-emerald-700 font-serif italic block">Be Financially Fit</span>
-                            </div>
-                          );
-                        }
-                        if (nameLower.includes("gleeds")) {
-                          return (
-                            <span className="font-sans text-4xl font-extrabold text-slate-900 tracking-tight">gleeds</span>
-                          );
-                        }
-                        if (nameLower.includes("statusneo")) {
-                          return (
-                            <div className="flex items-center text-2xl font-sans text-slate-900">
-                              <span className="font-normal">Status</span>
-                              <span className="font-extrabold">Neo</span>
-                              <span className="w-2.5 h-2.5 rounded-full bg-amber-400 ml-0.5" />
-                            </div>
-                          );
-                        }
-                        if (nameLower.includes("sit pune")) {
-                          return (
-                            <div className="bg-[#1a1a1a] p-3 rounded-lg flex items-center gap-3 text-red-500 border border-slate-700">
-                              <div className="w-8 h-8 rounded bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-500 text-xs font-bold">
-                                🌐
-                              </div>
-                              <div className="text-left">
-                                <span className="text-xs font-bold text-white block">SIT PUNE</span>
-                                <span className="text-[7px] text-red-400 font-serif block">वसुधैव कुटुम्बकम्</span>
-                              </div>
-                            </div>
-                          );
-                        }
-                        return (
-                          <div className="bg-slate-50 border border-slate-200 p-3 rounded flex items-center gap-2 text-slate-700">
-                            <span>💼</span>
-                            <span className="font-bold text-xs uppercase">{item.name}</span>
-                          </div>
-                        );
-                      })()
+                <ScrollReveal key={idx} variant="flip-left" delay={idx * 90}>
+                  <div 
+                    className="rounded-xl bg-white p-8 shadow-xl flex flex-col items-center justify-between h-56 hover:scale-105 transition-all border border-slate-100 relative hover-card-3d"
+                  >
+                    {/* Delete Button */}
+                    {isEditActive && (
+                      <button
+                        onClick={() => deleteClientele(idx)}
+                        className="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-full transition-all z-10 font-bold text-xs"
+                        title="Delete card"
+                      >
+                        ✕
+                      </button>
                     )}
-                  </div>
-                  
-                  <div className="text-center space-y-1 mt-4 w-full">
-                    <div className="flex justify-between items-center w-full mb-1">
-                      <InlineText as="span" className="text-[8px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded" path={["clienteles", "items", String(idx), "sector"]} fallback={item.sector} />
-                      <InlineText as="span" className="text-[8px] font-bold text-blue-500 uppercase tracking-widest" path={["clienteles", "items", String(idx), "category"]} fallback={item.category} />
+
+                    <div className="flex flex-col items-center justify-center h-full w-full overflow-hidden">
+                      {isEditActive || hasCustomImage ? (
+                        <div className="h-16 w-full flex items-center justify-center overflow-hidden relative">
+                          <InlineImage 
+                            path={["clienteles", "items", String(idx), "logoType"]} 
+                            fallback={hasCustomImage ? item.logoType : "/logo.png"} 
+                            className="h-full w-auto max-h-16"
+                            alt={item.name}
+                          />
+                        </div>
+                      ) : (
+                        // Fallback to custom layouts based on name
+                        (() => {
+                          const nameLower = item.name.toLowerCase();
+                          if (nameLower.includes("indiacapital")) {
+                            return (
+                              <div className="bg-[#0b1b1f] text-white px-5 py-2.5 rounded-lg flex items-center gap-2.5 border border-slate-800 shadow-sm">
+                                <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-400 via-emerald-400 to-indigo-500 flex items-center justify-center text-[10px] font-bold">
+                                  ❖
+                                </div>
+                                <span className="font-bold text-base tracking-tight font-sans">IndiaCapital</span>
+                              </div>
+                            );
+                          }
+                          if (nameLower.includes("chikitsak")) {
+                            return (
+                              <div className="text-center">
+                                <div className="flex items-center justify-center gap-1 text-emerald-700 font-extrabold text-xl tracking-tighter">
+                                  <span>F</span>
+                                  <span className="text-emerald-500">C</span>
+                                </div>
+                                <span className="font-bold text-sm text-emerald-950 tracking-wider block">FIN CHIKITSAK</span>
+                                <span className="text-[9px] text-emerald-700 font-serif italic block">Be Financially Fit</span>
+                              </div>
+                            );
+                          }
+                          if (nameLower.includes("gleeds")) {
+                            return (
+                              <span className="font-sans text-4xl font-extrabold text-slate-900 tracking-tight">gleeds</span>
+                            );
+                          }
+                          if (nameLower.includes("statusneo")) {
+                            return (
+                              <div className="flex items-center text-2xl font-sans text-slate-900">
+                                <span className="font-normal">Status</span>
+                                <span className="font-extrabold">Neo</span>
+                                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 ml-0.5" />
+                              </div>
+                            );
+                          }
+                          if (nameLower.includes("sit pune")) {
+                            return (
+                              <div className="bg-[#1a1a1a] p-3 rounded-lg flex items-center gap-3 text-red-500 border border-slate-700">
+                                <div className="w-8 h-8 rounded bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-500 text-xs font-bold">
+                                  🌐
+                                </div>
+                                <div className="text-left">
+                                  <span className="text-xs font-bold text-white block">SIT PUNE</span>
+                                  <span className="text-[7px] text-red-400 font-serif block">वसुधैव कुटुम्बकम्</span>
+                                </div>
+                              </div>
+                            );
+                          }
+                          return (
+                            <div className="bg-slate-50 border border-slate-200 p-3 rounded flex items-center gap-2 text-slate-700">
+                              <span>💼</span>
+                              <span className="font-bold text-xs uppercase">{item.name}</span>
+                            </div>
+                          );
+                        })()
+                      )}
                     </div>
-                    <InlineText as="h3" className="text-base font-black text-slate-800 tracking-tight" path={["clienteles", "items", String(idx), "name"]} fallback={item.name} />
-                    <InlineText as="p" multiline className="text-[10px] text-slate-500 leading-relaxed" path={["clienteles", "items", String(idx), "desc"]} fallback={item.desc} />
+                    
+                    <div className="text-center space-y-1 mt-4 w-full">
+                      <div className="flex justify-between items-center w-full mb-1">
+                        <InlineText as="span" className="text-[8px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded" path={["clienteles", "items", String(idx), "sector"]} fallback={item.sector} />
+                        <InlineText as="span" className="text-[8px] font-bold text-blue-500 uppercase tracking-widest" path={["clienteles", "items", String(idx), "category"]} fallback={item.category} />
+                      </div>
+                      <InlineText as="h3" className="text-base font-black text-slate-800 tracking-tight" path={["clienteles", "items", String(idx), "name"]} fallback={item.name} />
+                      <InlineText as="p" multiline className="text-[10px] text-slate-500 leading-relaxed" path={["clienteles", "items", String(idx), "desc"]} fallback={item.desc} />
+                    </div>
                   </div>
-                </div>
+                </ScrollReveal>
               );
             })}
 
@@ -952,17 +996,19 @@ export function ProfessionalBlueHome({
       </section>
 
       {/* ----------------- Security Certifications ----------------- */}
-      <section id="certifications" className="py-24 border-b border-blue-900/20 bg-[#030712]">
+      <section id="certifications" className="py-24 border-b border-emerald-950/20 bg-[#030712]/95 relative" style={{ zIndex: 1 }}>
         <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8">
-            <div>
-              <h2 className="text-xs font-bold tracking-widest text-emerald-400 uppercase font-mono">COMPLIANCE STANDARDS</h2>
-              <p className="mt-1 text-3xl font-extrabold text-white">Security & Regulatory Certifications</p>
+          <ScrollReveal variant="fade-up">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8">
+              <div>
+                <h2 className="text-xs font-bold tracking-widest text-emerald-400 uppercase font-mono">COMPLIANCE STANDARDS</h2>
+                <p className="mt-1 text-3xl font-extrabold text-white">Security & Regulatory Certifications</p>
+              </div>
+              <Link href="/certifications" className="rounded-full border border-emerald-500/30 bg-emerald-950/40 px-5 py-2.5 text-xs font-mono font-bold text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 transition-all">
+                View Certification Badges →
+              </Link>
             </div>
-            <Link href="/certifications" className="rounded-full border border-emerald-500/30 bg-emerald-950/40 px-5 py-2.5 text-xs font-mono font-bold text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 transition-all">
-              View Certification Badges →
-            </Link>
-          </div>
+          </ScrollReveal>
 
           <div className="mt-12">
             {certificationsList.length === 0 ? (
@@ -976,34 +1022,35 @@ export function ProfessionalBlueHome({
                 <p className="text-slate-600 text-xs font-mono">Visit the Certifications page in editor mode to add badges.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-5 stagger-group">
                 {certificationsList.map((item: any, idx: number) => (
-                  <div
-                    key={idx}
-                    className="rounded-xl border border-emerald-500/20 bg-emerald-950/10 overflow-hidden flex flex-col hover:border-emerald-400/40 transition-all"
-                  >
-                    {/* Badge Image Area */}
-                    <div className="flex items-center justify-center bg-[#060c18]/60 w-full" style={{ minHeight: "80px" }}>
-                      {item.imageUrl ? (
-                        <img
-                          src={item.imageUrl}
-                          alt={item.title || "Certification"}
-                          className="w-full h-full object-contain p-3"
-                          style={{ maxHeight: "80px" }}
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center text-emerald-900/60 py-4">
-                          <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                          </svg>
-                        </div>
-                      )}
+                  <ScrollReveal key={idx} variant="flip-right" delay={idx * 80}>
+                    <div
+                      className="rounded-xl border border-emerald-500/20 bg-emerald-950/10 overflow-hidden flex flex-col hover:border-emerald-400/40 transition-all hover-card-3d h-full"
+                    >
+                      {/* Badge Image Area */}
+                      <div className="flex items-center justify-center bg-[#060c18]/60 w-full" style={{ minHeight: "80px" }}>
+                        {item.imageUrl ? (
+                          <img
+                            src={item.imageUrl}
+                            alt={item.title || "Certification"}
+                            className="w-full h-full object-contain p-3"
+                            style={{ maxHeight: "80px" }}
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center text-emerald-900/60 py-4">
+                            <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      {/* Title */}
+                      <div className="p-3 border-t border-emerald-900/20 text-center">
+                        <p className="text-emerald-400 font-mono font-bold text-[10px] leading-tight">{item.title || "Certification"}</p>
+                      </div>
                     </div>
-                    {/* Title */}
-                    <div className="p-3 border-t border-emerald-900/20 text-center">
-                      <p className="text-emerald-400 font-mono font-bold text-[10px] leading-tight">{item.title || "Certification"}</p>
-                    </div>
-                  </div>
+                  </ScrollReveal>
                 ))}
               </div>
             )}
@@ -1012,47 +1059,50 @@ export function ProfessionalBlueHome({
       </section>
 
       {/* ----------------- Careers & Talent Portal ----------------- */}
-      <section id="careers" className="py-24 border-b border-blue-900/20 bg-[#030712]">
+      <section id="careers" className="py-24 border-b border-blue-900/20 bg-[#030712]/95 relative" style={{ zIndex: 1 }}>
         <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8">
-            <div>
-              <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">CAREER PORTAL</h2>
-              <InlineText as="p" className="mt-1 text-3xl font-extrabold text-white" path={["home", "careersTitle"]} fallback="Join the Kloudera Engineering Core" />
+          <ScrollReveal variant="fade-up">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8">
+              <div>
+                <h2 className="text-xs font-bold tracking-widest text-cyan-400 uppercase font-mono">CAREER PORTAL</h2>
+                <InlineText as="p" className="mt-1 text-3xl font-extrabold text-white" path={["home", "careersTitle"]} fallback="Join the Kloudera Engineering Core" />
+              </div>
+              <Link href="/careers" className="rounded-lg bg-blue-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-blue-500">
+                View All Open Positions →
+              </Link>
             </div>
-            <Link href="/careers" className="rounded-lg bg-blue-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-blue-500">
-              View All Open Positions →
-            </Link>
-          </div>
+          </ScrollReveal>
 
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 stagger-group">
             {jobsList.map((job: any, idx: number) => {
               const textColors = ["text-cyan-300", "text-blue-300", "text-indigo-300", "text-emerald-300"];
               const textColor = textColors[idx % textColors.length];
 
               return (
-                <div 
-                  key={idx} 
-                  className="rounded-xl border border-blue-500/20 bg-slate-900/50 p-6 backdrop-blur-md relative flex flex-col justify-between"
-                >
-                  {/* Delete Button */}
-                  {isEditActive && (
-                    <button
-                      onClick={() => deleteJob(idx)}
-                      className="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold text-xs"
-                      title="Delete card"
-                    >
-                      ✕
-                    </button>
-                  )}
-                  <div>
-                    <InlineText as="span" className={`rounded bg-blue-950 px-2.5 py-1 text-[10px] font-mono border border-blue-800 inline-block ${textColor}`} path={["careers", "jobs", String(idx), "category"]} fallback={job.category} />
-                    <InlineText as="h3" className="mt-3 text-lg font-bold text-white block" path={["careers", "jobs", String(idx), "title"]} fallback={job.title} />
-                    <InlineText as="p" multiline className="text-xs text-slate-400 mt-2 block" path={["careers", "jobs", String(idx), "desc"]} fallback={job.desc} />
+                <ScrollReveal key={idx} variant="flip-up" delay={idx * 80}>
+                  <div 
+                    className="rounded-xl border border-blue-500/20 bg-slate-900/50 p-6 backdrop-blur-md relative flex flex-col justify-between hover-card-3d h-full"
+                  >
+                    {/* Delete Button */}
+                    {isEditActive && (
+                      <button
+                        onClick={() => deleteJob(idx)}
+                        className="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-zinc-900 border border-zinc-800 p-1.5 rounded-full transition-all z-10 font-bold text-xs"
+                        title="Delete card"
+                      >
+                        ✕
+                      </button>
+                    )}
+                    <div>
+                      <InlineText as="span" className={`rounded bg-blue-950 px-2.5 py-1 text-[10px] font-mono border border-blue-800 inline-block ${textColor}`} path={["careers", "jobs", String(idx), "category"]} fallback={job.category} />
+                      <InlineText as="h3" className="mt-3 text-lg font-bold text-white block" path={["careers", "jobs", String(idx), "title"]} fallback={job.title} />
+                      <InlineText as="p" multiline className="text-xs text-slate-400 mt-2 block" path={["careers", "jobs", String(idx), "desc"]} fallback={job.desc} />
+                    </div>
+                    <Link href="/careers" className="mt-4 inline-block text-xs font-bold text-blue-400 hover:text-cyan-300">
+                      Apply Position →
+                    </Link>
                   </div>
-                  <Link href="/careers" className="mt-4 inline-block text-xs font-bold text-blue-400 hover:text-cyan-300">
-                    Apply Position →
-                  </Link>
-                </div>
+                </ScrollReveal>
               );
             })}
 
