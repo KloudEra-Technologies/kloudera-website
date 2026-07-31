@@ -1244,6 +1244,9 @@ export function ProfessionalBlueHome({
         </div>
       </section>
 
+      {/* ----------------- Our Visionary Team ----------------- */}
+      <TeamSection siteData={siteData} fetchedData={fetchedData} />
+
       {/* ----------------- Footer ----------------- */}
       <footer className="border-t border-blue-900/40 bg-[#02040a] py-12">
         <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-6">
@@ -1273,3 +1276,104 @@ export function ProfessionalBlueHome({
 };
 
 export default ProfessionalBlueHome;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TeamSection — "Our Visionary Team" displayed at the bottom of the home page
+// Reads from the same about.team data used by /about
+// ─────────────────────────────────────────────────────────────────────────────
+
+const DEFAULT_HOME_TEAM = [
+  { name: "Ratnesh Pandey", role: "CEO | Co-Founder | vCISO | Director", image: "" },
+  { name: "Deepa", role: "Director | Co-Founder | CHRO", image: "" },
+  { name: "Utkarsh", role: "Sr. Cyber Security SME | Partner Success Mgr", image: "" },
+];
+
+function TeamSection({ siteData, fetchedData }: { siteData: any; fetchedData: any }) {
+  const teamData: any[] =
+    siteData?.about?.team ||
+    fetchedData?.about?.team ||
+    DEFAULT_HOME_TEAM;
+
+  return (
+    <section
+      id="team"
+      className="py-24 border-b border-blue-900/20 bg-gradient-to-b from-[#030712] via-[#07101f] to-[#030712] relative overflow-hidden"
+      style={{ zIndex: 1 }}
+    >
+      {/* Ambient glow */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-96 w-96 rounded-full bg-cyan-500/5 blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-blue-600/5 blur-3xl" />
+      </div>
+
+      <div className="mx-auto max-w-7xl px-6 relative">
+        {/* Section header */}
+        <div className="text-center mb-14">
+          <span className="inline-block text-[10px] font-mono font-bold text-cyan-400 tracking-widest uppercase bg-cyan-950/40 border border-cyan-900/40 px-4 py-1 rounded-full mb-4">
+            EXECUTIVE LEADERSHIP
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            Our <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Visionary</span> Team
+          </h2>
+          <p className="mt-3 text-sm text-slate-400 max-w-xl mx-auto">
+            The minds steering Kloudera's mission to deliver world-class cybersecurity and cloud solutions.
+          </p>
+        </div>
+
+        {/* Team cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
+          {teamData.map((mbr: any, idx: number) => (
+            <div
+              key={idx}
+              className="group relative w-full max-w-xs rounded-3xl border border-blue-500/20 bg-slate-900/60 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:border-cyan-400/50 hover:shadow-[0_8px_40px_rgba(6,182,212,0.15)] transition-all duration-300 p-8 flex flex-col items-center text-center gap-5 overflow-hidden"
+            >
+              {/* Card glow on hover */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-cyan-500/0 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+              {/* Avatar */}
+              <div className="relative">
+                <div className="w-28 h-28 rounded-full border-2 border-cyan-400/60 shadow-[0_0_24px_rgba(6,182,212,0.35)] overflow-hidden bg-slate-800 flex items-center justify-center">
+                  {mbr.image ? (
+                    <img src={mbr.image} alt={mbr.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-3xl font-extrabold text-cyan-400 font-mono select-none">
+                      {(mbr.name || "?")[0].toUpperCase()}
+                    </span>
+                  )}
+                </div>
+                {/* Online indicator */}
+                <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-emerald-400 border-2 border-slate-900 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+              </div>
+
+              {/* Info */}
+              <div className="space-y-2">
+                <p className="font-extrabold text-white text-lg tracking-wide leading-tight">{mbr.name || "Team Member"}</p>
+                <div className="flex flex-wrap items-center justify-center gap-1.5">
+                  {(mbr.role || "").split("|").map((r: string, i: number) => (
+                    <span
+                      key={i}
+                      className="text-[10px] font-mono bg-blue-950/80 text-cyan-300 px-2.5 py-0.5 rounded-md border border-blue-800/60"
+                    >
+                      {r.trim()}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA link */}
+        <div className="mt-12 text-center">
+          <Link
+            href="/about"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-cyan-500/30 bg-cyan-950/30 text-cyan-300 font-mono text-xs font-bold hover:bg-cyan-900/40 hover:border-cyan-400/60 transition-all"
+          >
+            <span>Learn More About Our Team</span>
+            <span>→</span>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}

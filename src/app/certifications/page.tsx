@@ -1,4 +1,4 @@
-"use client";
+  "use client";
 
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import Link from "next/link";
@@ -26,6 +26,125 @@ function groupByCategory(items: any[]): Record<string, any[]> {
   return grouped;
 }
 
+// ---- Category Manager Panel ----
+interface CategoryManagerProps {
+  subSections: string[];
+  onAdd: (name: string) => void;
+  onDelete: (name: string) => void;
+  onRename: (oldName: string, newName: string) => void;
+}
+
+function CategoryManager({ subSections, onAdd, onDelete, onRename }: CategoryManagerProps) {
+  const [newName, setNewName] = useState("");
+  const [editingIdx, setEditingIdx] = useState<number | null>(null);
+  const [editingVal, setEditingVal] = useState("");
+
+  const startRename = (idx: number) => {
+    setEditingIdx(idx);
+    setEditingVal(subSections[idx]);
+  };
+
+  const commitRename = () => {
+    if (editingIdx === null) return;
+    const trimmed = editingVal.trim();
+    if (trimmed && trimmed !== subSections[editingIdx]) {
+      onRename(subSections[editingIdx], trimmed);
+    }
+    setEditingIdx(null);
+    setEditingVal("");
+  };
+
+  const handleAdd = () => {
+    const trimmed = newName.trim();
+    if (!trimmed) return;
+    onAdd(trimmed);
+    setNewName("");
+  };
+
+  return (
+    <div className="sticky top-24 z-40 mb-8 rounded-2xl border border-emerald-500/30 bg-[#060e10]/95 backdrop-blur-xl shadow-[0_0_30px_rgba(16,185,129,0.08)] p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="h-4 w-1 rounded-full bg-emerald-500" />
+        <span className="text-[10px] font-mono font-bold text-emerald-400 tracking-widest uppercase">Category Manager</span>
+        <span className="text-[9px] font-mono text-emerald-700 ml-1">(edit mode only)</span>
+      </div>
+
+      {/* Category List */}
+      <div className="flex flex-wrap gap-2 mb-4 min-h-[32px]">
+        {subSections.map((name, idx) => (
+          <div
+            key={idx}
+            className="group flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/40 px-3 py-1"
+          >
+            {editingIdx === idx ? (
+              <input
+                autoFocus
+                value={editingVal}
+                onChange={(e) => setEditingVal(e.target.value)}
+                onBlur={commitRename}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") commitRename();
+                  if (e.key === "Escape") { setEditingIdx(null); setEditingVal(""); }
+                }}
+                className="bg-transparent text-white text-xs font-bold font-mono outline-none border-b border-emerald-400 w-28 min-w-0"
+              />
+            ) : (
+              <button
+                onClick={() => startRename(idx)}
+                title="Click to rename"
+                className="text-xs font-bold font-mono text-emerald-300 hover:text-white transition-colors cursor-text"
+              >
+                {name}
+              </button>
+            )}
+            {/* pencil icon */}
+            {editingIdx !== idx && (
+              <button
+                onClick={() => startRename(idx)}
+                title="Rename"
+                className="text-emerald-700 hover:text-emerald-400 transition-colors"
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+              </button>
+            )}
+            {/* delete */}
+            <button
+              onClick={() => onDelete(name)}
+              title="Delete category"
+              className="text-red-700 hover:text-red-400 transition-colors ml-0.5"
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Add new category */}
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+          placeholder="New category name…"
+          className="flex-1 bg-zinc-900/80 border border-emerald-800/50 focus:border-emerald-400 text-white text-xs rounded-lg px-3 py-1.5 outline-none font-mono transition-colors"
+        />
+        <button
+          onClick={handleAdd}
+          disabled={!newName.trim()}
+          className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-black text-xs font-bold rounded-lg transition-all font-mono"
+        >
+          + Add
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function CertificationsPage() {
   const [data, setData] = useState<any>(null);
 
@@ -47,25 +166,30 @@ export default function CertificationsPage() {
   }, []);
 
   const certificationsList: any[] = siteData?.certifications?.items || data?.items || [];
-  // Sub-sections: array of category names user has defined
   const subSections: string[] = siteData?.certifications?.subSections || data?.subSections || ["General"];
 
-  const [newSectionName, setNewSectionName] = useState("");
-  const [addingSectionIdx, setAddingSectionIdx] = useState<number | null>(null);
-
   // — Section management —
-  const addSubSection = () => {
-    const name = newSectionName.trim() || `Section ${subSections.length + 1}`;
-    const updated = [...subSections, name];
-    updateNestedValue(["certifications", "subSections"], updated);
-    setNewSectionName("");
-    setAddingSectionIdx(null);
+  const addSubSection = (name: string) => {
+    if (subSections.includes(name)) return;
+    updateNestedValue(["certifications", "subSections"], [...subSections, name]);
   };
 
   const deleteSubSection = (sectionName: string) => {
-    // Remove section + all its certs
     const updatedSections = subSections.filter((s) => s !== sectionName);
     const updatedItems = certificationsList.filter((c) => (c.category || "General") !== sectionName);
+    updateNestedValue(["certifications", "subSections"], updatedSections);
+    updateNestedValue(["certifications", "items"], updatedItems);
+  };
+
+  const renameSubSection = (oldName: string, newName: string) => {
+    if (subSections.includes(newName)) {
+      alert(`A category named "${newName}" already exists.`);
+      return;
+    }
+    const updatedSections = subSections.map((s) => (s === oldName ? newName : s));
+    const updatedItems = certificationsList.map((c) =>
+      (c.category || "General") === oldName ? { ...c, category: newName } : c
+    );
     updateNestedValue(["certifications", "subSections"], updatedSections);
     updateNestedValue(["certifications", "items"], updatedItems);
   };
@@ -173,7 +297,7 @@ export default function CertificationsPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto w-full p-6 py-12 space-y-16 relative z-10">
+      <main className="flex-1 max-w-7xl mx-auto w-full p-6 py-12 space-y-10 relative z-10">
 
         {/* Banner */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
@@ -195,6 +319,16 @@ export default function CertificationsPage() {
             fallback="Kloudera operates under audited global security frameworks, data privacy laws, and quality management protocols."
           />
         </div>
+
+        {/* Category Manager — only visible in edit mode */}
+        {isEditActive && (
+          <CategoryManager
+            subSections={subSections}
+            onAdd={addSubSection}
+            onDelete={deleteSubSection}
+            onRename={renameSubSection}
+          />
+        )}
 
         {/* Empty state */}
         {totalCerts === 0 && !isEditActive && (
@@ -230,14 +364,6 @@ export default function CertificationsPage() {
                     {sectionCerts.length} badge{sectionCerts.length !== 1 ? "s" : ""}
                   </span>
                 </div>
-                {isEditActive && (
-                  <button
-                    onClick={() => deleteSubSection(sectionName)}
-                    className="text-xs font-mono text-red-500 hover:text-red-400 border border-red-900/40 hover:border-red-500/40 px-3 py-1 rounded-full transition-all"
-                  >
-                    Delete Section
-                  </button>
-                )}
               </div>
 
               {/* Certs Grid */}
@@ -285,46 +411,6 @@ export default function CertificationsPage() {
           );
         })}
 
-        {/* Add Sub-Section button */}
-        {isEditActive && (
-          <div className="border-t border-blue-900/30 pt-8 flex flex-col items-center gap-4">
-            {addingSectionIdx !== null ? (
-              <div className="flex items-center gap-3">
-                <input
-                  autoFocus
-                  type="text"
-                  value={newSectionName}
-                  onChange={(e) => setNewSectionName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && addSubSection()}
-                  placeholder="e.g. ISO Standards, Data Privacy..."
-                  className="bg-zinc-900 border border-emerald-500/40 text-white text-sm rounded-lg px-4 py-2 outline-none focus:border-emerald-400 w-64 font-mono"
-                />
-                <button
-                  onClick={addSubSection}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-all font-mono"
-                >
-                  Create
-                </button>
-                <button
-                  onClick={() => { setAddingSectionIdx(null); setNewSectionName(""); }}
-                  className="px-4 py-2 border border-zinc-700 text-zinc-400 text-xs rounded-lg hover:border-zinc-500 transition-all font-mono"
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setAddingSectionIdx(0)}
-                className="flex items-center gap-2 px-6 py-3 border-2 border-dashed border-emerald-500/30 hover:border-emerald-400 text-emerald-400 rounded-xl font-mono text-xs font-bold uppercase tracking-widest transition-all hover:bg-emerald-900/10"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                Add New Sub-Section
-              </button>
-            )}
-          </div>
-        )}
       </main>
     </div>
   );
