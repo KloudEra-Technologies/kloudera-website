@@ -21,9 +21,9 @@ export const metadata: Metadata = {
   description: "Future-proof your enterprise with world-class Cyber Security, cognitive AI workflows, Microsoft solutions, and premium GPU systems.",
   metadataBase: new URL("https://kloudera.tech"),
   icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
   verification: {
     google: "pRWllGWgk6Lq_VratDGf3nwXPLpJbkmTMPdVkrrDscg",
