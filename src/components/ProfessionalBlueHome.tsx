@@ -1247,6 +1247,9 @@ export function ProfessionalBlueHome({
       {/* ----------------- Our Visionary Team ----------------- */}
       <TeamSection siteData={siteData} fetchedData={fetchedData} />
 
+      {/* ----------------- Social Media Connect ----------------- */}
+      <SocialSection siteData={siteData} fetchedData={fetchedData} />
+
       {/* ----------------- Footer ----------------- */}
       <footer className="border-t border-blue-900/40 bg-[#02040a] py-12">
         <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-6">
@@ -1377,3 +1380,131 @@ function TeamSection({ siteData, fetchedData }: { siteData: any; fetchedData: an
     </section>
   );
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SocialSection — Interactive cards connecting to LinkedIn, Instagram, Facebook, YouTube
+// ─────────────────────────────────────────────────────────────────────────────
+
+function SocialSection({ siteData, fetchedData }: { siteData: any; fetchedData: any }) {
+  const { isEditMode: isEditActive, updateNestedValue } = useEditor();
+
+  const linkedIn = siteData?.home?.social?.linkedin || fetchedData?.home?.social?.linkedin || "https://www.linkedin.com/company/104839162/";
+  const instagram = siteData?.home?.social?.instagram || fetchedData?.home?.social?.instagram || "https://www.instagram.com/klouderatech/";
+  const facebook = siteData?.home?.social?.facebook || fetchedData?.home?.social?.facebook || "https://www.facebook.com/people/KloudEra-Technologies/61567616190162/";
+  const youtube = siteData?.home?.social?.youtube || fetchedData?.home?.social?.youtube || "https://www.youtube.com/@KloudEraTechnologies-b3z";
+
+  const platforms = [
+    {
+      name: "LinkedIn",
+      url: linkedIn,
+      key: "linkedin",
+      icon: (
+        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+        </svg>
+      ),
+      theme: "group-hover:border-blue-500 group-hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] text-blue-400 bg-blue-500/10",
+      desc: "Connect with our professional network, team updates, and corporate milestones.",
+    },
+    {
+      name: "Instagram",
+      url: instagram,
+      key: "instagram",
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      ),
+      theme: "group-hover:border-pink-500 group-hover:shadow-[0_0_30px_rgba(236,72,153,0.3)] text-pink-400 bg-pink-500/10",
+      desc: "Take a look behind the scenes, at our work culture, and design achievements.",
+    },
+    {
+      name: "Facebook",
+      url: facebook,
+      key: "facebook",
+      icon: (
+        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1V12h3v3h-3v6.8c4.56-.93 8-4.96 8-9.8z"/>
+        </svg>
+      ),
+      theme: "group-hover:border-indigo-600 group-hover:shadow-[0_0_30px_rgba(79,70,229,0.3)] text-indigo-400 bg-indigo-500/10",
+      desc: "Join our community hub for customer stories, webinars, and events.",
+    },
+    {
+      name: "YouTube",
+      url: youtube,
+      key: "youtube",
+      icon: (
+        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.516 0-9.387.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.387.507 9.387.507s7.517 0 9.389-.507a3.002 3.002 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      ),
+      theme: "group-hover:border-red-500 group-hover:shadow-[0_0_30px_rgba(239,68,68,0.3)] text-red-500 bg-red-500/10",
+      desc: "Watch product demonstrations, expert guides, and technical breakdowns.",
+    },
+  ];
+
+  return (
+    <section id="social" className="py-24 border-b border-blue-900/20 bg-[#030712] relative overflow-hidden" style={{ zIndex: 1 }}>
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 h-80 w-80 rounded-full bg-blue-500/[0.02] blur-3xl" />
+        <div className="absolute bottom-0 right-1/3 h-96 w-96 rounded-full bg-cyan-500/[0.02] blur-3xl" />
+      </div>
+
+      <div className="mx-auto max-w-7xl px-6 relative">
+        <div className="text-center mb-14">
+          <span className="inline-block text-[10px] font-mono font-bold text-cyan-400 tracking-widest uppercase bg-cyan-950/40 border border-cyan-900/40 px-4 py-1 rounded-full mb-4">
+            GET IN TOUCH
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            Connect With <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">KloudEra</span>
+          </h2>
+          <p className="mt-3 text-sm text-slate-400 max-w-xl mx-auto">
+            Stay updated with our latest technology insights, corporate announcements, and active project highlights.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {platforms.map((platform) => (
+            <div key={platform.name} className="group relative flex flex-col justify-between rounded-2xl border border-blue-900/30 bg-[#060c18]/60 backdrop-blur-xl p-6 transition-all duration-300 hover:-translate-y-1">
+              <a
+                href={isEditActive ? undefined : platform.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`absolute inset-0 rounded-2xl ${isEditActive ? "pointer-events-none" : ""}`}
+              />
+              
+              <div className="space-y-4">
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center border border-transparent transition-all duration-300 ${platform.theme}`}>
+                  {platform.icon}
+                </div>
+                <h3 className="text-lg font-bold text-white font-mono tracking-wide">{platform.name}</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">{platform.desc}</p>
+              </div>
+
+              {isEditActive ? (
+                <div className="mt-6 pt-4 border-t border-blue-900/30 space-y-1.5 relative z-10">
+                  <label className="text-[9px] font-mono text-cyan-400 font-bold uppercase tracking-wider block">Redirect URL</label>
+                  <input
+                    type="text"
+                    value={platform.url}
+                    onChange={(e) => updateNestedValue(["home", "social", platform.key], e.target.value)}
+                    className="w-full bg-zinc-950 border border-blue-900/50 focus:border-cyan-400 text-[10px] text-zinc-300 rounded px-2.5 py-1.5 outline-none font-mono transition-colors"
+                  />
+                </div>
+              ) : (
+                <div className="mt-6 pt-4 border-t border-blue-900/20 flex items-center justify-between text-[10px] font-mono text-cyan-500 group-hover:text-cyan-400 transition-colors">
+                  <span>VISIT PROFILE</span>
+                  <span>→</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
