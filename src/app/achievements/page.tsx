@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
 import { InlineText, InlineImage, useEditor } from "@/components/editor";
+import { ReturnButton } from "@/components/ReturnButton";
 
 export default function AchievementsPage() {
   const [data, setData] = useState<any>(null);
@@ -75,13 +76,7 @@ export default function AchievementsPage() {
           </span>
         </div>
 
-        <Link
-          href="/"
-          className="mt-4 sm:mt-0 px-4 py-1.5 border border-cyan-500/30 text-cyan-300 font-mono text-[10px] tracking-wider rounded-full hover:bg-cyan-500/10 transition-all cursor-pointer flex items-center gap-2"
-        >
-          <span>←</span>
-          <span>RETURN TO HOME</span>
-        </Link>
+        <ReturnButton />
       </header>
 
       {/* Main Content */}

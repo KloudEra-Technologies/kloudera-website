@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { InlineText } from "@/components/editor";
+import { ReturnButton } from "@/components/ReturnButton";
 
 const ICONS = [
   // Cybersecurity (Shield)
@@ -193,12 +194,7 @@ export default function ServicesHubPage() {
           </h1>
         </div>
 
-        <button
-          onClick={() => window.location.href = "/"}
-          className="mt-4 sm:mt-0 px-4 py-1.5 border border-blue-500/40 text-cyan-300 font-mono text-[10px] tracking-wider rounded hover:bg-blue-900/40 cursor-pointer transition-all"
-        >
-          ← RETURN TO HOME
-        </button>
+        <ReturnButton />
       </header>
 
       {/* Content */}

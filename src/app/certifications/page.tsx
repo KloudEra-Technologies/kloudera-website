@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
 import { InlineText, useEditor } from "@/components/editor";
+import { ReturnButton } from "@/components/ReturnButton";
 
 // Fisher-Yates shuffle — deterministic once called on mount
 function shuffle<T>(arr: T[]): T[] {
@@ -271,7 +272,6 @@ export default function CertificationsPage() {
         }
       `}</style>
 
-      {/* Header */}
       <header className="border-b border-blue-900/30 bg-[#060b18]/90 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-3">
           <Link href="/">
@@ -286,13 +286,7 @@ export default function CertificationsPage() {
           <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-3 py-1 rounded-full">
             {totalCerts} CERTIFIED STANDARDS
           </span>
-          <Link
-            href="/"
-            className="px-4 py-1.5 border border-cyan-500/30 text-cyan-300 font-mono text-[10px] tracking-wider rounded-full hover:bg-cyan-500/10 transition-all flex items-center gap-2"
-          >
-            <span>←</span>
-            <span>RETURN TO HOME</span>
-          </Link>
+          <ReturnButton />
         </div>
       </header>
 

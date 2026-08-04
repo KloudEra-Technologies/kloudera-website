@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { getImageStyle, getCleanImageUrl } from "@/lib/imageHelper";
 import { InlineText, InlineImage, useEditor } from "@/components/editor";
 import { BgAnimation } from "@/components/BgAnimation";
+import { ReturnButton } from "@/components/ReturnButton";
 
 const DEFAULT_WHY_CHOOSE_US = [
   {
@@ -108,12 +109,7 @@ export default function AboutPage() {
           </h1>
         </div>
 
-        <button
-          onClick={() => window.location.href = "/"}
-          className="mt-4 sm:mt-0 px-4 py-1.5 border border-teal-500/30 text-teal-400 font-mono text-[10px] tracking-wider rounded hover:bg-teal-500/10 cursor-none transition-all"
-        >
-          DISCONNECT
-        </button>
+        <ReturnButton />
       </header>
 
       {/* Content */}

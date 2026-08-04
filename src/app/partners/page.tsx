@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { InlineText, useEditor } from "@/components/editor";
 import { BgAnimation } from "@/components/BgAnimation";
+import { ReturnButton } from "@/components/ReturnButton";
 
 export default function PartnersPage() {
   const [partnersData, setPartnersData] = useState<any>(null);
@@ -91,12 +92,7 @@ export default function PartnersPage() {
         </div>
 
         <div className="flex gap-3 mt-4 sm:mt-0 items-center">
-          <button
-            onClick={() => (window.location.href = "/")}
-            className="px-4 py-1.5 border border-teal-500/30 text-teal-400 text-[11px] font-mono tracking-wider rounded hover:bg-teal-500/10 transition-all"
-          >
-            ← BACK TO HOME
-          </button>
+          <ReturnButton />
         </div>
       </header>
 

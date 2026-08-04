@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useAccessibility } from "@/components/AccessibilityContext";
 import { InlineText, useEditor } from "@/components/editor";
 import { BgAnimation } from "@/components/BgAnimation";
+import { ReturnButton } from "@/components/ReturnButton";
 
 interface Job {
   id: string;
@@ -227,12 +228,7 @@ export default function CareersPage() {
             <span className="text-[9px] text-zinc-500 block">APPLICANT_PIPELINE</span>
             <span className="text-xs text-teal-400 font-bold">HIRING_DECK // ONLINE</span>
           </div>
-          <button
-            onClick={() => window.location.href = "/"}
-            className="px-4 py-1.5 border border-teal-500/30 text-teal-400 text-[10px] tracking-wider rounded hover:bg-teal-500/10 cursor-none transition-all"
-          >
-            DISCONNECT
-          </button>
+          <ReturnButton />
         </div>
       </header>
 
