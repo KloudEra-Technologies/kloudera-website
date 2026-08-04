@@ -736,12 +736,18 @@ export function ProfessionalBlueHome({
           <ScrollReveal variant="fade-up">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8 mb-12">
               <div>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-                  Our <span className="text-blue-500">Achievements</span>
-                </h2>
-                <p className="mt-2 text-xs sm:text-sm text-slate-400 font-mono">
-                  Official accreditation and government recognition under key national initiatives.
-                </p>
+                <InlineText
+                  as="h2"
+                  className="text-3xl sm:text-4xl font-extrabold text-white"
+                  path={["home", "achievementsTitle"]}
+                  fallback="Our Achievements"
+                />
+                <InlineText
+                  as="p"
+                  className="mt-2 text-xs sm:text-sm text-slate-400 font-mono block"
+                  path={["home", "achievementsDesc"]}
+                  fallback="Official accreditation and government recognition under key national initiatives."
+                />
               </div>
               <Link href="/achievements" className="rounded-full border border-blue-500/30 bg-blue-950/40 px-5 py-2.5 text-xs font-mono font-bold text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 transition-all">
                 View All Accreditations →
@@ -856,12 +862,18 @@ export function ProfessionalBlueHome({
           <ScrollReveal variant="fade-up">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8 mb-12">
               <div>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-                  Our <span className="text-blue-500">Clienteles</span>
-                </h2>
-                <p className="mt-2 text-xs sm:text-sm text-slate-300 font-mono">
-                  Engineered for industry-leading financial, IT, construction, and educational enterprises.
-                </p>
+                <InlineText
+                  as="h2"
+                  className="text-3xl sm:text-4xl font-extrabold text-white"
+                  path={["home", "clientelesTitle"]}
+                  fallback="Our Clienteles"
+                />
+                <InlineText
+                  as="p"
+                  className="mt-2 text-xs sm:text-sm text-slate-300 font-mono block"
+                  path={["home", "clientelesDesc"]}
+                  fallback="Engineered for industry-leading financial, IT, construction, and educational enterprises."
+                />
               </div>
               <Link href="/clienteles" className="rounded-full border border-blue-500/30 bg-blue-950/40 px-5 py-2.5 text-xs font-mono font-bold text-cyan-300 hover:bg-blue-900/60 transition-all">
                 View Clientele Details →
@@ -1001,8 +1013,18 @@ export function ProfessionalBlueHome({
           <ScrollReveal variant="fade-up">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-blue-900/40 pb-8">
               <div>
-                <h2 className="text-xs font-bold tracking-widest text-emerald-400 uppercase font-mono">COMPLIANCE STANDARDS</h2>
-                <p className="mt-1 text-3xl font-extrabold text-white">Security & Regulatory Certifications</p>
+                <InlineText
+                  as="h2"
+                  className="text-xs font-bold tracking-widest text-emerald-400 uppercase font-mono block"
+                  path={["home", "certificationsSub"]}
+                  fallback="COMPLIANCE STANDARDS"
+                />
+                <InlineText
+                  as="p"
+                  className="mt-1 text-3xl font-extrabold text-white block"
+                  path={["home", "certificationsTitle"]}
+                  fallback="Security & Regulatory Certifications"
+                />
               </div>
               <Link href="/certifications" className="rounded-full border border-emerald-500/30 bg-emerald-950/40 px-5 py-2.5 text-xs font-mono font-bold text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 transition-all">
                 View Certification Badges →
@@ -1137,7 +1159,7 @@ export function ProfessionalBlueHome({
                   <span>→</span>
                 </Link>
                 <div className="text-xs text-slate-400 block pt-2">
-                  Prefer direct email? Contact us at <span className="text-cyan-300 font-mono">support@kloudera.ai</span>
+                  Prefer direct email? Contact us at <span className="text-cyan-300 font-mono">info@kloudera.ai</span>
                 </div>
               </div>
             </div>
