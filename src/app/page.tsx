@@ -18,6 +18,13 @@ export default function Home() {
     if (hasVerified === "true") {
       setVerified(true);
     }
+    
+    // Restore saved view mode from previous session
+    const savedMode = localStorage.getItem("kloudera_view_mode") as "classic" | "3d" | null;
+    if (savedMode === "3d" || savedMode === "classic") {
+      setViewMode(savedMode);
+    }
+    
     setLoading(false);
 
     const handleError = (e: ErrorEvent) => {
@@ -54,6 +61,11 @@ export default function Home() {
     router.push(url);
   };
 
+  const handleSetViewMode = (mode: "classic" | "3d") => {
+    setViewMode(mode);
+    localStorage.setItem("kloudera_view_mode", mode);
+  };
+
   if (loading) {
     return (
       <main className="flex h-screen w-screen items-center justify-center bg-black font-mono text-cyan-400">
@@ -75,12 +87,12 @@ export default function Home() {
       {!verified ? (
         <VerificationGate onVerifyComplete={handleVerifyComplete} />
       ) : viewMode === "classic" ? (
-        <ProfessionalBlueHome onLaunch3D={() => setViewMode("3d")} />
+        <ProfessionalBlueHome onLaunch3D={() => handleSetViewMode("3d")} />
       ) : (
         <div className="relative h-screen w-screen overflow-hidden">
           {/* Exit 3D View Floating Button */}
           <button
-            onClick={() => setViewMode("classic")}
+            onClick={() => handleSetViewMode("classic")}
             className="fixed top-6 left-6 z-[999] flex items-center gap-2 rounded-full border border-cyan-500/40 bg-slate-950/90 px-4 py-2 text-xs font-bold font-mono text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] backdrop-blur-md transition-all hover:scale-105 hover:border-cyan-400 hover:bg-slate-900 cursor-pointer"
           >
             <span>←</span>
