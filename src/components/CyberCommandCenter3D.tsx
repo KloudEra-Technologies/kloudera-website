@@ -1497,8 +1497,8 @@ export const CyberCommandCenter3D: React.FC<CyberCommandCenterProps> = ({ onNavi
         // Convert to camera local coordinate space to check if in front or behind
         const localPos = tempV.clone().applyMatrix4(camera.matrixWorldInverse);
         
-        // In local coordinates, negative Z is in front, positive Z is behind
-        if (localPos.z < -0.2) {
+        // In local coordinates, negative Z is in front. Only show labels within 28 units to prevent clustering
+        if (localPos.z < -0.2 && localPos.z > -28.0) {
           tempV.project(camera);
 
           // Hide labels that are completely offscreen to prevent clustering
