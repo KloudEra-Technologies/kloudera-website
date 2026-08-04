@@ -1656,16 +1656,19 @@ export const CyberCommandCenter3D: React.FC<CyberCommandCenterProps> = ({ onNavi
           >
             <div
               className={`flex flex-col items-center transition-all duration-300 ${
-                isHovered ? "scale-105 opacity-100" : "scale-90 opacity-60"
+                isHovered ? "scale-105 opacity-100" : "scale-95 opacity-95"
               }`}
             >
               {/* Department Label */}
               <div
-                className="px-3 py-1.5 rounded border text-[10px] font-bold font-mono tracking-wider shadow-lg bg-zinc-950/90 whitespace-nowrap"
+                className="px-3 py-1.5 rounded border text-[10px] font-bold font-mono tracking-wider shadow-lg bg-zinc-950/95 whitespace-nowrap"
                 style={{
-                  borderColor: isHovered ? dept.color : "rgba(20,184,166,0.1)",
-                  color: isHovered ? "#fff" : "rgba(255,255,255,0.7)",
-                  boxShadow: isHovered ? `0 0 15px ${dept.color}40` : "none",
+                  borderColor: isHovered ? dept.color : "rgba(251, 191, 36, 0.5)",
+                  color: isHovered ? "#ffffff" : "#fbbf24",
+                  boxShadow: isHovered 
+                    ? `0 0 15px ${dept.color}60` 
+                    : "0 0 10px rgba(251, 191, 36, 0.2)",
+                  textShadow: isHovered ? "none" : "0 0 6px rgba(251, 191, 36, 0.4)",
                 }}
               >
                 {dept.name}
@@ -1675,7 +1678,7 @@ export const CyberCommandCenter3D: React.FC<CyberCommandCenterProps> = ({ onNavi
               <div
                 className="w-[1px] h-4 mt-0.5"
                 style={{
-                  background: isHovered ? dept.color : "rgba(20,184,166,0.1)",
+                  background: isHovered ? dept.color : "rgba(251, 191, 36, 0.5)",
                 }}
               />
             </div>
