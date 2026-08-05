@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAccessibility } from "./AccessibilityContext";
+import { InlineText } from "./editor";
 
 interface OccupiedSlot {
   start: string;
@@ -314,17 +315,24 @@ export const CalendarScheduler: React.FC = () => {
             </div>
             <div>
               <span className="text-[9px] text-zinc-500 uppercase tracking-widest block font-bold">ORGANIZATION</span>
-              <h3 className="text-white text-xs font-bold uppercase tracking-wider">Kloudera Advisors</h3>
+              <InlineText as="h3" className="text-white text-xs font-bold uppercase tracking-wider block" path={["book-meeting", "orgName"]} fallback="Kloudera Advisors" />
             </div>
           </div>
 
           <div className="space-y-2 pt-2">
-            <h2 className="text-sm font-extrabold text-white uppercase tracking-wider leading-relaxed">
-              Cloud Strategy & Architecture Consultation
-            </h2>
-            <p className="text-[10px] text-zinc-400 leading-relaxed font-sans">
-              Connect with our principal architects to review cloud scaling strategy, enterprise data recovery tools, and network security blueprints.
-            </p>
+            <InlineText
+              as="h2"
+              className="text-sm font-extrabold text-white uppercase tracking-wider leading-relaxed block"
+              path={["book-meeting", "eventTitle"]}
+              fallback="Cloud Strategy & Architecture Consultation"
+            />
+            <InlineText
+              as="p"
+              multiline
+              className="text-[10px] text-zinc-400 leading-relaxed font-sans block"
+              path={["book-meeting", "eventDesc"]}
+              fallback="Connect with our principal architects to review cloud scaling strategy, enterprise data recovery tools, and network security blueprints."
+            />
           </div>
 
           <div className="space-y-3.5 pt-3 border-t border-teal-500/5 text-[10.5px]">
@@ -346,7 +354,7 @@ export const CalendarScheduler: React.FC = () => {
 
           {phase !== "confirmed" && (
             <div className="space-y-3 pt-4 border-t border-teal-500/5">
-              <span className="text-[9px] text-zinc-500 font-bold uppercase block">1. Select Meeting Length</span>
+              <InlineText as="span" className="text-[9px] text-zinc-500 font-bold uppercase block" path={["book-meeting", "lengthLabel"]} fallback="1. Select Meeting Length" />
               <div className="grid grid-cols-3 gap-2">
                 {[30, 45, 60].map((mins) => (
                   <button
@@ -494,7 +502,7 @@ export const CalendarScheduler: React.FC = () => {
               >
                 ← Back
               </button>
-              <h3 className="text-white text-xs font-bold uppercase tracking-wider">Confirm Your Consultation Details</h3>
+              <InlineText as="h3" className="text-white text-xs font-bold uppercase tracking-wider block" path={["book-meeting", "confirmHeading"]} fallback="Confirm Your Consultation Details" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
