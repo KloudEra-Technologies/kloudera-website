@@ -9,8 +9,8 @@ interface KloudEraLogoProps {
 }
 
 export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", iconOnly = false }) => {
-  const [processedLogoUrl, setProcessedLogoUrl] = useState<string | null>(null);
-  const [logoHeight, setLogoHeight] = useState<string>("68px");
+  const [processedLogoUrl, setProcessedLogoUrl] = useState<string | null>("/logo.png");
+  const [logoHeight, setLogoHeight] = useState<string>("36px");
   const [logoLeft, setLogoLeft] = useState<string>("0px");
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
