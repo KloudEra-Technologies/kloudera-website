@@ -10,7 +10,7 @@ interface KloudEraLogoProps {
 
 export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", iconOnly = false }) => {
   const [processedLogoUrl, setProcessedLogoUrl] = useState<string | null>("/logo.png");
-  const [logoHeight, setLogoHeight] = useState<string>("72px");
+  const [logoHeight, setLogoHeight] = useState<string>("96px");
   const [logoLeft, setLogoLeft] = useState<string>("0px");
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -32,8 +32,8 @@ export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", icon
           if (data.brand?.logoHeight) {
             const h = data.brand.logoHeight;
             const parsed = parseInt(h);
-            if (!isNaN(parsed) && parsed < 60) {
-              setLogoHeight("72px");
+            if (!isNaN(parsed) && parsed < 80) {
+              setLogoHeight("96px");
             } else {
               setLogoHeight(h);
             }
@@ -98,8 +98,8 @@ export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", icon
         src={processedLogoUrl || "/logo.png"}
         alt="KloudEra Technologies"
         style={{ 
-          height: iconOnly ? "56px" : logoHeight, 
-          maxHeight: "84px",
+          height: iconOnly ? "68px" : logoHeight, 
+          maxHeight: "110px",
           width: "auto"
         }}
         className="object-contain"
