@@ -357,14 +357,14 @@ export function ProfessionalBlueHome({
         
         <div className="mx-auto max-w-7xl px-4 sm:px-6 relative z-10">
           <div className="mx-auto max-w-3xl text-center">
-            <ScrollReveal variant="fade-down" delay={0}>
+            <ScrollReveal variant="blur-glow" delay={0}>
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/60 px-3.5 py-1 text-[10px] sm:text-xs font-semibold tracking-wider text-cyan-300 backdrop-blur-md mb-6 max-w-full">
                 <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
                 <InlineText as="span" className="truncate" path={["home", "heroBadge"]} fallback="ENTERPRISE CYBERSECURITY & HARDWARE PLATFORM" />
               </div>
             </ScrollReveal>
 
-            <ScrollReveal variant="fade-up" delay={80}>
+            <ScrollReveal variant="typewriter" delay={80}>
               <h1 className="text-2xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight break-words">
                 <InlineText as="span" path={["home", "heroTitlePrefix"]} fallback="Architecting " />
                 <InlineText 
@@ -377,7 +377,7 @@ export function ProfessionalBlueHome({
               </h1>
             </ScrollReveal>
 
-            <ScrollReveal variant="fade-up" delay={160}>
+            <ScrollReveal variant="blur-glow" delay={160}>
               <InlineText 
                 as="p" 
                 multiline

@@ -312,7 +312,11 @@ body.kloudera-edit-active::before {
    ============================================================ */
 .sr-hidden {
   opacity: 0;
-  will-change: opacity, transform;
+  will-change: opacity, transform, filter;
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.5s ease;
 }
 .sr-hidden.sr-fade-up    { transform: translateY(52px); }
 .sr-hidden.sr-fade-down  { transform: translateY(-52px); }
@@ -324,6 +328,37 @@ body.kloudera-edit-active::before {
 .sr-hidden.sr-flip-right { transform: perspective(700px) rotateY(28deg) translateX(24px); }
 .sr-hidden.sr-zoom       { transform: scale(1.12); filter: blur(5px); }
 
+/* Custom Text Entrance Animations */
+.sr-hidden.sr-typewriter {
+  clip-path: inset(0 100% 0 0);
+}
+@keyframes typewriterReveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0); }
+}
+
+.sr-hidden.sr-blur-glow {
+  opacity: 0;
+  filter: blur(12px);
+}
+@keyframes blurGlowReveal {
+  0% {
+    filter: blur(12px) brightness(0.4);
+    text-shadow: 0 0 20px rgba(34, 211, 238, 0.8);
+    opacity: 0;
+  }
+  50% {
+    filter: blur(4px) brightness(1.2);
+    text-shadow: 0 0 30px rgba(168, 85, 247, 0.9), 0 0 10px rgba(34, 211, 238, 0.8);
+    opacity: 0.8;
+  }
+  100% {
+    filter: blur(0px) brightness(1);
+    text-shadow: none;
+    opacity: 1;
+  }
+}
+
 .sr-visible {
   opacity: 1 !important;
   transform: none !important;
@@ -332,6 +367,12 @@ body.kloudera-edit-active::before {
     opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
     filter 0.6s ease;
+}
+.sr-visible.sr-typewriter {
+  animation: typewriterReveal 2.2s steps(40, end) forwards !important;
+}
+.sr-visible.sr-blur-glow {
+  animation: blurGlowReveal 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
 }
 
 /* Stagger helpers for sibling cards */

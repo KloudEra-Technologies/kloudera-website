@@ -11,7 +11,9 @@ type SRVariant =
   | 'flip-up'
   | 'flip-left'
   | 'flip-right'
-  | 'zoom';
+  | 'zoom'
+  | 'typewriter'
+  | 'blur-glow';
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -48,23 +50,28 @@ export function ScrollReveal({
     // Set initial hidden state
     el.classList.add('sr-hidden', `sr-${variant}`);
 
+    let timer: NodeJS.Timeout;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // Apply delay then reveal
-          const timer = setTimeout(() => {
+          timer = setTimeout(() => {
             el.classList.remove('sr-hidden');
             el.classList.add('sr-visible');
           }, delay);
-          observer.unobserve(el);
-          return () => clearTimeout(timer);
+        } else {
+          clearTimeout(timer);
+          el.classList.remove('sr-visible');
+          el.classList.add('sr-hidden');
         }
       },
       { threshold }
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
   }, [variant, delay, threshold]);
 
   return (
