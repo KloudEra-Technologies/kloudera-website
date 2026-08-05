@@ -238,19 +238,34 @@ export function ProfessionalBlueHome({
           </nav>
 
           <div className="flex items-center gap-3">
+            <style>{`
+              @keyframes text-glow-purple {
+                0%, 100% {
+                  text-shadow: 0 0 4px rgba(168, 85, 247, 0.4), 0 0 1px rgba(168, 85, 247, 0.2);
+                  color: #d8b4fe;
+                }
+                50% {
+                  text-shadow: 0 0 16px rgba(168, 85, 247, 0.95), 0 0 8px rgba(168, 85, 247, 0.75), 0 0 2px #ffffff;
+                  color: #ffffff;
+                }
+              }
+              .animate-text-glow-purple {
+                animation: text-glow-purple 3s ease-in-out infinite;
+              }
+            `}</style>
             <button
               onClick={() => {
                 playAudio("click");
                 onLaunch3D();
               }}
-              className="group relative hidden sm:inline-flex items-center gap-2 overflow-hidden rounded-full border-2 border-cyan-400 bg-cyan-950/90 px-3.5 sm:px-5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-black tracking-wider text-white shadow-[0_0_20px_rgba(34,211,238,0.55)] hover:shadow-[0_0_30px_rgba(34,211,238,0.85)] backdrop-blur-md transition-all hover:scale-105 hover:border-cyan-300 cursor-pointer"
+              className="group relative hidden sm:inline-flex items-center gap-2 overflow-hidden rounded-full border-2 border-cyan-400 bg-cyan-950/90 px-3.5 sm:px-5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-black tracking-wider shadow-[0_0_20px_rgba(34,211,238,0.55)] hover:shadow-[0_0_30px_rgba(34,211,238,0.85)] backdrop-blur-md transition-all hover:scale-105 hover:border-cyan-300 cursor-pointer"
             >
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-cyan-400" />
               </span>
-              <span className="hidden sm:inline" style={{ textShadow: "0 0 8px rgba(34,211,238,0.95), 0 0 2px #ffffff" }}>LAUNCH 3D VIRTUAL HQ</span>
-              <span className="sm:hidden" style={{ textShadow: "0 0 8px rgba(34,211,238,0.95), 0 0 2px #ffffff" }}>3D HQ</span>
+              <span className="hidden sm:inline animate-text-glow-purple">LAUNCH 3D VIRTUAL HQ</span>
+              <span className="sm:hidden animate-text-glow-purple">3D HQ</span>
               <span className="text-sm transition-transform group-hover:translate-x-0.5">🌌</span>
             </button>
 
