@@ -10,7 +10,7 @@ interface KloudEraLogoProps {
 
 export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", iconOnly = false }) => {
   const [processedLogoUrl, setProcessedLogoUrl] = useState<string | null>("/logo.png");
-  const [logoHeight, setLogoHeight] = useState<string>("36px");
+  const [logoHeight, setLogoHeight] = useState<string>("48px");
   const [logoLeft, setLogoLeft] = useState<string>("0px");
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -30,7 +30,13 @@ export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", icon
         if (res.ok) {
           const data = await res.json();
           if (data.brand?.logoHeight) {
-            setLogoHeight(data.brand.logoHeight);
+            const h = data.brand.logoHeight;
+            const parsed = parseInt(h);
+            if (!isNaN(parsed) && parsed < 44) {
+              setLogoHeight("48px");
+            } else {
+              setLogoHeight(h);
+            }
           }
           if (data.brand?.logoLeft) {
             setLogoLeft(data.brand.logoLeft);
