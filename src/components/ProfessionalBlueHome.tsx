@@ -7,7 +7,6 @@ import { useAccessibility } from "./AccessibilityContext";
 import { InlineText, InlineImage, useEditor } from "@/components/editor";
 import { BgAnimation } from "./BgAnimation";
 import { ScrollReveal } from "./ScrollReveal";
-import { StickmanDuel } from "./StickmanDuel";
 
 interface ProfessionalBlueHomeProps {
   onLaunch3D?: () => void;
@@ -224,11 +223,6 @@ export function ProfessionalBlueHome({
           <Link href="/" className="flex items-center gap-3">
             <KloudEraLogo className="h-8 sm:h-10 w-auto text-blue-400" />
           </Link>
-
-          {/* Stickman Blade Duel Navbar Decoration */}
-          <div className="hidden lg:flex items-center justify-center">
-            <StickmanDuel />
-          </div>
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
             <a href="#services" className="hover:text-cyan-400 transition-colors">Services</a>
