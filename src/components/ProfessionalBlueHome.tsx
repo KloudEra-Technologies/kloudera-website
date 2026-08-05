@@ -364,18 +364,16 @@ export function ProfessionalBlueHome({
               </div>
             </ScrollReveal>
 
-            <ScrollReveal variant="typewriter" delay={80}>
-              <h1 className="text-2xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight break-words">
-                <InlineText as="span" path={["home", "heroTitlePrefix"]} fallback="Architecting " />
-                <InlineText 
-                  as="span" 
-                  className={heroHighlightGradient ? "bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent" : "text-white"}
-                  path={["home", "heroTitleHighlight"]} 
-                  fallback="Zero-Trust" 
-                />
-                <InlineText as="span" path={["home", "heroTitleSuffix"]} fallback=" Digital Enterprises" />
-              </h1>
-            </ScrollReveal>
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight break-words animate-typewriter">
+              <InlineText as="span" path={["home", "heroTitlePrefix"]} fallback="Architecting " />
+              <InlineText 
+                as="span" 
+                className={heroHighlightGradient ? "bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent" : "text-white"}
+                path={["home", "heroTitleHighlight"]} 
+                fallback="Zero-Trust" 
+              />
+              <InlineText as="span" path={["home", "heroTitleSuffix"]} fallback=" Digital Enterprises" />
+            </h1>
 
             <ScrollReveal variant="blur-glow" delay={160}>
               <InlineText 

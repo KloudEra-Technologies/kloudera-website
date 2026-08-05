@@ -332,6 +332,9 @@ body.kloudera-edit-active::before {
 .sr-hidden.sr-typewriter {
   clip-path: inset(0 100% 0 0);
 }
+.animate-typewriter {
+  animation: typewriterReveal 2.2s steps(40, end) forwards;
+}
 @keyframes typewriterReveal {
   from { clip-path: inset(0 100% 0 0); }
   to   { clip-path: inset(0 0% 0 0); }
