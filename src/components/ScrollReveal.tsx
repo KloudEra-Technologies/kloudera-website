@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, ReactNode } from 'react';
+import { useEditor } from "@/components/editor";
 
 type SRVariant =
   | 'fade-up'
@@ -42,10 +43,25 @@ export function ScrollReveal({
   as: Tag = 'div',
 }: ScrollRevealProps) {
   const ref = useRef<HTMLElement>(null);
+  
+  let isEditActive = false;
+  try {
+    const editor = useEditor();
+    isEditActive = editor.isEditMode;
+  } catch (e) {
+    // Editor context not available
+  }
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    if (isEditActive) {
+      // Remove any scroll reveal hidden classes to prevent hiding editable elements
+      el.classList.remove('sr-hidden', `sr-${variant}`);
+      el.classList.add('sr-visible');
+      return;
+    }
 
     // Set initial hidden state
     el.classList.add('sr-hidden', `sr-${variant}`);
