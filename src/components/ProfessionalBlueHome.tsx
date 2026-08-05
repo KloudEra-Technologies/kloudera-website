@@ -221,7 +221,7 @@ export function ProfessionalBlueHome({
       <header className="w-full sticky top-0 z-50 border-b border-blue-900/40 bg-[#030712]/95 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 sm:px-10 py-4">
           <Link href="/" className="flex items-center gap-3">
-            <KloudEraLogo className="h-8 sm:h-10 w-auto text-blue-400" />
+            <KloudEraLogo className="h-12 sm:h-14 w-auto text-blue-400" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
@@ -1305,7 +1305,7 @@ export function ProfessionalBlueHome({
       <footer className="border-t border-blue-900/40 bg-[#02040a] py-12">
         <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <KloudEraLogo className="h-8 w-auto text-blue-400" />
+            <KloudEraLogo className="h-12 w-auto text-blue-400" />
             <InlineText as="span" className="text-xs text-slate-500 font-mono" path={["home", "footerCopyright"]} fallback="© 2026 Kloudera Technologies Inc. All rights reserved." />
           </div>
 
