@@ -23,7 +23,7 @@ export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", icon
   const { isEditMode, authToken, updateNestedValue } = editorContext;
 
   useEffect(() => {
-    const loadLogoAndCrop = async () => {
+    const loadLogo = async () => {
       let logoSrc = "/logo.png";
       try {
         const res = await fetch("/api/website-content", { cache: "no-store" });
@@ -40,84 +40,10 @@ export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", icon
           }
         }
       } catch (e) {}
-
-      // Load image and crop transparent borders
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = logoSrc;
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-          setProcessedLogoUrl(logoSrc);
-          return;
-        }
-
-        ctx.drawImage(img, 0, 0);
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imgData.data;
-
-        // Find bounding box of non-transparent content (alpha > 5)
-        let minX = canvas.width;
-        let minY = canvas.height;
-        let maxX = 0;
-        let maxY = 0;
-        let hasContent = false;
-
-        for (let y = 0; y < canvas.height; y++) {
-          for (let x = 0; x < canvas.width; x++) {
-            const idx = (y * canvas.width + x) * 4;
-            const alpha = data[idx + 3];
-            if (alpha > 5) {
-              hasContent = true;
-              if (x < minX) minX = x;
-              if (x > maxX) maxX = x;
-              if (y < minY) minY = y;
-              if (y > maxY) maxY = y;
-            }
-          }
-        }
-
-        if (!hasContent) {
-          setProcessedLogoUrl(logoSrc);
-          return;
-        }
-
-        // Add 2px safety padding to prevent sub-pixel clipping
-        const pad = 2;
-        const startX = Math.max(0, minX - pad);
-        const startY = Math.max(0, minY - pad);
-        const endX = Math.min(canvas.width - 1, maxX + pad);
-        const endY = Math.min(canvas.height - 1, maxY + pad);
-
-        const cropWidth = endX - startX + 1;
-        const cropHeight = endY - startY + 1;
-
-        const cropCanvas = document.createElement("canvas");
-        cropCanvas.width = cropWidth;
-        cropCanvas.height = cropHeight;
-        const cropCtx = cropCanvas.getContext("2d");
-        if (!cropCtx) {
-          setProcessedLogoUrl(logoSrc);
-          return;
-        }
-
-        cropCtx.drawImage(
-          canvas,
-          startX, startY, cropWidth, cropHeight, // Source bounds
-          0, 0, cropWidth, cropHeight            // Destination bounds
-        );
-
-        setProcessedLogoUrl(cropCanvas.toDataURL("image/png"));
-      };
-      img.onerror = () => {
-        setProcessedLogoUrl(logoSrc);
-      };
+      setProcessedLogoUrl(logoSrc);
     };
 
-    loadLogoAndCrop();
+    loadLogo();
   }, []);
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
