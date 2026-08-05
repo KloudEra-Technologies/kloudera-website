@@ -249,8 +249,8 @@ export function ProfessionalBlueHome({
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-cyan-400" />
               </span>
-              <span className="hidden sm:inline">LAUNCH 3D VIRTUAL HQ</span>
-              <span className="sm:hidden">3D HQ</span>
+              <span className="hidden sm:inline" style={{ textShadow: "0 0 8px rgba(34,211,238,0.95), 0 0 2px #ffffff" }}>LAUNCH 3D VIRTUAL HQ</span>
+              <span className="sm:hidden" style={{ textShadow: "0 0 8px rgba(34,211,238,0.95), 0 0 2px #ffffff" }}>3D HQ</span>
               <span className="text-sm transition-transform group-hover:translate-x-0.5">🌌</span>
             </button>
 
