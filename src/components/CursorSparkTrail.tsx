@@ -15,8 +15,8 @@ export const CursorSparkTrail: React.FC = () => {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    // Settings matched to TRON lightcycle snippet (Red version - High Glow)
-    const activeColor = "#ff003c"; // Neon Red
+    // Settings matched to TRON lightcycle snippet (Cyan version - High Glow)
+    const activeColor = "#00f0ff"; // Electric Cyan Blue
     const trailLifespan = 0.85; // Elegant lingering trail
     const glowThickness = 8; // Keep the core thin and sharp for laser look
 
