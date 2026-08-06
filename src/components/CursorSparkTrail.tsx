@@ -184,9 +184,8 @@ export const CursorSparkTrail: React.FC = () => {
 
     // Render loop
     const render = () => {
-      // Clear canvas with trail fade
-      ctx.fillStyle = "rgba(3, 7, 18, 0.32)"; // Dark theme match
-      ctx.fillRect(0, 0, width, height);
+      // Clear canvas completely to keep background transparent
+      ctx.clearRect(0, 0, width, height);
 
       // 1. Update and draw shockwaves (fast simple circular path)
       if (shockwaves.length > 0) {
