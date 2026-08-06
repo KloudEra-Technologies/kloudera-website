@@ -192,8 +192,8 @@ export const CursorSparkTrail: React.FC = () => {
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
 
-        // Pass 1: Massive neon outer bloom
-        ctx.shadowBlur = 24;
+        // Pass 1: Massive neon outer bloom (BRIGHTENED)
+        ctx.shadowBlur = 40;
         ctx.shadowColor = activeColor;
         ctx.strokeStyle = activeColor;
 
@@ -202,8 +202,8 @@ export const CursorSparkTrail: React.FC = () => {
           const p2 = trailPoints[i];
           const alpha = Math.min(p1.life, p2.life);
           
-          ctx.globalAlpha = alpha * 0.8;
-          ctx.lineWidth = glowThickness * alpha + 2;
+          ctx.globalAlpha = alpha * 0.98;
+          ctx.lineWidth = glowThickness * alpha + 4;
 
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
@@ -211,8 +211,8 @@ export const CursorSparkTrail: React.FC = () => {
           ctx.stroke();
         }
 
-        // Pass 2: Intense neon mid line
-        ctx.shadowBlur = 8;
+        // Pass 2: Intense neon mid line (BRIGHTENED)
+        ctx.shadowBlur = 20;
         ctx.shadowColor = activeColor;
         ctx.strokeStyle = activeColor;
 
@@ -222,7 +222,7 @@ export const CursorSparkTrail: React.FC = () => {
           const alpha = Math.min(p1.life, p2.life);
 
           ctx.globalAlpha = alpha;
-          ctx.lineWidth = Math.max(1, glowThickness * alpha * 0.45);
+          ctx.lineWidth = Math.max(1.5, glowThickness * alpha * 0.55);
 
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
@@ -240,7 +240,7 @@ export const CursorSparkTrail: React.FC = () => {
           const alpha = Math.min(p1.life, p2.life);
 
           ctx.globalAlpha = alpha;
-          ctx.lineWidth = Math.max(1, glowThickness * alpha * 0.2);
+          ctx.lineWidth = Math.max(1, glowThickness * alpha * 0.25);
 
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
@@ -268,7 +268,7 @@ export const CursorSparkTrail: React.FC = () => {
         if (p.life > 0) {
           ctx.save();
           ctx.globalAlpha = p.life;
-          ctx.shadowBlur = 6;
+          ctx.shadowBlur = 12;
           ctx.shadowColor = p.color;
           ctx.fillStyle = p.color;
           ctx.beginPath();
@@ -306,6 +306,7 @@ export const CursorSparkTrail: React.FC = () => {
         display: "block",
         pointerEvents: "none",
         zIndex: 9999, // Overlay above background but completely non-blocking
+        opacity: 1.0,
       }}
     />
   );
