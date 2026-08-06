@@ -15,10 +15,10 @@ export const CursorSparkTrail: React.FC = () => {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    // Settings matched to TRON lightcycle snippet (Red version - High Visibility)
-    const activeColor = "#ff003c"; // Vivid Neon Red
-    const trailLifespan = 0.82; // Longer trail longevity
-    const glowThickness = 22; // Doubled thickness
+    // Settings matched to TRON lightcycle snippet (Red version - High Glow)
+    const activeColor = "#ff003c"; // Neon Red
+    const trailLifespan = 0.85; // Elegant lingering trail
+    const glowThickness = 8; // Keep the core thin and sharp for laser look
 
     interface TrailPoint {
       x: number;
@@ -50,7 +50,7 @@ export const CursorSparkTrail: React.FC = () => {
         this.x = x;
         this.y = y;
         this.radius = 1;
-        this.maxRadius = 180 * (glowThickness / 8);
+        this.maxRadius = 160 * (glowThickness / 8);
         this.life = 1.0;
         this.color = activeColor;
       }
@@ -64,19 +64,30 @@ export const CursorSparkTrail: React.FC = () => {
         if (this.life <= 0) return;
         context.save();
         context.globalAlpha = Math.max(this.life, 0);
-        context.shadowBlur = 35;
+        context.globalCompositeOperation = "lighter"; // Additive blending for glows
+        
+        // Stacked blurs for shockwave glow
         context.shadowColor = this.color;
         context.strokeStyle = this.color;
-        context.lineWidth = 5; // Thicker shockwave lines
 
-        // Outer shockwave ring
+        // Outer glow
+        context.shadowBlur = 40;
+        context.lineWidth = 4;
+        context.beginPath();
+        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        context.stroke();
+
+        // Inner sharp glow
+        context.shadowBlur = 15;
+        context.lineWidth = 2;
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         context.stroke();
 
         // Inner core flash ring
         context.strokeStyle = "#ffffff";
-        context.lineWidth = 2.5;
+        context.shadowBlur = 0;
+        context.lineWidth = 1.5;
         context.beginPath();
         context.arc(this.x, this.y, Math.max(1, this.radius * 0.6), 0, Math.PI * 2);
         context.stroke();
@@ -106,29 +117,29 @@ export const CursorSparkTrail: React.FC = () => {
         decay: decayVal,
       });
 
-      // Spawn micro sparklets (Larger sizes)
-      if (Math.random() < 0.4) {
+      // Spawn micro sparklets
+      if (Math.random() < 0.45) {
         particles.push({
           x: e.clientX + (Math.random() - 0.5) * glowThickness,
           y: e.clientY + (Math.random() - 0.5) * glowThickness,
           vx: (Math.random() - 0.5) * 2.5,
           vy: (Math.random() - 0.5) * 2.5,
           life: 1.0,
-          decay: 0.03, // Longer spark life
-          size: Math.random() * 4 + 2, // Larger sparks
+          decay: 0.03,
+          size: Math.random() * 3 + 1.5,
           color: activeColor,
         });
       }
     };
 
-    // Spark blast on click (Larger sparks)
+    // Spark blast on click
     const triggerSparkBlast = (x: number, y: number) => {
       shockwaves.push(new GridShockwave(x, y));
 
       const particleCount = 28;
       for (let i = 0; i < particleCount; i++) {
         const angle = (i / particleCount) * Math.PI * 2;
-        const blastSpeed = Math.random() * 10 + 4;
+        const blastSpeed = Math.random() * 9 + 3;
         particles.push({
           x: x,
           y: y,
@@ -136,7 +147,7 @@ export const CursorSparkTrail: React.FC = () => {
           vy: Math.sin(angle) * blastSpeed,
           life: 1.0,
           decay: 0.02,
-          size: Math.random() * 5 + 3, // Larger sparks
+          size: Math.random() * 4 + 2,
           color: activeColor,
         });
       }
@@ -185,14 +196,15 @@ export const CursorSparkTrail: React.FC = () => {
         if (sw.life <= 0) shockwaves.splice(i, 1);
       }
 
-      // 2. Draw light ribbon (multi-pass glow)
+      // 2. Draw light ribbon (additive multi-pass glow)
       if (trailPoints.length >= 2) {
         ctx.save();
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
+        ctx.globalCompositeOperation = "lighter"; // Enable additive color blending
 
-        // Pass 1: Massive neon outer bloom (BRIGHTENED)
-        ctx.shadowBlur = 50;
+        // Pass 1: Massive neon outer bloom (Radius 60)
+        ctx.shadowBlur = 60;
         ctx.shadowColor = activeColor;
         ctx.strokeStyle = activeColor;
 
@@ -201,8 +213,8 @@ export const CursorSparkTrail: React.FC = () => {
           const p2 = trailPoints[i];
           const alpha = Math.min(p1.life, p2.life);
           
-          ctx.globalAlpha = alpha * 0.98;
-          ctx.lineWidth = glowThickness * alpha + 8;
+          ctx.globalAlpha = alpha * 0.95;
+          ctx.lineWidth = glowThickness * alpha + 10; // Wide outer glow bounds
 
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
@@ -210,8 +222,8 @@ export const CursorSparkTrail: React.FC = () => {
           ctx.stroke();
         }
 
-        // Pass 2: Intense neon mid line (BRIGHTENED)
-        ctx.shadowBlur = 24;
+        // Pass 2: Intense neon mid line bloom (Radius 30)
+        ctx.shadowBlur = 30;
         ctx.shadowColor = activeColor;
         ctx.strokeStyle = activeColor;
 
@@ -221,7 +233,7 @@ export const CursorSparkTrail: React.FC = () => {
           const alpha = Math.min(p1.life, p2.life);
 
           ctx.globalAlpha = alpha;
-          ctx.lineWidth = Math.max(2, glowThickness * alpha * 0.7);
+          ctx.lineWidth = Math.max(1.5, glowThickness * alpha * 0.6);
 
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
@@ -229,7 +241,26 @@ export const CursorSparkTrail: React.FC = () => {
           ctx.stroke();
         }
 
-        // Pass 3: Bright white core line
+        // Pass 3: Ultra core glow (Radius 10)
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = activeColor;
+        ctx.strokeStyle = activeColor;
+
+        for (let i = 1; i < trailPoints.length; i++) {
+          const p1 = trailPoints[i - 1];
+          const p2 = trailPoints[i];
+          const alpha = Math.min(p1.life, p2.life);
+
+          ctx.globalAlpha = alpha;
+          ctx.lineWidth = Math.max(1, glowThickness * alpha * 0.35);
+
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
+
+        // Pass 4: Bright white core line
         ctx.shadowBlur = 0;
         ctx.strokeStyle = "#ffffff";
 
@@ -238,8 +269,8 @@ export const CursorSparkTrail: React.FC = () => {
           const p2 = trailPoints[i];
           const alpha = Math.min(p1.life, p2.life);
 
-          ctx.globalAlpha = alpha;
-          ctx.lineWidth = Math.max(1.5, glowThickness * alpha * 0.35);
+          ctx.globalAlpha = alpha * 0.9;
+          ctx.lineWidth = Math.max(1, glowThickness * alpha * 0.22);
 
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
