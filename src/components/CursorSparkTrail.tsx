@@ -188,95 +188,68 @@ export const CursorSparkTrail: React.FC = () => {
       ctx.fillStyle = "rgba(3, 7, 18, 0.32)"; // Dark theme match
       ctx.fillRect(0, 0, width, height);
 
-      // 1. Update and draw shockwaves
-      for (let i = shockwaves.length - 1; i >= 0; i--) {
-        const sw = shockwaves[i];
-        sw.update();
-        sw.draw(ctx);
-        if (sw.life <= 0) shockwaves.splice(i, 1);
+      // 1. Update and draw shockwaves (fast simple circular path)
+      if (shockwaves.length > 0) {
+        ctx.save();
+        ctx.globalCompositeOperation = "lighter";
+        for (let i = shockwaves.length - 1; i >= 0; i--) {
+          const sw = shockwaves[i];
+          sw.update();
+          
+          ctx.shadowColor = sw.color;
+          ctx.strokeStyle = sw.color;
+          ctx.shadowBlur = 20;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.strokeStyle = "#ffffff";
+          ctx.shadowBlur = 0;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(sw.x, sw.y, Math.max(1, sw.radius * 0.6), 0, Math.PI * 2);
+          ctx.stroke();
+
+          if (sw.life <= 0) shockwaves.splice(i, 1);
+        }
+        ctx.restore();
       }
 
-      // 2. Draw light ribbon (additive multi-pass glow)
+      // 2. Draw light ribbon (Optimized: single continuous path rendering to eliminate latency)
       if (trailPoints.length >= 2) {
         ctx.save();
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        ctx.globalCompositeOperation = "lighter"; // Enable additive color blending
+        ctx.globalCompositeOperation = "lighter";
 
-        // Pass 1: Massive neon outer bloom (Radius 60)
-        ctx.shadowBlur = 60;
-        ctx.shadowColor = activeColor;
-        ctx.strokeStyle = activeColor;
-
+        // Build a single path for the entire trail
+        ctx.beginPath();
+        ctx.moveTo(trailPoints[0].x, trailPoints[0].y);
         for (let i = 1; i < trailPoints.length; i++) {
-          const p1 = trailPoints[i - 1];
-          const p2 = trailPoints[i];
-          const alpha = Math.min(p1.life, p2.life);
-          
-          ctx.globalAlpha = alpha * 0.95;
-          ctx.lineWidth = glowThickness * alpha + 10; // Wide outer glow bounds
-
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.stroke();
+          ctx.lineTo(trailPoints[i].x, trailPoints[i].y);
         }
 
-        // Pass 2: Intense neon mid line bloom (Radius 30)
-        ctx.shadowBlur = 30;
+        // Draw Outer Neon Red Bloom in one call
+        ctx.shadowBlur = 40;
         ctx.shadowColor = activeColor;
         ctx.strokeStyle = activeColor;
+        ctx.lineWidth = glowThickness + 4;
+        ctx.globalAlpha = 0.85;
+        ctx.stroke();
 
-        for (let i = 1; i < trailPoints.length; i++) {
-          const p1 = trailPoints[i - 1];
-          const p2 = trailPoints[i];
-          const alpha = Math.min(p1.life, p2.life);
+        // Draw Mid Laser line in one call
+        ctx.shadowBlur = 15;
+        ctx.lineWidth = glowThickness * 0.6;
+        ctx.globalAlpha = 0.95;
+        ctx.stroke();
 
-          ctx.globalAlpha = alpha;
-          ctx.lineWidth = Math.max(1.5, glowThickness * alpha * 0.6);
-
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.stroke();
-        }
-
-        // Pass 3: Ultra core glow (Radius 10)
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = activeColor;
-        ctx.strokeStyle = activeColor;
-
-        for (let i = 1; i < trailPoints.length; i++) {
-          const p1 = trailPoints[i - 1];
-          const p2 = trailPoints[i];
-          const alpha = Math.min(p1.life, p2.life);
-
-          ctx.globalAlpha = alpha;
-          ctx.lineWidth = Math.max(1, glowThickness * alpha * 0.35);
-
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.stroke();
-        }
-
-        // Pass 4: Bright white core line
+        // Draw Inner White Core in one call
         ctx.shadowBlur = 0;
         ctx.strokeStyle = "#ffffff";
-
-        for (let i = 1; i < trailPoints.length; i++) {
-          const p1 = trailPoints[i - 1];
-          const p2 = trailPoints[i];
-          const alpha = Math.min(p1.life, p2.life);
-
-          ctx.globalAlpha = alpha * 0.9;
-          ctx.lineWidth = Math.max(1, glowThickness * alpha * 0.22);
-
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.stroke();
-        }
+        ctx.lineWidth = glowThickness * 0.25;
+        ctx.globalAlpha = 1.0;
+        ctx.stroke();
 
         ctx.restore();
       }
@@ -289,25 +262,25 @@ export const CursorSparkTrail: React.FC = () => {
       }
 
       // 3. Draw sparks
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life -= p.decay;
+      if (particles.length > 0) {
+        ctx.save();
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.life -= p.decay;
 
-        if (p.life > 0) {
-          ctx.save();
-          ctx.globalAlpha = p.life;
-          ctx.shadowBlur = 12;
-          ctx.shadowColor = p.color;
-          ctx.fillStyle = p.color;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        } else {
-          particles.splice(i, 1);
+          if (p.life > 0) {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            particles.splice(i, 1);
+          }
         }
+        ctx.restore();
       }
 
       animationFrameId = requestAnimationFrame(render);
