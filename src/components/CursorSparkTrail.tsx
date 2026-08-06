@@ -194,16 +194,13 @@ export const CursorSparkTrail: React.FC = () => {
           const sw = shockwaves[i];
           sw.update();
           
-          ctx.shadowColor = sw.color;
           ctx.strokeStyle = sw.color;
-          ctx.shadowBlur = 20;
           ctx.lineWidth = 3;
           ctx.beginPath();
           ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
           ctx.stroke();
 
           ctx.strokeStyle = "#ffffff";
-          ctx.shadowBlur = 0;
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.arc(sw.x, sw.y, Math.max(1, sw.radius * 0.6), 0, Math.PI * 2);
@@ -214,16 +211,14 @@ export const CursorSparkTrail: React.FC = () => {
         ctx.restore();
       }
 
-      // 2. Draw light ribbon (Tapered rendering: segment by segment scaling width with life)
+      // 2. Draw light ribbon (Tapered rendering - Zero shadowBlur inside loop for absolute lag-free performance)
       if (trailPoints.length >= 2) {
         ctx.save();
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
         ctx.globalCompositeOperation = "lighter";
 
-        // Outer Glow Pass
-        ctx.shadowBlur = 30;
-        ctx.shadowColor = activeColor;
+        // Outer Glow Pass (Drawn with solid color; blur is handled by hardware-accelerated CSS filters)
         ctx.strokeStyle = activeColor;
         for (let i = 1; i < trailPoints.length; i++) {
           const p1 = trailPoints[i - 1];
@@ -231,7 +226,7 @@ export const CursorSparkTrail: React.FC = () => {
           const alpha = Math.min(p1.life, p2.life);
           
           ctx.globalAlpha = alpha * 0.85;
-          ctx.lineWidth = (glowThickness + 8) * alpha; // Taper outer glow based on point life
+          ctx.lineWidth = (glowThickness + 8) * alpha;
 
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
@@ -240,14 +235,13 @@ export const CursorSparkTrail: React.FC = () => {
         }
 
         // Mid Laser Pass
-        ctx.shadowBlur = 10;
         for (let i = 1; i < trailPoints.length; i++) {
           const p1 = trailPoints[i - 1];
           const p2 = trailPoints[i];
           const alpha = Math.min(p1.life, p2.life);
 
           ctx.globalAlpha = alpha;
-          ctx.lineWidth = Math.max(0.5, glowThickness * 0.65 * alpha); // Taper mid line
+          ctx.lineWidth = Math.max(0.5, glowThickness * 0.65 * alpha);
 
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
@@ -256,7 +250,6 @@ export const CursorSparkTrail: React.FC = () => {
         }
 
         // Inner White Core Pass
-        ctx.shadowBlur = 0;
         ctx.strokeStyle = "#ffffff";
         for (let i = 1; i < trailPoints.length; i++) {
           const p1 = trailPoints[i - 1];
@@ -264,7 +257,7 @@ export const CursorSparkTrail: React.FC = () => {
           const alpha = Math.min(p1.life, p2.life);
 
           ctx.globalAlpha = alpha;
-          ctx.lineWidth = Math.max(0.25, glowThickness * 0.25 * alpha); // Taper core line
+          ctx.lineWidth = Math.max(0.25, glowThickness * 0.25 * alpha);
 
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
@@ -331,6 +324,7 @@ export const CursorSparkTrail: React.FC = () => {
         pointerEvents: "none",
         zIndex: 9999, // Overlay above background but completely non-blocking
         opacity: 1.0,
+        filter: "drop-shadow(0 0 10px #00f0ff) drop-shadow(0 0 4px #00f0ff)", // Hardware-accelerated GPU neon glow!
       }}
     />
   );
