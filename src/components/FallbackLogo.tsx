@@ -61,7 +61,10 @@ export function PartnerLogo({ name, customLogoUrl }: { name: string; customLogoU
     aliases.push("Sentinel  ONE");
   }
 
-  // 1. Prioritize local overrides (from public/partners/ folder)
+  // 1. Prioritize database / custom uploaded URL (highest priority)
+  if (customLogoUrl) srcs.push(customLogoUrl);
+
+  // 2. Fallback to local overrides (from public/partners/ folder)
   for (const ext of extensions) {
     // Try aliases first
     for (const alias of aliases) {
@@ -75,9 +78,6 @@ export function PartnerLogo({ name, customLogoUrl }: { name: string; customLogoU
     srcs.push(`/partners/${strippedName}.${ext}`);
     srcs.push(`/partners/${strippedNameLower}.${ext}`);
   }
-
-  // 2. Fallback to database URL
-  if (customLogoUrl) srcs.push(customLogoUrl);
 
   // 3. Fallback to official Wikimedia trademark logos for offline coverage
   if (cleanNameLower.includes("trend micro") || cleanNameLower.includes("trendmicro")) {
