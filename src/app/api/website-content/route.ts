@@ -9,42 +9,24 @@ export const revalidate = 0;
 
 const FILE_PATH = path.join(process.cwd(), "src", "data", "website_content.json");
 
-
-
 export async function GET() {
   try {
-    // 1. Try to load from database first
-    try {
-      const config = await prisma.systemConfig.findUnique({
-        where: { key: "website_content" }
-      });
-      if (config) {
-        const parsed = JSON.parse(config.value);
-        return NextResponse.json(parsed, {
-          headers: {
-            "Cache-Control": "no-store, max-age=0, must-revalidate",
-            "Pragma": "no-cache"
-          }
-        });
-      }
-    } catch (dbErr: any) {
-      console.error("CRITICAL DATABASE READ FAILURE in GET /api/website-content:", dbErr);
-    }
-
-    // 3. Fallback to reading the local JSON file from disk
-    if (!fs.existsSync(FILE_PATH)) {
-      return NextResponse.json({ error: "Content file not found" }, { status: 404 });
-    }
-    const rawData = fs.readFileSync(FILE_PATH, "utf8");
-    const data = JSON.parse(rawData);
-    return NextResponse.json(data, {
-      headers: {
-        "Cache-Control": "no-store, max-age=0, must-revalidate",
-        "Pragma": "no-cache"
-      }
+    const config = await prisma.systemConfig.findUnique({
+      where: { key: "website_content" }
     });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    if (config) {
+      const parsed = JSON.parse(config.value);
+      return NextResponse.json(parsed, {
+        headers: {
+          "Cache-Control": "no-store, max-age=0, must-revalidate",
+          "Pragma": "no-cache"
+        }
+      });
+    }
+    return NextResponse.json({ error: "Configuration not found in database" }, { status: 404 });
+  } catch (dbErr: any) {
+    console.error("DATABASE READ FAILURE in GET /api/website-content:", dbErr);
+    return NextResponse.json({ error: "Database query failed: " + dbErr.message }, { status: 500 });
   }
 }
 
