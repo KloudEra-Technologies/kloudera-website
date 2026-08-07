@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useEditor } from "./EditorContext";
 import { getCleanImageUrl, getImageStyle, getAdjustmentValue, setAdjustmentValue } from "@/lib/imageHelper";
 
@@ -16,6 +16,40 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showControls, setShowControls] = useState(false);
   const [localPreview, setLocalPreview] = useState<string | null>(null);
+
+  // Position coordinates for draggable editor panel
+  const [position, setPosition] = useState({ x: 20, y: 100 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef({ x: 0, y: 0 });
+  const panelStart = useRef({ x: 0, y: 0 });
+
+  // Dynamically set default center-right position on client mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setPosition({ x: window.innerWidth - 350, y: 120 });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isDragging) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const dx = e.clientX - dragStart.current.x;
+      const dy = e.clientY - dragStart.current.y;
+      setPosition({
+        x: Math.max(10, Math.min(window.innerWidth - 330, panelStart.current.x + dx)),
+        y: Math.max(10, Math.min(window.innerHeight - 350, panelStart.current.y + dy))
+      });
+    };
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging]);
 
   let value = siteData;
   for (const key of path) {
@@ -99,18 +133,23 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
 
       {showControls && (
         <>
-          {/* Click outside to close overlay (completely transparent so it doesn't block the image view) */}
+          {/* Floating side panel on the screen - now draggable */}
           <div 
-            className="fixed inset-0 z-[99998]"
-            onClick={() => setShowControls(false)}
-          />
-          {/* Floating side panel on the right side of the screen */}
-          <div 
-            className="fixed right-6 top-24 w-80 bg-zinc-950/95 border border-teal-500/40 p-5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] font-mono text-[10px] flex flex-col gap-4 text-left text-zinc-100 z-[99999] backdrop-blur-md"
+            style={{ left: `${position.x}px`, top: `${position.y}px` }}
+            className="fixed w-80 bg-zinc-950/95 border border-teal-500/40 p-5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] font-mono text-[10px] flex flex-col gap-4 text-left text-zinc-100 z-[99999] backdrop-blur-md select-none"
             onClick={e => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center border-b border-teal-500/20 pb-3">
-              <span className="text-teal-400 font-bold uppercase tracking-wider">Image Settings</span>
+            <div 
+              onMouseDown={(e) => {
+                setIsDragging(true);
+                dragStart.current = { x: e.clientX, y: e.clientY };
+                panelStart.current = { x: position.x, y: position.y };
+              }}
+              className="flex justify-between items-center border-b border-teal-500/20 pb-3 cursor-move active:cursor-grabbing select-none"
+            >
+              <span className="text-teal-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <span>✥</span> Image Settings
+              </span>
               <button onClick={() => setShowControls(false)} className="text-zinc-500 hover:text-white text-sm">✕</button>
             </div>
 
