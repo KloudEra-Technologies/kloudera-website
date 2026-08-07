@@ -8,7 +8,7 @@ import { PartnerLogo } from "@/components/FallbackLogo";
 
 export default function PartnersPage() {
   const [partnersData, setPartnersData] = useState<any>(null);
-  const [localPreviews, setLocalPreviews] = useState<Record<number, string>>({});
+  const [localPreviews, setLocalPreviews] = useState<Record<string | number, string>>({});
   const { isEditMode: isEditActive, updateNestedValue, siteData, authToken } = useEditor();
 
   useEffect(() => {
@@ -71,10 +71,11 @@ export default function PartnersPage() {
 
   const handleImageUpload = async (
     idx: number,
-    file: File
+    file: File,
+    customPartnerName?: string,
+    isAlliance?: boolean
   ) => {
-    const partner = partnersList[idx];
-    const partnerName = partner?.name || "Partner";
+    const partnerName = isAlliance ? customPartnerName || "Partner" : partnersList[idx]?.name || "Partner";
     const cleanName = partnerName.trim().replace(/\s+/g, "");
     
     // Determine file extension
@@ -88,14 +89,17 @@ export default function PartnersPage() {
 
     const predictedUrl = `/partners/${cleanName}.${ext}`;
 
-    // Set local preview instantly
+    // Set local preview instantly (use partnerName as key if alliance)
     const tempPreviewUrl = URL.createObjectURL(file);
-    setLocalPreviews((prev) => ({ ...prev, [idx]: tempPreviewUrl }));
+    const previewKey = isAlliance ? partnerName : idx;
+    setLocalPreviews((prev) => ({ ...prev, [previewKey]: tempPreviewUrl }));
 
-    // Set permanent URL path instantly so it is safe to publish immediately
-    const updated = [...partnersList];
-    updated[idx] = { ...updated[idx], logoUrl: predictedUrl };
-    updateNestedValue(["partners", "featured"], updated);
+    // For strategic partners, update their logo URL path instantly so they can publish immediately
+    if (!isAlliance) {
+      const updated = [...partnersList];
+      updated[idx] = { ...updated[idx], logoUrl: predictedUrl };
+      updateNestedValue(["partners", "featured"], updated);
+    }
 
     const token = authToken || "";
     const formData = new FormData();
@@ -111,10 +115,22 @@ export default function PartnersPage() {
       });
       const data = await res.json();
       if (res.ok && data.url) {
-        // Confirm final URL
-        const finalUpdated = [...partnersList];
-        finalUpdated[idx] = { ...finalUpdated[idx], logoUrl: data.url };
-        updateNestedValue(["partners", "featured"], finalUpdated);
+        if (isAlliance) {
+          // Promote alliance partner to strategic list now that upload is complete
+          const promotedPartner = {
+            name: partnerName,
+            tagline: "Collaborative systems partnership and integrated threat-shield security intelligence analytics node.",
+            logoUrl: data.url,
+            logoColor: "#06b6d4"
+          };
+          const updated = [...partnersList, promotedPartner];
+          updateNestedValue(["partners", "featured"], updated);
+        } else {
+          // Confirm final URL for strategic partner
+          const finalUpdated = [...partnersList];
+          finalUpdated[idx] = { ...finalUpdated[idx], logoUrl: data.url };
+          updateNestedValue(["partners", "featured"], finalUpdated);
+        }
       } else {
         alert(`Upload failed: ${data.error || "Unknown error"}`);
       }
@@ -122,18 +138,6 @@ export default function PartnersPage() {
       alert("Network error during image upload. Please try again.");
       console.error("Image upload failed", err);
     }
-  };
-
-  const promoteAllianceToFeatured = (allianceName: string, action: (newIdx: number) => void) => {
-    const promotedPartner = {
-      name: allianceName,
-      tagline: "Collaborative systems partnership and integrated threat-shield security intelligence analytics node.",
-      logoUrl: "",
-      logoColor: "#06b6d4"
-    };
-    const updated = [...partnersList, promotedPartner];
-    updateNestedValue(["partners", "featured"], updated);
-    action(updated.length - 1);
   };
 
   return (
@@ -204,27 +208,29 @@ export default function PartnersPage() {
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {partnersList.map((partner: any, idx: number) => (
-              <PartnerCard
-                key={idx}
-                partner={partner}
-                idx={idx}
-                isEditActive={isEditActive}
-                localPreviewUrl={localPreviews[idx]}
-                onDelete={() => deletePartner(idx)}
-                onImageUpload={(file) => handleImageUpload(idx, file)}
-                onNameChange={(val) => {
-                  const updated = [...partnersList];
-                  updated[idx] = { ...updated[idx], name: val };
-                  updateNestedValue(["partners", "featured"], updated);
-                }}
-                onTaglineChange={(val) => {
-                  const updated = [...partnersList];
-                  updated[idx] = { ...updated[idx], tagline: val };
-                  updateNestedValue(["partners", "featured"], updated);
-                }}
-              />
-            ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {partnersList.map((partner: any, idx: number) => (
+                <PartnerCard
+                  key={idx}
+                  partner={partner}
+                  idx={idx}
+                  isEditActive={isEditActive}
+                  localPreviewUrl={localPreviews[idx]}
+                  onDelete={() => deletePartner(idx)}
+                  onImageUpload={(file) => handleImageUpload(idx, file)}
+                  onNameChange={(val) => {
+                    const updated = [...partnersList];
+                    updated[idx] = { ...updated[idx], name: val };
+                    updateNestedValue(["partners", "featured"], updated);
+                  }}
+                  onTaglineChange={(val) => {
+                    const updated = [...partnersList];
+                    updated[idx] = { ...updated[idx], tagline: val };
+                    updateNestedValue(["partners", "featured"], updated);
+                  }}
+                />
+              ))}
+            </div>
 
             {/* Add Card Button — only in edit mode */}
             {isEditActive && (
@@ -263,9 +269,10 @@ export default function PartnersPage() {
                     partner={partnerObj}
                     idx={idx + 100}
                     isEditActive={isEditActive}
+                    localPreviewUrl={localPreviews[allianceName]}
                     onDelete={() => {}}
-                    onImageUpload={(file) => promoteAllianceToFeatured(allianceName, (newIdx) => handleImageUpload(newIdx, file))}
-                    onNameChange={(val) => promoteAllianceToFeatured(allianceName, (newIdx) => {
+                    onImageUpload={(file) => handleImageUpload(idx + 100, file, allianceName, true)}
+                    onNameChange={(val) => {
                       const promotedObj = {
                         name: val,
                         tagline: "Collaborative systems partnership and integrated threat-shield security intelligence analytics node.",
@@ -274,8 +281,8 @@ export default function PartnersPage() {
                       };
                       const finalUpdated = [...partnersList, promotedObj];
                       updateNestedValue(["partners", "featured"], finalUpdated);
-                    })}
-                    onTaglineChange={(val) => promoteAllianceToFeatured(allianceName, (newIdx) => {
+                    }}
+                    onTaglineChange={(val) => {
                       const promotedObj = {
                         name: allianceName,
                         tagline: val,
@@ -284,7 +291,7 @@ export default function PartnersPage() {
                       };
                       const finalUpdated = [...partnersList, promotedObj];
                       updateNestedValue(["partners", "featured"], finalUpdated);
-                    })}
+                    }}
                   />
                 );
               })}
