@@ -42,8 +42,30 @@ export function PartnerLogo({ name, customLogoUrl }: { name: string; customLogoU
 
   const extensions = ["png", "svg", "jpg", "jpeg", "webp", "gif", "avif"];
 
+  // Smart aliases
+  const aliases: string[] = [];
+  if (cleanNameLower.includes("aws") || cleanNameLower.includes("amazon")) {
+    aliases.push("AWS");
+  }
+  if (cleanNameLower.includes("google") || cleanNameLower.includes("gcp")) {
+    aliases.push("GCP");
+  }
+  if (cleanNameLower.includes("cross") && cleanNameLower.includes("cipher")) {
+    aliases.push("CrossCipher");
+  }
+  if (cleanNameLower.includes("sentinel")) {
+    aliases.push("Sentinel  ONE");
+  }
+
   // 1. Prioritize local overrides (from public/partners/ folder)
   for (const ext of extensions) {
+    // Try aliases first
+    for (const alias of aliases) {
+      srcs.push(`/partners/${alias}.${ext}`);
+      srcs.push(`/partners/${alias.toLowerCase()}.${ext}`);
+    }
+
+    // Try normal clean formats
     srcs.push(`/partners/${cleanName}.${ext}`);
     srcs.push(`/partners/${cleanNameLower}.${ext}`);
     srcs.push(`/partners/${strippedName}.${ext}`);
