@@ -72,21 +72,31 @@ export default function PartnersPage() {
     idx: number,
     file: File
   ) => {
-    // Generate instant client preview
-    const tempPreviewUrl = URL.createObjectURL(file);
+    const partner = partnersList[idx];
+    const partnerName = partner?.name || "Partner";
+    const cleanName = partnerName.trim().replace(/\s+/g, "");
+    
+    // Determine file extension
+    let ext = "png";
+    const mimeType = file.type || "image/png";
+    if (mimeType.includes("jpeg") || mimeType.includes("jpg")) ext = "jpg";
+    else if (mimeType.includes("svg")) ext = "svg";
+    else if (mimeType.includes("webp")) ext = "webp";
+    else if (mimeType.includes("avif")) ext = "avif";
+    else if (mimeType.includes("gif")) ext = "gif";
+
+    const predictedUrl = `/partners/${cleanName}.${ext}`;
+
+    // Set permanent URL path instantly so it is safe to publish immediately
     const updated = [...partnersList];
-    updated[idx] = { ...updated[idx], logoUrl: tempPreviewUrl };
+    updated[idx] = { ...updated[idx], logoUrl: predictedUrl };
     updateNestedValue(["partners", "featured"], updated);
 
     const token = authToken || "";
     const formData = new FormData();
     formData.append("file", file);
     formData.append("token", token);
-    
-    const partner = partnersList[idx];
-    if (partner && partner.name) {
-      formData.append("partnerName", partner.name);
-    }
+    formData.append("partnerName", partnerName);
 
     try {
       const res = await fetch("/api/upload-image", {
@@ -96,7 +106,7 @@ export default function PartnersPage() {
       });
       const data = await res.json();
       if (res.ok && data.url) {
-        // Replace preview URL with permanent static asset route URL
+        // Confirm final URL
         const finalUpdated = [...partnersList];
         finalUpdated[idx] = { ...finalUpdated[idx], logoUrl: data.url };
         updateNestedValue(["partners", "featured"], finalUpdated);
