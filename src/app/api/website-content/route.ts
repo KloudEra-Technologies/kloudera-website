@@ -28,10 +28,10 @@ export async function GET() {
         });
       }
     } catch (dbErr: any) {
-      console.error("DATABASE READ FAILURE in GET /api/website-content:", dbErr);
+      console.error("CRITICAL DATABASE READ FAILURE in GET /api/website-content:", dbErr);
     }
 
-    // 2. Fallback to reading the local JSON file from disk
+    // 3. Fallback to reading the local JSON file from disk
     if (!fs.existsSync(FILE_PATH)) {
       return NextResponse.json({ error: "Content file not found" }, { status: 404 });
     }

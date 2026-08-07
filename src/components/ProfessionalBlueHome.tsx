@@ -17,92 +17,6 @@ interface ProfessionalBlueHomeProps {
   selectedElementPath?: string;
 }
 
-function FallbackImage({ 
-  srcs, 
-  alt, 
-  className, 
-  style, 
-  fallbackElement 
-}: { 
-  srcs: string[]; 
-  alt: string; 
-  className?: string; 
-  style?: React.CSSProperties; 
-  fallbackElement: React.ReactNode; 
-}) {
-  const [srcIndex, setSrcIndex] = useState(0);
-
-  const handleError = () => {
-    if (srcIndex < srcs.length - 1) {
-      setSrcIndex(srcIndex + 1);
-    }
-  };
-
-  if (srcIndex >= srcs.length || !srcs[srcIndex]) {
-    return <>{fallbackElement}</>;
-  }
-
-  return (
-    <img
-      src={srcs[srcIndex]}
-      alt={alt}
-      className={className}
-      style={style}
-      onError={handleError}
-    />
-  );
-}
-
-function renderPartnerLogo(name: string, customLogoUrl?: string) {
-  const n = name.toLowerCase();
-  const cleanName = n.replace(/[^a-z0-9]/g, "");
-  
-  const srcs: string[] = [];
-  if (customLogoUrl) srcs.push(customLogoUrl);
-  
-  // Local overrides
-  srcs.push(`/partners/${cleanName}.png`);
-  srcs.push(`/partners/${cleanName}.svg`);
-  srcs.push(`/partners/${cleanName}.jpg`);
-  srcs.push(`/partners/${cleanName}.jpeg`);
-  srcs.push(`/partners/${cleanName}.webp`);
-
-  return (
-    <FallbackImage
-      srcs={srcs}
-      alt={name}
-      className="w-full h-full object-contain p-4"
-      style={{ maxHeight: "100px" }}
-      fallbackElement={<div className="w-10 h-10 animate-pulse rounded bg-blue-900/10" />}
-    />
-  );
-}
-
-function renderCertificationLogo(code: string, customImageUrl?: string) {
-  const c = code.toLowerCase();
-  const cleanCode = c.replace(/[^a-z0-9]/g, "");
-
-  const srcs: string[] = [];
-  if (customImageUrl) srcs.push(customImageUrl);
-
-  // Local overrides
-  srcs.push(`/certifications/${cleanCode}.png`);
-  srcs.push(`/certifications/${cleanCode}.svg`);
-  srcs.push(`/certifications/${cleanCode}.jpg`);
-  srcs.push(`/certifications/${cleanCode}.jpeg`);
-  srcs.push(`/certifications/${cleanCode}.webp`);
-
-  return (
-    <FallbackImage
-      srcs={srcs}
-      alt={code}
-      className="w-full h-full object-contain p-3"
-      style={{ maxHeight: "80px" }}
-      fallbackElement={<div className="w-8 h-8 animate-pulse rounded bg-emerald-900/10" />}
-    />
-  );
-}
-
 export function ProfessionalBlueHome({ 
   onLaunch3D = () => {}, 
   siteData: initialSiteData, 
@@ -712,7 +626,22 @@ export function ProfessionalBlueHome({
                     >
                       {/* Logo / Image Area */}
                       <div className="flex items-center justify-center bg-zinc-950/60 w-full" style={{ minHeight: "100px" }}>
-                        {renderPartnerLogo(item.name || "", item.logoUrl)}
+                        {item.logoUrl ? (
+                          <img
+                            src={item.logoUrl}
+                            alt={item.name || "Partner"}
+                            className="w-full h-full object-contain p-4"
+                            style={{ maxHeight: "100px" }}
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center text-slate-600 py-6">
+                            <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                              <rect x="3" y="3" width="18" height="18" rx="3" strokeWidth="1.5" />
+                              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
                       {/* Name + Tagline */}
                       <div className="p-4 border-t border-blue-900/20 flex flex-col gap-1">
@@ -1154,7 +1083,20 @@ export function ProfessionalBlueHome({
                     >
                       {/* Badge Image Area */}
                       <div className="flex items-center justify-center bg-[#060c18]/60 w-full" style={{ minHeight: "80px" }}>
-                        {renderCertificationLogo(item.code || item.title || "", item.imageUrl)}
+                        {item.imageUrl ? (
+                          <img
+                            src={item.imageUrl}
+                            alt={item.title || "Certification"}
+                            className="w-full h-full object-contain p-3"
+                            style={{ maxHeight: "80px" }}
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center text-emerald-900/60 py-4">
+                            <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
                       {/* Title */}
                       <div className="p-3 border-t border-emerald-900/20 text-center">
