@@ -109,6 +109,18 @@ export default function PartnersPage() {
     }
   };
 
+  const promoteAllianceToFeatured = (allianceName: string, action: (newIdx: number) => void) => {
+    const promotedPartner = {
+      name: allianceName,
+      tagline: "Collaborative systems partnership and integrated threat-shield security intelligence analytics node.",
+      logoUrl: "",
+      logoColor: "#06b6d4"
+    };
+    const updated = [...partnersList, promotedPartner];
+    updateNestedValue(["partners", "featured"], updated);
+    action(updated.length - 1);
+  };
+
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col font-sans relative overflow-hidden">
       <BgAnimation variant="partners" />
@@ -234,11 +246,29 @@ export default function PartnersPage() {
                     key={`alliance-${idx}`}
                     partner={partnerObj}
                     idx={idx + 100}
-                    isEditActive={false}
+                    isEditActive={isEditActive}
                     onDelete={() => {}}
-                    onImageUpload={() => {}}
-                    onNameChange={() => {}}
-                    onTaglineChange={() => {}}
+                    onImageUpload={(file) => promoteAllianceToFeatured(allianceName, (newIdx) => handleImageUpload(newIdx, file))}
+                    onNameChange={(val) => promoteAllianceToFeatured(allianceName, (newIdx) => {
+                      const promotedObj = {
+                        name: val,
+                        tagline: "Collaborative systems partnership and integrated threat-shield security intelligence analytics node.",
+                        logoUrl: "",
+                        logoColor: "#06b6d4"
+                      };
+                      const finalUpdated = [...partnersList, promotedObj];
+                      updateNestedValue(["partners", "featured"], finalUpdated);
+                    })}
+                    onTaglineChange={(val) => promoteAllianceToFeatured(allianceName, (newIdx) => {
+                      const promotedObj = {
+                        name: allianceName,
+                        tagline: val,
+                        logoUrl: "",
+                        logoColor: "#06b6d4"
+                      };
+                      const finalUpdated = [...partnersList, promotedObj];
+                      updateNestedValue(["partners", "featured"], finalUpdated);
+                    })}
                   />
                 );
               })}
