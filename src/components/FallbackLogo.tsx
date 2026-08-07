@@ -1,17 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
+
+interface FallbackImageProps {
+  srcs: string[];
+  alt: string;
+  className?: string;
+  style?: React.CSSProperties;
+  fallbackElement: React.ReactNode;
+}
+
+function FallbackImage({ srcs, alt, className, style, fallbackElement }: FallbackImageProps) {
+  const [srcIndex, setSrcIndex] = useState(0);
+
+  const handleError = () => {
+    if (srcIndex < srcs.length - 1) {
+      setSrcIndex(srcIndex + 1);
+    }
+  };
+
+  if (srcIndex >= srcs.length || !srcs[srcIndex]) {
+    return <>{fallbackElement}</>;
+  }
+
+  return (
+    <img
+      src={srcs[srcIndex]}
+      alt={alt}
+      className={className}
+      style={style}
+      onError={handleError}
+    />
+  );
+}
 
 export function PartnerLogo({ name, customLogoUrl }: { name: string; customLogoUrl?: string }) {
-  if (customLogoUrl) {
-    return (
-      <img
-        src={customLogoUrl}
-        alt={name}
-        className="w-full h-full object-contain p-4"
-        style={{ maxHeight: "100px" }}
-      />
-    );
+  const srcs: string[] = [];
+  if (customLogoUrl) srcs.push(customLogoUrl);
+
+  const cleanName = name.trim();
+  const cleanNameLower = cleanName.toLowerCase();
+  const strippedName = cleanName.replace(/\s+/g, "");
+  const strippedNameLower = strippedName.toLowerCase();
+
+  const extensions = ["png", "svg", "jpg", "jpeg", "webp", "gif", "avif"];
+
+  // Generate lookup paths
+  for (const ext of extensions) {
+    srcs.push(`/partners/${cleanName}.${ext}`);
+    srcs.push(`/partners/${cleanNameLower}.${ext}`);
+    srcs.push(`/partners/${strippedName}.${ext}`);
+    srcs.push(`/partners/${strippedNameLower}.${ext}`);
   }
-  return (
+
+  // De-duplicate array
+  const uniqueSrcs = Array.from(new Set(srcs));
+
+  const textFallback = (
     <div className="flex flex-col items-center justify-center text-slate-600 py-6">
       <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
         <rect x="3" y="3" width="18" height="18" rx="3" strokeWidth="1.5" />
@@ -19,6 +62,16 @@ export function PartnerLogo({ name, customLogoUrl }: { name: string; customLogoU
         <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
       </svg>
     </div>
+  );
+
+  return (
+    <FallbackImage
+      srcs={uniqueSrcs}
+      alt={name}
+      className="w-full h-full object-contain p-4"
+      style={{ maxHeight: "100px" }}
+      fallbackElement={textFallback}
+    />
   );
 }
 
