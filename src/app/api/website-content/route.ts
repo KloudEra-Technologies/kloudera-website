@@ -28,7 +28,40 @@ export async function GET() {
   } catch (dbErr: any) {
     console.error("DATABASE READ FAILURE in GET /api/website-content:", dbErr);
     
-    // Fallback to local JSON file
+    // Fallback 1: Fetch directly from GitHub to get real-time edits if database is down
+    const token = process.env.GITHUB_PAT;
+    if (token) {
+      try {
+        console.log("Neon database unreachable. Fetching latest website_content.json from GitHub repository...");
+        const gitRes = await fetch(
+          "https://api.github.com/repos/KloudEra-Technologies/kloudera-website/contents/src/data/website_content.json?ref=main",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/vnd.github.v3.raw",
+              "User-Agent": "Kloudera-App"
+            },
+            next: { revalidate: 0 } // Disable fetch cache
+          }
+        );
+        if (gitRes.ok) {
+          const parsed = await gitRes.json();
+          console.log("Successfully fetched latest website_content.json from GitHub!");
+          return NextResponse.json(parsed, {
+            headers: {
+              "Cache-Control": "no-store, max-age=0, must-revalidate",
+              "Pragma": "no-cache"
+            }
+          });
+        } else {
+          console.warn("GitHub fetch failed with status:", gitRes.status);
+        }
+      } catch (gitErr: any) {
+        console.error("Failed to fetch fallback from GitHub:", gitErr.message);
+      }
+    }
+
+    // Fallback 2: Fallback to local static JSON file on disk
     if (fs.existsSync(FILE_PATH)) {
       try {
         const rawData = fs.readFileSync(FILE_PATH, "utf8");
