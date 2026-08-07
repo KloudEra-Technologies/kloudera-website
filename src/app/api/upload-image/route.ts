@@ -126,8 +126,16 @@ export async function POST(req: NextRequest) {
         }, { status: 400 });
       }
 
-      // Return the public static route url
-      return NextResponse.json({ success: true, url: `/partners/${filename}` });
+      // Generate base64 dataUrl for instant client-side preview
+      const base64Data = buffer.toString("base64");
+      const tempDataUrl = `data:${file.type || "image/png"};base64,${base64Data}`;
+
+      // Return the public static route url and the temporary dataUrl
+      return NextResponse.json({ 
+        success: true, 
+        url: `/partners/${filename}`,
+        tempDataUrl
+      });
     }
 
     const base64Data = buffer.toString("base64");

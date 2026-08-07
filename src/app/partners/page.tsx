@@ -72,6 +72,12 @@ export default function PartnersPage() {
     idx: number,
     file: File
   ) => {
+    // Generate instant client preview
+    const tempPreviewUrl = URL.createObjectURL(file);
+    const updated = [...partnersList];
+    updated[idx] = { ...updated[idx], logoUrl: tempPreviewUrl };
+    updateNestedValue(["partners", "featured"], updated);
+
     const token = authToken || "";
     const formData = new FormData();
     formData.append("file", file);
@@ -90,9 +96,10 @@ export default function PartnersPage() {
       });
       const data = await res.json();
       if (res.ok && data.url) {
-        const updated = [...partnersList];
-        updated[idx] = { ...updated[idx], logoUrl: data.url };
-        updateNestedValue(["partners", "featured"], updated);
+        // Replace preview URL with permanent static asset route URL
+        const finalUpdated = [...partnersList];
+        finalUpdated[idx] = { ...finalUpdated[idx], logoUrl: data.url };
+        updateNestedValue(["partners", "featured"], finalUpdated);
       } else {
         alert(`Upload failed: ${data.error || "Unknown error"}`);
       }
