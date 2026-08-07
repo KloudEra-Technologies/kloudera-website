@@ -89,9 +89,9 @@ export default function PartnersPage() {
 
     const predictedUrl = `/partners/${cleanName}.${ext}`;
 
-    // Set local preview instantly (use partnerName as key if alliance)
+    // Set local preview instantly (always use partnerName as key)
     const tempPreviewUrl = URL.createObjectURL(file);
-    const previewKey = isAlliance ? partnerName : idx;
+    const previewKey = partnerName;
     setLocalPreviews((prev) => ({ ...prev, [previewKey]: tempPreviewUrl }));
 
     // For strategic partners, update their logo URL path instantly so they can publish immediately
@@ -138,6 +138,18 @@ export default function PartnersPage() {
       alert("Network error during image upload. Please try again.");
       console.error("Image upload failed", err);
     }
+  };
+
+  const promoteAllianceToFeatured = (allianceName: string, action: (newIdx: number) => void) => {
+    const promotedPartner = {
+      name: allianceName,
+      tagline: "Collaborative systems partnership and integrated threat-shield security intelligence analytics node.",
+      logoUrl: "",
+      logoColor: "#06b6d4"
+    };
+    const updated = [...partnersList, promotedPartner];
+    updateNestedValue(["partners", "featured"], updated);
+    action(updated.length - 1);
   };
 
   return (
@@ -214,7 +226,7 @@ export default function PartnersPage() {
                 partner={partner}
                 idx={idx}
                 isEditActive={isEditActive}
-                localPreviewUrl={localPreviews[idx]}
+                localPreviewUrl={localPreviews[partner.name] || localPreviews[idx]}
                 onDelete={() => deletePartner(idx)}
                 onImageUpload={(file) => handleImageUpload(idx, file)}
                 onNameChange={(val) => {
