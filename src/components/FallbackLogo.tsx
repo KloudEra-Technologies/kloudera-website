@@ -75,6 +75,11 @@ export function PartnerLogo({ name, customLogoUrl }: { name: string; customLogoU
   // 2. Fallback to database URL
   if (customLogoUrl) srcs.push(customLogoUrl);
 
+  // 3. Fallback to official Wikimedia trademark logos for offline coverage
+  if (cleanNameLower.includes("trend micro") || cleanNameLower.includes("trendmicro")) {
+    srcs.push("https://upload.wikimedia.org/wikipedia/commons/d/da/Trend_Micro_logo.svg");
+  }
+
   // De-duplicate array
   const uniqueSrcs = Array.from(new Set(srcs));
 

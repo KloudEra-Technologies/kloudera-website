@@ -23,6 +23,7 @@ export default function PartnersPage() {
 
   // Use siteData first (live edits), then fetched DB data, then empty array
   const partnersList: any[] = siteData?.partners?.featured || partnersData?.featured || [];
+  const alliancesList: string[] = siteData?.partners?.alliances || partnersData?.alliances || [];
 
   const addPartner = () => {
     const updated = [
@@ -118,57 +119,96 @@ export default function PartnersPage() {
       </div>
 
       {/* Partners Grid */}
-      <main className="flex-1 max-w-6xl mx-auto w-full px-6 pb-20">
+      <main className="flex-1 max-w-6xl mx-auto w-full px-6 pb-20 space-y-16">
 
-        {partnersList.length === 0 && !isEditActive && (
-          <div className="flex flex-col items-center justify-center py-24 text-center space-y-4">
-            <div className="w-20 h-20 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-4">
-              <svg className="w-10 h-10 text-zinc-600" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-              </svg>
+        {/* Section 1: Strategic Partners */}
+        <div className="space-y-6">
+          <div className="flex items-center gap-3 border-b border-zinc-800 pb-4">
+            <div className="h-5 w-1 rounded-full bg-teal-500" />
+            <h3 className="text-sm font-bold text-teal-400 font-mono tracking-widest uppercase">STRATEGIC TECHNOLOGY PARTNERS</h3>
+          </div>
+
+          {partnersList.length === 0 && !isEditActive && (
+            <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                <svg className="w-8 h-8 text-zinc-600" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                </svg>
+              </div>
+              <p className="text-zinc-500 font-mono text-sm">No partners added yet.</p>
             </div>
-            <p className="text-zinc-500 font-mono text-sm">No partners added yet.</p>
-            <p className="text-zinc-600 text-xs font-mono">Use editor mode (Ctrl+Shift+E) to add partner cards.</p>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {partnersList.map((partner: any, idx: number) => (
+              <PartnerCard
+                key={idx}
+                partner={partner}
+                idx={idx}
+                isEditActive={isEditActive}
+                onDelete={() => deletePartner(idx)}
+                onImageUpload={(file) => handleImageUpload(idx, file)}
+                onNameChange={(val) => {
+                  const updated = [...partnersList];
+                  updated[idx] = { ...updated[idx], name: val };
+                  updateNestedValue(["partners", "featured"], updated);
+                }}
+                onTaglineChange={(val) => {
+                  const updated = [...partnersList];
+                  updated[idx] = { ...updated[idx], tagline: val };
+                  updateNestedValue(["partners", "featured"], updated);
+                }}
+              />
+            ))}
+
+            {/* Add Card Button — only in edit mode */}
+            {isEditActive && (
+              <button
+                onClick={addPartner}
+                className="rounded-2xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 flex flex-col items-center justify-center gap-3 transition-all min-h-[260px] font-mono text-teal-400 group"
+              >
+                <div className="w-12 h-12 rounded-full border-2 border-dashed border-teal-500/50 group-hover:border-teal-400 flex items-center justify-center transition-all">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                </div>
+                <span className="text-xs font-bold uppercase tracking-widest">Add Partner</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Section 2: Global Alliance Network */}
+        {alliancesList.length > 0 && (
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 border-b border-zinc-800 pb-4">
+              <div className="h-5 w-1 rounded-full bg-cyan-500" />
+              <h3 className="text-sm font-bold text-cyan-400 font-mono tracking-widest uppercase">GLOBAL ALLIANCE NETWORK</h3>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {alliancesList.map((allianceName: string, idx: number) => {
+                const partnerObj = {
+                  name: allianceName,
+                  tagline: "Collaborative systems partnership and integrated threat-shield security intelligence analytics node."
+                };
+                return (
+                  <PartnerCard
+                    key={`alliance-${idx}`}
+                    partner={partnerObj}
+                    idx={idx + 100}
+                    isEditActive={false}
+                    onDelete={() => {}}
+                    onImageUpload={() => {}}
+                    onNameChange={() => {}}
+                    onTaglineChange={() => {}}
+                  />
+                );
+              })}
+            </div>
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {partnersList.map((partner: any, idx: number) => (
-            <PartnerCard
-              key={idx}
-              partner={partner}
-              idx={idx}
-              isEditActive={isEditActive}
-              onDelete={() => deletePartner(idx)}
-              onImageUpload={(file) => handleImageUpload(idx, file)}
-              onNameChange={(val) => {
-                const updated = [...partnersList];
-                updated[idx] = { ...updated[idx], name: val };
-                updateNestedValue(["partners", "featured"], updated);
-              }}
-              onTaglineChange={(val) => {
-                const updated = [...partnersList];
-                updated[idx] = { ...updated[idx], tagline: val };
-                updateNestedValue(["partners", "featured"], updated);
-              }}
-            />
-          ))}
-
-          {/* Add Card Button — only in edit mode */}
-          {isEditActive && (
-            <button
-              onClick={addPartner}
-              className="rounded-2xl border-2 border-dashed border-teal-500/40 bg-zinc-950/20 hover:bg-teal-500/5 hover:border-teal-500 flex flex-col items-center justify-center gap-3 transition-all min-h-[260px] font-mono text-teal-400 group"
-            >
-              <div className="w-12 h-12 rounded-full border-2 border-dashed border-teal-500/50 group-hover:border-teal-400 flex items-center justify-center transition-all">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-              </div>
-              <span className="text-xs font-bold uppercase tracking-widest">Add Partner</span>
-            </button>
-          )}
-        </div>
       </main>
     </div>
   );
