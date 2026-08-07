@@ -77,7 +77,20 @@ export async function POST(req: NextRequest) {
       console.log("Prepared filename:", filename);
       
       // Target paths
-      const subFolder = partnerName ? "partners" : "uploads";
+      let subFolder = "uploads";
+      if (partnerName) {
+        subFolder = "partners";
+      } else if (pathParam) {
+        const lowerPath = pathParam.toLowerCase();
+        if (lowerPath.includes("achievements")) {
+          subFolder = "achievements";
+        } else if (lowerPath.includes("team")) {
+          subFolder = "team";
+        } else if (lowerPath.includes("clienteles")) {
+          subFolder = "clienteles";
+        }
+      }
+      
       const publicDir = path.join(process.cwd(), "public", subFolder);
       const rootDir = path.join(process.cwd(), subFolder);
 
