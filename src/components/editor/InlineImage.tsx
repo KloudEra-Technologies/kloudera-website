@@ -52,6 +52,7 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
     const formData = new FormData();
     formData.append("file", file);
     formData.append("token", token);
+    formData.append("path", path.join("_"));
 
     try {
       const res = await fetch("/api/upload-image", {
@@ -73,13 +74,14 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
   const scale = Number(getAdjustmentValue(displayUrl, "scale", "1"));
   const x = Number(getAdjustmentValue(displayUrl, "x", "0"));
   const y = Number(getAdjustmentValue(displayUrl, "y", "0"));
+  const fit = getAdjustmentValue(displayUrl, "fit", "cover");
 
   return (
     <div className={`relative group/inline-image inline-block ${className}`}>
       <img 
         src={getCleanImageUrl(displayUrl)} 
         alt={alt}
-        className="w-full h-full object-cover"
+        className="w-full h-full"
         style={getImageStyle(displayUrl)} 
       />
       <div 
@@ -101,7 +103,7 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
           onClick={() => setShowControls(false)}
         >
           <div 
-            className="bg-zinc-950 border border-teal-500/40 p-5 rounded-2xl shadow-2xl font-mono text-[10px] w-72 flex flex-col gap-4 text-left"
+            className="bg-zinc-950 border border-teal-500/40 p-5 rounded-2xl shadow-2xl font-mono text-[10px] w-72 flex flex-col gap-4 text-left text-zinc-100"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex justify-between items-center border-b border-teal-500/20 pb-3">
@@ -124,6 +126,20 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
             />
 
             <div className="space-y-3 mt-1">
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between text-zinc-400 text-[9px] uppercase tracking-wider">
+                  <span>IMAGE FITTING</span>
+                </div>
+                <select
+                  value={fit}
+                  onChange={(e) => updateNestedValue(path, setAdjustmentValue(currentUrl, "fit", e.target.value))}
+                  className="bg-zinc-900 border border-zinc-800 text-white rounded px-2 py-1.5 outline-none focus:border-teal-500 text-[10px]"
+                >
+                  <option value="cover">Fill space (Cropped)</option>
+                  <option value="contain">Show entire image (No crop)</option>
+                </select>
+              </div>
+
               <div className="flex flex-col gap-1">
                 <div className="flex justify-between text-zinc-400 text-[9px] uppercase tracking-wider">
                   <span>SCALE / ZOOM</span>

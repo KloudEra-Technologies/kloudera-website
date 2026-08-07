@@ -58,10 +58,11 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(bytes);
 
     const partnerName = formData.get("partnerName") as string | null;
-    console.log("Partner name parameter:", partnerName);
+    const pathParam = formData.get("path") as string | null;
+    console.log("Upload parameters - partnerName:", partnerName, "path:", pathParam);
     
-    if (partnerName) {
-      const cleanName = partnerName.trim().replace(/\s+/g, "");
+    if (partnerName || pathParam) {
+      const cleanName = (partnerName || pathParam || "").trim().replace(/\s+/g, "");
       
       // Determine file extension
       let ext = "png";
@@ -76,8 +77,9 @@ export async function POST(req: NextRequest) {
       console.log("Prepared filename:", filename);
       
       // Target paths
-      const publicDir = path.join(process.cwd(), "public", "partners");
-      const rootDir = path.join(process.cwd(), "partners");
+      const subFolder = partnerName ? "partners" : "uploads";
+      const publicDir = path.join(process.cwd(), "public", subFolder);
+      const rootDir = path.join(process.cwd(), subFolder);
 
       // Ensure target folders exist (skipped on Vercel to prevent EROFS)
       const isVercel = Boolean(process.env.VERCEL);
@@ -94,7 +96,7 @@ export async function POST(req: NextRequest) {
           // Write file to both folders
           fs.writeFileSync(path.join(publicDir, filename), buffer);
           fs.writeFileSync(path.join(rootDir, filename), buffer);
-          console.log("Successfully wrote file to local filesystem");
+          console.log(`Successfully wrote file to local filesystem: ${subFolder}/${filename}`);
         } catch (fsErr: any) {
           console.warn("Local filesystem write failed:", fsErr.message);
         }
@@ -106,11 +108,13 @@ export async function POST(req: NextRequest) {
       
       if (githubTokenSet) {
         try {
-          console.log(`Starting GitHub commit for: public/partners/${filename}`);
+          console.log(`Starting GitHub commit for: public/${subFolder}/${filename}`);
           const githubResult = await commitToGithub(
-            `public/partners/${filename}`,
+            `public/${subFolder}/${filename}`,
             buffer,
-            `cms: upload logo image for partner ${partnerName}`
+            partnerName 
+              ? `cms: upload logo image for partner ${partnerName}`
+              : `cms: upload image for path ${pathParam}`
           );
           console.log("GitHub commit response success:", githubResult.success);
           if (!githubResult.success) {
@@ -133,7 +137,7 @@ export async function POST(req: NextRequest) {
       // Return the public static route url and the temporary dataUrl
       return NextResponse.json({ 
         success: true, 
-        url: `/partners/${filename}`,
+        url: `/${subFolder}/${filename}`,
         tempDataUrl
       });
     }
