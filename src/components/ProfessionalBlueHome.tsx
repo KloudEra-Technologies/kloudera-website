@@ -17,6 +17,147 @@ interface ProfessionalBlueHomeProps {
   selectedElementPath?: string;
 }
 
+function renderPartnerLogo(name: string) {
+  const n = name.toLowerCase();
+  if (n.includes("microsoft")) {
+    return (
+      <svg className="w-8 h-8" viewBox="0 0 23 23" fill="none">
+        <rect x="0" y="0" width="11" height="11" fill="#f25f22" />
+        <rect x="12" y="0" width="11" height="11" fill="#7fba00" />
+        <rect x="0" y="12" width="11" height="11" fill="#00a4ef" />
+        <rect x="12" y="12" width="11" height="11" fill="#ffb900" />
+      </svg>
+    );
+  }
+  if (n.includes("mongodb")) {
+    return (
+      <svg className="w-8 h-8" viewBox="0 0 32 32" fill="none">
+        <path d="M16 2C16 2 9 8 9 15C9 21 13 26 16 30C19 26 23 21 23 15C23 8 16 2 16 2Z" fill="#13aa52" />
+        <path d="M16 6C16 6 12 11 12 15C12 19 14 22 16 25V6Z" fill="#108c43" />
+      </svg>
+    );
+  }
+  if (n.includes("aws") || n.includes("amazon")) {
+    return (
+      <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="#ff9900" strokeWidth="1.5">
+        <path d="M4 14a8 8 0 0116 0c0 2-3 4-8 4s-8-2-8-4z" />
+        <path d="M6 18c2 2 6 3 9 2" strokeLinecap="round" />
+        <path d="M15 19l2 2-1-3" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  if (n.includes("google")) {
+    return (
+      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none">
+        <path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114A5.99 5.99 0 018 12.5a5.99 5.99 0 015.99-6.013c2.476 0 4.544 1.493 5.4 3.6l3.864-1.6A11.96 11.96 0 0013.99.5C7.37.5 2 5.87 2 12.5S7.37 24.5 13.99 24.5c6.31 0 11.75-4.8 11.75-12.013 0-.74-.067-1.45-.2-2.202H12.24z" fill="#ea4335" />
+      </svg>
+    );
+  }
+  if (n.includes("fortinet")) {
+    return (
+      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L2 7v5c0 5.5 4.5 10 10 11 5.5-1 10-5.5 10-11V7l-10-5zm-1 14h2v2h-2v-2zm0-9h2v7h-2V7z" fill="#ef4444" />
+      </svg>
+    );
+  }
+  if (n.includes("sprinto")) {
+    return (
+      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="1.5">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9 12l2 2 4-4" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  if (n.includes("trend micro")) {
+    return (
+      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="#f43f5e" />
+      </svg>
+    );
+  }
+  if (n.includes("cross cipher")) {
+    return (
+      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" strokeWidth="1.5">
+        <path d="M12 2L2 7v5c0 5.5 4.5 10 10 11 5.5-1 10-5.5 10-11V7l-10-5z" />
+        <circle cx="12" cy="12" r="3" />
+        <path d="M12 9V5" />
+        <path d="M12 19v-4" />
+      </svg>
+    );
+  }
+  // Default placeholder
+  return (
+    <svg className="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
+    </svg>
+  );
+}
+
+function renderCertificationLogo(code: string) {
+  const c = code.toLowerCase();
+  if (c.includes("iso 27001")) {
+    return (
+      <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.5">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M8 12h8" />
+        <path d="M12 8v8" />
+        <text x="50%" y="55%" dominantBaseline="middle" textAnchor="middle" fontSize="6" fontWeight="bold" fill="#10b981" fontFamily="monospace">ISO</text>
+      </svg>
+    );
+  }
+  if (c.includes("soc 2")) {
+    return (
+      <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" strokeWidth="1.5">
+        <rect x="2" y="2" width="20" height="20" rx="4" />
+        <path d="M8 12l3 3 5-5" strokeLinecap="round" />
+        <text x="50%" y="75%" dominantBaseline="middle" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#06b6d4" fontFamily="monospace">SOC 2</text>
+      </svg>
+    );
+  }
+  if (c.includes("nist")) {
+    return (
+      <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="1.5">
+        <polygon points="12,2 22,8 22,16 12,22 2,16 2,8" />
+        <text x="50%" y="55%" dominantBaseline="middle" textAnchor="middle" fontSize="6" fontWeight="bold" fill="#6366f1" fontFamily="monospace">NIST</text>
+      </svg>
+    );
+  }
+  if (c.includes("cmmi")) {
+    return (
+      <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.5">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        <text x="50%" y="45%" dominantBaseline="middle" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#3b82f6" fontFamily="monospace">CMMI</text>
+      </svg>
+    );
+  }
+  if (c.includes("hipaa")) {
+    return (
+      <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.5">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <path d="M12 8v8M8 12h8" strokeWidth="2" />
+      </svg>
+    );
+  }
+  if (c.includes("pci")) {
+    return (
+      <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" strokeWidth="1.5">
+        <rect x="2" y="5" width="20" height="14" rx="2" />
+        <line x1="2" y1="10" x2="22" y2="10" />
+        <circle cx="6" cy="15" r="1.5" />
+        <text x="70%" y="75%" dominantBaseline="middle" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#f43f5e" fontFamily="monospace">PCI</text>
+      </svg>
+    );
+  }
+  // Default placeholder
+  return (
+    <svg className="w-8 h-8 text-emerald-900/60" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+    </svg>
+  );
+}
+
 export function ProfessionalBlueHome({ 
   onLaunch3D = () => {}, 
   siteData: initialSiteData, 
@@ -634,12 +775,8 @@ export function ProfessionalBlueHome({
                             style={{ maxHeight: "100px" }}
                           />
                         ) : (
-                          <div className="flex items-center justify-center text-slate-600 py-6">
-                            <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
-                              <rect x="3" y="3" width="18" height="18" rx="3" strokeWidth="1.5" />
-                              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
-                            </svg>
+                          <div className="flex items-center justify-center p-6">
+                            {renderPartnerLogo(item.name || "")}
                           </div>
                         )}
                       </div>
@@ -1091,10 +1228,8 @@ export function ProfessionalBlueHome({
                             style={{ maxHeight: "80px" }}
                           />
                         ) : (
-                          <div className="flex items-center justify-center text-emerald-900/60 py-4">
-                            <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                            </svg>
+                          <div className="flex items-center justify-center p-4">
+                            {renderCertificationLogo(item.code || item.title || "")}
                           </div>
                         )}
                       </div>
