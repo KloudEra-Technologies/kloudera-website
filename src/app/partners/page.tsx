@@ -8,6 +8,7 @@ import { PartnerLogo } from "@/components/FallbackLogo";
 
 export default function PartnersPage() {
   const [partnersData, setPartnersData] = useState<any>(null);
+  const [localPreviews, setLocalPreviews] = useState<Record<number, string>>({});
   const { isEditMode: isEditActive, updateNestedValue, siteData, authToken } = useEditor();
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export default function PartnersPage() {
           setPartnersData(data.partners);
         }
       })
-      .catch((err) => console.error("Failed to load partners database", err));
+      .catch(console.error);
   }, []);
 
   // Use siteData first (live edits), then fetched DB data, then empty array
@@ -86,6 +87,10 @@ export default function PartnersPage() {
     else if (mimeType.includes("gif")) ext = "gif";
 
     const predictedUrl = `/partners/${cleanName}.${ext}`;
+
+    // Set local preview instantly
+    const tempPreviewUrl = URL.createObjectURL(file);
+    setLocalPreviews((prev) => ({ ...prev, [idx]: tempPreviewUrl }));
 
     // Set permanent URL path instantly so it is safe to publish immediately
     const updated = [...partnersList];
@@ -205,6 +210,7 @@ export default function PartnersPage() {
                 partner={partner}
                 idx={idx}
                 isEditActive={isEditActive}
+                localPreviewUrl={localPreviews[idx]}
                 onDelete={() => deletePartner(idx)}
                 onImageUpload={(file) => handleImageUpload(idx, file)}
                 onNameChange={(val) => {
@@ -301,6 +307,7 @@ interface PartnerCardProps {
   onImageUpload: (file: File) => void;
   onNameChange: (val: string) => void;
   onTaglineChange: (val: string) => void;
+  localPreviewUrl?: string;
 }
 
 function PartnerCard({
@@ -311,6 +318,7 @@ function PartnerCard({
   onImageUpload,
   onNameChange,
   onTaglineChange,
+  localPreviewUrl,
 }: PartnerCardProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [editingName, setEditingName] = useState(false);
@@ -359,7 +367,7 @@ function PartnerCard({
 
           {/* Image Area */}
           <div className="relative w-full bg-zinc-950/80 flex items-center justify-center overflow-hidden" style={{ minHeight: "180px" }}>
-            <PartnerLogo name={partner.name || ""} customLogoUrl={partner.logoUrl} />
+            <PartnerLogo name={partner.name || ""} customLogoUrl={localPreviewUrl || partner.logoUrl} />
 
             {isEditActive && (
               <>
