@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { prisma } from "@/lib/db";
+import { commitToGithub } from "@/lib/githubCommitter";
 
 export async function POST(req: NextRequest) {
   try {
@@ -79,6 +80,16 @@ export async function POST(req: NextRequest) {
       // Write file to both folders
       fs.writeFileSync(path.join(publicDir, filename), buffer);
       fs.writeFileSync(path.join(rootDir, filename), buffer);
+
+      // Commit and push to GitHub asynchronously
+      const githubTokenSet = Boolean(process.env.GITHUB_PAT);
+      if (githubTokenSet) {
+        commitToGithub(
+          `public/partners/${filename}`,
+          buffer,
+          `cms: upload logo image for partner ${partnerName}`
+        ).catch((err) => console.error("Async GitHub image commit failed:", err));
+      }
 
       // Return the public static route url
       return NextResponse.json({ success: true, url: `/partners/${filename}` });

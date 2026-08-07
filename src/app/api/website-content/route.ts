@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { prisma } from "@/lib/db";
 import { recordAuditNotification } from "@/app/api/admin-audit/route";
+import { commitToGithub } from "@/lib/githubCommitter";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -144,6 +145,16 @@ export async function POST(req: NextRequest) {
       fs.writeFileSync(FILE_PATH, JSON.stringify(body, null, 2), "utf8");
     } catch (diskErr: any) {
       console.warn("Disk write failed (expected on read-only serverless hosts like Vercel):", diskErr.message);
+    }
+
+    // 3. Commit and push to GitHub asynchronously
+    const githubTokenSet = Boolean(process.env.GITHUB_PAT);
+    if (githubTokenSet) {
+      commitToGithub(
+        "src/data/website_content.json",
+        Buffer.from(JSON.stringify(body, null, 2), "utf8"),
+        `cms: publish website content update by ${isUltimate ? "ultimate admin" : "editor"}`
+      ).catch((err) => console.error("Async GitHub content commit failed:", err));
     }
     
     return NextResponse.json({ 
