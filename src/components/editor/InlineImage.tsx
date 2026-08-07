@@ -15,6 +15,7 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
   const { isEditMode, siteData, updateNestedValue, authToken } = useEditor();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showControls, setShowControls] = useState(false);
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
 
   let value = siteData;
   for (const key of path) {
@@ -26,6 +27,7 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
     }
   }
   const currentUrl = value !== undefined ? value : fallback;
+  const displayUrl = localPreview || currentUrl;
 
   if (!isEditMode) {
     return (
@@ -42,6 +44,10 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Set local preview instantly
+    const previewUrl = URL.createObjectURL(file);
+    setLocalPreview(previewUrl);
+
     const token = authToken || "";
     const formData = new FormData();
     formData.append("file", file);
@@ -55,7 +61,6 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
       });
       const data = await res.json();
       if (res.ok && data.url) {
-        // preserve previous parameters if needed, or reset them
         updateNestedValue(path, data.url);
       } else {
         alert(`Upload error: ${data.error}`);
@@ -65,17 +70,17 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
     }
   };
 
-  const scale = Number(getAdjustmentValue(currentUrl, "scale", "1"));
-  const x = Number(getAdjustmentValue(currentUrl, "x", "0"));
-  const y = Number(getAdjustmentValue(currentUrl, "y", "0"));
+  const scale = Number(getAdjustmentValue(displayUrl, "scale", "1"));
+  const x = Number(getAdjustmentValue(displayUrl, "x", "0"));
+  const y = Number(getAdjustmentValue(displayUrl, "y", "0"));
 
   return (
     <div className={`relative group/inline-image inline-block ${className}`}>
       <img 
-        src={getCleanImageUrl(currentUrl)} 
+        src={getCleanImageUrl(displayUrl)} 
         alt={alt}
         className="w-full h-full object-cover"
-        style={getImageStyle(currentUrl)} 
+        style={getImageStyle(displayUrl)} 
       />
       <div 
         className="absolute inset-0 border-2 border-dashed border-transparent group-hover/inline-image:border-teal-500 cursor-pointer transition-colors"

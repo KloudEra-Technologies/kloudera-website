@@ -149,6 +149,7 @@ function CategoryManager({ subSections, onAdd, onDelete, onRename }: CategoryMan
 
 export default function CertificationsPage() {
   const [data, setData] = useState<any>(null);
+  const [localPreviews, setLocalPreviews] = useState<Record<string | number, string>>({});
 
   let editorContext: any;
   try {
@@ -217,6 +218,9 @@ export default function CertificationsPage() {
   };
 
   const handleImageUpload = async (idx: number, file: File) => {
+    const tempPreviewUrl = URL.createObjectURL(file);
+    setLocalPreviews((prev) => ({ ...prev, [idx]: tempPreviewUrl }));
+
     const token = authToken || "";
     const formData = new FormData();
     formData.append("file", file);
@@ -371,6 +375,7 @@ export default function CertificationsPage() {
                       cert={cert}
                       idx={realIdx}
                       isEditActive={isEditActive}
+                      localPreviewUrl={localPreviews[realIdx]}
                       onDelete={() => deleteCert(realIdx)}
                       onImageUpload={(file) => handleImageUpload(realIdx, file)}
                       onTitleChange={(val) => {
@@ -393,12 +398,12 @@ export default function CertificationsPage() {
                     onClick={() => addCert(sectionName)}
                     className="rounded-2xl border-2 border-dashed border-emerald-500/20 bg-emerald-950/5 hover:bg-emerald-900/20 hover:border-emerald-400/40 flex flex-col items-center justify-center gap-3 transition-all min-h-[200px] font-mono text-emerald-500 group"
                   >
-                    <div className="w-10 h-10 rounded-full border-2 border-dashed border-emerald-500/40 group-hover:border-emerald-400 flex items-center justify-center transition-all">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <div className="w-12 h-12 rounded-full border-2 border-dashed border-emerald-500/30 group-hover:border-emerald-400/50 flex items-center justify-center transition-all">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                       </svg>
                     </div>
-                    <span className="text-xs font-bold uppercase tracking-widest">Add to {sectionName}</span>
+                    <span className="text-xs font-bold uppercase tracking-widest">Add Badge</span>
                   </button>
                 )}
               </div>
@@ -417,13 +422,14 @@ interface CertCardProps {
   cert: any;
   idx: number;
   isEditActive: boolean;
+  localPreviewUrl?: string;
   onDelete: () => void;
   onImageUpload: (file: File) => void;
   onTitleChange: (val: string) => void;
   onDescChange: (val: string) => void;
 }
 
-function CertCard({ cert, idx, isEditActive, onDelete, onImageUpload, onTitleChange, onDescChange }: CertCardProps) {
+function CertCard({ cert, idx, isEditActive, localPreviewUrl, onDelete, onImageUpload, onTitleChange, onDescChange }: CertCardProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [editingTitle, setEditingTitle] = useState(false);
   const [editingDesc, setEditingDesc] = useState(false);
@@ -445,8 +451,7 @@ function CertCard({ cert, idx, isEditActive, onDelete, onImageUpload, onTitleCha
         .cert-card-back { transform: rotateY(180deg); }
       `}</style>
       <div
-        className="cert-card-wrap relative group"
-        style={{ perspective: "1000px", minHeight: "240px" }}
+        className="cert-card-wrap group relative w-full h-[260px] perspective-1000"
       >
         <div 
           className="cert-card-inner w-full h-full absolute inset-0"
@@ -476,7 +481,7 @@ function CertCard({ cert, idx, isEditActive, onDelete, onImageUpload, onTitleCha
             )}
             {/* Image Area */}
             <div className="relative w-full bg-[#060c18] flex items-center justify-center overflow-hidden p-4" style={{ minHeight: "160px" }}>
-              <CertificationLogo code={cert.code || ""} title={cert.title} customImageUrl={cert.imageUrl} />
+              <CertificationLogo code={cert.code || ""} title={cert.title} customImageUrl={localPreviewUrl || cert.imageUrl} />
               {isEditActive && (
                 <>
                   <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) onImageUpload(f); }} />

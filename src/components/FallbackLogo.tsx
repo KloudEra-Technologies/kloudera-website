@@ -118,16 +118,16 @@ export function CertificationLogo({ code, title, customImageUrl }: { code: strin
 
   const extensions = ["png", "svg", "jpg", "jpeg", "webp", "gif", "avif"];
 
-  // 1. Prioritize local overrides (from public/certifications/ folder)
+  // 1. Prioritize database / custom uploaded URL (highest priority)
+  if (customImageUrl) srcs.push(customImageUrl);
+
+  // 2. Fallback to local overrides (from public/certifications/ folder)
   for (const ext of extensions) {
     srcs.push(`/certifications/${cleanCode}.${ext}`);
     srcs.push(`/certifications/${cleanCodeLower}.${ext}`);
     srcs.push(`/certifications/${strippedCode}.${ext}`);
     srcs.push(`/certifications/${strippedCodeLower}.${ext}`);
   }
-
-  // 2. Fallback to database URL
-  if (customImageUrl) srcs.push(customImageUrl);
 
   // De-duplicate array
   const uniqueSrcs = Array.from(new Set(srcs));
