@@ -95,6 +95,10 @@ export async function POST(req: NextRequest) {
           buffer,
           `cms: upload logo image for partner ${partnerName}`
         ).catch((err) => console.error("Async GitHub image commit failed:", err));
+      } else if (isVercel) {
+        return NextResponse.json({ 
+          error: "GitHub Access Token (GITHUB_PAT) is missing in Vercel Environment Variables. Please add it to enable uploads." 
+        }, { status: 400 });
       }
 
       // Return the public static route url
