@@ -34,7 +34,6 @@ function FallbackImage({ srcs, alt, className, style, fallbackElement }: Fallbac
 
 export function PartnerLogo({ name, customLogoUrl }: { name: string; customLogoUrl?: string }) {
   const srcs: string[] = [];
-  if (customLogoUrl) srcs.push(customLogoUrl);
 
   const cleanName = name.trim();
   const cleanNameLower = cleanName.toLowerCase();
@@ -43,13 +42,16 @@ export function PartnerLogo({ name, customLogoUrl }: { name: string; customLogoU
 
   const extensions = ["png", "svg", "jpg", "jpeg", "webp", "gif", "avif"];
 
-  // Generate lookup paths
+  // 1. Prioritize local overrides (from public/partners/ folder)
   for (const ext of extensions) {
     srcs.push(`/partners/${cleanName}.${ext}`);
     srcs.push(`/partners/${cleanNameLower}.${ext}`);
     srcs.push(`/partners/${strippedName}.${ext}`);
     srcs.push(`/partners/${strippedNameLower}.${ext}`);
   }
+
+  // 2. Fallback to database URL
+  if (customLogoUrl) srcs.push(customLogoUrl);
 
   // De-duplicate array
   const uniqueSrcs = Array.from(new Set(srcs));
@@ -76,21 +78,44 @@ export function PartnerLogo({ name, customLogoUrl }: { name: string; customLogoU
 }
 
 export function CertificationLogo({ code, title, customImageUrl }: { code: string; title?: string; customImageUrl?: string }) {
-  if (customImageUrl) {
-    return (
-      <img
-        src={customImageUrl}
-        alt={title || code}
-        className="w-full h-full object-contain p-3"
-        style={{ maxHeight: "80px" }}
-      />
-    );
+  const srcs: string[] = [];
+
+  const cleanCode = code.trim();
+  const cleanCodeLower = cleanCode.toLowerCase();
+  const strippedCode = cleanCode.replace(/\s+/g, "");
+  const strippedCodeLower = strippedCode.toLowerCase();
+
+  const extensions = ["png", "svg", "jpg", "jpeg", "webp", "gif", "avif"];
+
+  // 1. Prioritize local overrides (from public/certifications/ folder)
+  for (const ext of extensions) {
+    srcs.push(`/certifications/${cleanCode}.${ext}`);
+    srcs.push(`/certifications/${cleanCodeLower}.${ext}`);
+    srcs.push(`/certifications/${strippedCode}.${ext}`);
+    srcs.push(`/certifications/${strippedCodeLower}.${ext}`);
   }
-  return (
+
+  // 2. Fallback to database URL
+  if (customImageUrl) srcs.push(customImageUrl);
+
+  // De-duplicate array
+  const uniqueSrcs = Array.from(new Set(srcs));
+
+  const textFallback = (
     <div className="flex items-center justify-center text-emerald-900/60 py-4">
       <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
       </svg>
     </div>
+  );
+
+  return (
+    <FallbackImage
+      srcs={uniqueSrcs}
+      alt={code}
+      className="w-full h-full object-contain p-3"
+      style={{ maxHeight: "80px" }}
+      fallbackElement={textFallback}
+    />
   );
 }
