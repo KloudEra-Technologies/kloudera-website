@@ -23,7 +23,31 @@ export default function PartnersPage() {
 
   // Use siteData first (live edits), then fetched DB data, then empty array
   const partnersList: any[] = siteData?.partners?.featured || partnersData?.featured || [];
-  const alliancesList: string[] = siteData?.partners?.alliances || partnersData?.alliances || [];
+
+  const ALL_FOLDER_PARTNER_NAMES = [
+    "6Clicks", "AWS", "AccuKnox", "Acronis", "Adani Connex", "Apple", "Arcon", "Arctic Wolf",
+    "AvePoint", "Axidian", "BeyondTrust", "Bit Defender", "Black Kite", "Briskinfosec", "Checkpoint",
+    "Claroty", "CloudBlue", "Collibra", "Colt", "CrossCipher", "Crowdstike", "Cybrovate", "Data  Samudra",
+    "DataDog", "Databricks", "Dell", "Digital Ocean", "ESET", "Elastic", "Exabeam", "Flexera", "ForcePoint",
+    "Forescout", "Fortinet", "GCP", "Gensys", "HCL Softwares", "HP", "HPE", "Heimdal", "IBM", "Infoblox",
+    "Ingram", "Invicti", "Ishan Technologies", "Jump Cloud", "Juniper", "Kratikal", "LogRythm", "Manage Engine",
+    "Mend.io", "Microsoft", "MongoDB", "NAKIVO", "NinjaOne", "Nozomi", "Nvidia", "NxtGen Cloud Technologies Pvt. Ltd.",
+    "Open Text", "Perforce", "Pi DC", "Proofpoint", "QS Solution", "Qualys", "Quest", "RP InfoTech", "RSA",
+    "Radware", "Rapid 7", "RasInfoTech", "Red Hat", "Rubrik", "Sales force", "Sattrix", "ScaleFusion", "Seceon",
+    "Securonix", "Sentinel  ONE", "ServiceNow", "SnapLogic", "SnowFlake", "Solarwinds", "Sonicwall", "Sophos",
+    "Sprinto", "Superna", "SysDog", "TS Plus", "Tally", "Tanim", "TeamViewer", "Tenable", "Trellix", "Turbo 360",
+    "UI Path", "Veeam", "Web Werks", "Xurrent", "Zabbix", "Zendesk", "Zoho Directory", "Zoho", "Zoom", "Zscaler",
+    "ctrls-datacenters-ltd-logo", "sify"
+  ];
+
+  // Filter out partners already rendered in Section 1 (Strategic Partners) to avoid duplicates
+  const alliancesList = ALL_FOLDER_PARTNER_NAMES.filter(name => {
+    const lowerName = name.toLowerCase();
+    return !partnersList.some(p => {
+      const pNameLower = (p.name || "").toLowerCase();
+      return pNameLower.includes(lowerName) || lowerName.includes(pNameLower);
+    });
+  });
 
   const addPartner = () => {
     const updated = [
