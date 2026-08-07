@@ -26,7 +26,7 @@ export const KloudEraLogo: React.FC<KloudEraLogoProps> = ({ className = "", icon
     const loadLogo = async () => {
       let logoSrc = "/logo.png";
       try {
-        const res = await fetch("/api/website-content");
+        const res = await fetch("/api/website-content", { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
           if (data.brand?.logoHeight) {

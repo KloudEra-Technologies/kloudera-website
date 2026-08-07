@@ -11,46 +11,19 @@ const FILE_PATH = path.join(process.cwd(), "src", "data", "website_content.json"
 
 
 
-// In-memory cache variables attached to the Node global object to survive serverless warm boots
-const getCache = () => (global as any).websiteContentCache || null;
-const setCache = (data: any) => {
-  (global as any).websiteContentCache = data;
-  (global as any).websiteContentCacheTime = Date.now();
-};
-const getCacheTime = () => (global as any).websiteContentCacheTime || 0;
-const clearCache = () => {
-  (global as any).websiteContentCache = null;
-  (global as any).websiteContentCacheTime = 0;
-};
-
-const CACHE_DURATION_MS = 300000; // 5 minutes cache TTL
-
 export async function GET() {
   try {
-    const now = Date.now();
-    const cached = getCache();
-    const cacheTime = getCacheTime();
-
-    // If cache is fresh, return it immediately to avoid Neon database transfer usage
-    if (cached && (now - cacheTime < CACHE_DURATION_MS)) {
-      return NextResponse.json(cached, {
-        headers: {
-          "Cache-Control": "public, max-age=300, stale-while-revalidate=60"
-        }
-      });
-    }
-
-    // 1. Try to load from database
+    // 1. Try to load from database first
     try {
       const config = await prisma.systemConfig.findUnique({
         where: { key: "website_content" }
       });
       if (config) {
         const parsed = JSON.parse(config.value);
-        setCache(parsed); // Save to cache
         return NextResponse.json(parsed, {
           headers: {
-            "Cache-Control": "public, max-age=300, stale-while-revalidate=60"
+            "Cache-Control": "no-store, max-age=0, must-revalidate",
+            "Pragma": "no-cache"
           }
         });
       }
@@ -58,25 +31,16 @@ export async function GET() {
       console.error("DATABASE READ FAILURE in GET /api/website-content:", dbErr);
     }
 
-    // 2. If DB failed (or reached transfer limit), try to use expired cache as fallback
-    if (cached) {
-      return NextResponse.json(cached, {
-        headers: {
-          "Cache-Control": "no-store, max-age=0, must-revalidate"
-        }
-      });
-    }
-
-    // 3. Fallback to reading the local JSON file from disk
+    // 2. Fallback to reading the local JSON file from disk
     if (!fs.existsSync(FILE_PATH)) {
       return NextResponse.json({ error: "Content file not found" }, { status: 404 });
     }
     const rawData = fs.readFileSync(FILE_PATH, "utf8");
     const data = JSON.parse(rawData);
-    setCache(data); // Populate cache from file
     return NextResponse.json(data, {
       headers: {
-        "Cache-Control": "public, max-age=300, stale-while-revalidate=60"
+        "Cache-Control": "no-store, max-age=0, must-revalidate",
+        "Pragma": "no-cache"
       }
     });
   } catch (err: any) {
@@ -171,8 +135,6 @@ export async function POST(req: NextRequest) {
         update: { value: JSON.stringify(body) },
         create: { key: "website_content", value: JSON.stringify(body) }
       });
-      // Force update in-memory cache instantly with new data
-      setCache(body);
     } catch (dbErr: any) {
       console.error("CRITICAL DATABASE WRITE FAILURE in POST /api/website-content:", dbErr);
       return NextResponse.json({ 
