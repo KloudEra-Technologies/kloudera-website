@@ -87,14 +87,22 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // Commit and push to GitHub asynchronously
+      // Commit and push to GitHub
       const githubTokenSet = Boolean(process.env.GITHUB_PAT);
       if (githubTokenSet) {
-        commitToGithub(
-          `public/partners/${filename}`,
-          buffer,
-          `cms: upload logo image for partner ${partnerName}`
-        ).catch((err) => console.error("Async GitHub image commit failed:", err));
+        try {
+          const githubResult = await commitToGithub(
+            `public/partners/${filename}`,
+            buffer,
+            `cms: upload logo image for partner ${partnerName}`
+          );
+          if (!githubResult.success) {
+            return NextResponse.json({ error: "GitHub commit failed: " + githubResult.error }, { status: 500 });
+          }
+        } catch (gitErr: any) {
+          console.error("GitHub image commit failed:", gitErr);
+          return NextResponse.json({ error: "GitHub upload error: " + gitErr.message }, { status: 500 });
+        }
       } else if (isVercel) {
         return NextResponse.json({ 
           error: "GitHub Access Token (GITHUB_PAT) is missing in Vercel Environment Variables. Please add it to enable uploads." 

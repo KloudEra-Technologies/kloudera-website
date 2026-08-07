@@ -150,19 +150,26 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 3. Commit and push to GitHub asynchronously
+    // 3. Commit and push to GitHub
+    let githubSaved = false;
     const githubTokenSet = Boolean(process.env.GITHUB_PAT);
     if (githubTokenSet) {
-      commitToGithub(
-        "src/data/website_content.json",
-        Buffer.from(JSON.stringify(body, null, 2), "utf8"),
-        `cms: publish website content update by ${isUltimate ? "ultimate admin" : "editor"}`
-      ).catch((err) => console.error("Async GitHub content commit failed:", err));
+      try {
+        const githubResult = await commitToGithub(
+          "src/data/website_content.json",
+          Buffer.from(JSON.stringify(body, null, 2), "utf8"),
+          `cms: publish website content update by ${isUltimate ? "ultimate admin" : "editor"}`
+        );
+        githubSaved = githubResult.success;
+      } catch (err: any) {
+        console.error("GitHub content commit failed:", err);
+      }
     }
     
     return NextResponse.json({ 
       success: true, 
       databaseSaved,
+      githubSaved,
       accessLevel: isUltimate ? "ultimate" : "content" 
     });
   } catch (err: any) {
