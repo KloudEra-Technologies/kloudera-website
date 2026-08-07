@@ -11,6 +11,10 @@ interface FallbackImageProps {
 function FallbackImage({ srcs, alt, className, style, fallbackElement }: FallbackImageProps) {
   const [srcIndex, setSrcIndex] = useState(0);
 
+  React.useEffect(() => {
+    setSrcIndex(0);
+  }, [srcs.join(",")]);
+
   const handleError = () => {
     if (srcIndex < srcs.length - 1) {
       setSrcIndex(srcIndex + 1);
