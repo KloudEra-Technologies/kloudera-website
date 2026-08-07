@@ -323,7 +323,10 @@ function PartnerCard({
                   className="hidden"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
-                    if (file) onImageUpload(file);
+                    if (file) {
+                      onImageUpload(file);
+                    }
+                    e.target.value = ""; // Reset value to allow uploading same file again
                   }}
                 />
                 <button
