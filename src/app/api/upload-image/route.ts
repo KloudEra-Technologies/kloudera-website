@@ -48,6 +48,42 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
+    const partnerName = formData.get("partnerName") as string | null;
+    if (partnerName) {
+      const cleanName = partnerName.trim().replace(/\s+/g, "");
+      const cleanNameLower = cleanName.toLowerCase();
+      
+      // Determine file extension
+      let ext = "png";
+      const mimeType = file.type || "image/png";
+      if (mimeType.includes("jpeg") || mimeType.includes("jpg")) ext = "jpg";
+      else if (mimeType.includes("svg")) ext = "svg";
+      else if (mimeType.includes("webp")) ext = "webp";
+      else if (mimeType.includes("avif")) ext = "avif";
+      else if (mimeType.includes("gif")) ext = "gif";
+
+      const filename = `${cleanName}.${ext}`;
+      
+      // Target paths
+      const publicDir = path.join(process.cwd(), "public", "partners");
+      const rootDir = path.join(process.cwd(), "partners");
+
+      // Ensure target folders exist
+      if (!fs.existsSync(publicDir)) {
+        fs.mkdirSync(publicDir, { recursive: true });
+      }
+      if (!fs.existsSync(rootDir)) {
+        fs.mkdirSync(rootDir, { recursive: true });
+      }
+
+      // Write file to both folders
+      fs.writeFileSync(path.join(publicDir, filename), buffer);
+      fs.writeFileSync(path.join(rootDir, filename), buffer);
+
+      // Return the public static route url
+      return NextResponse.json({ success: true, url: `/partners/${filename}` });
+    }
+
     const base64Data = buffer.toString("base64");
     const mimeType = file.type || "image/png";
     const dataUrl = `data:${mimeType};base64,${base64Data}`;

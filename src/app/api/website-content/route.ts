@@ -125,6 +125,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Save updates
+    let databaseSaved = false;
 
     // 1. Save to Database (Prisma SystemConfig table)
     try {
@@ -133,21 +134,23 @@ export async function POST(req: NextRequest) {
         update: { value: JSON.stringify(body) },
         create: { key: "website_content", value: JSON.stringify(body) }
       });
+      databaseSaved = true;
     } catch (dbErr: any) {
-      console.error("CRITICAL DATABASE WRITE FAILURE in POST /api/website-content:", dbErr);
-      return NextResponse.json({ 
-        error: "Database publish failed: " + dbErr.message + ". Please check your Vercel DATABASE_URL connection variable." 
-      }, { status: 500 });
+      console.error("DATABASE WRITE FAILURE in POST /api/website-content (will fallback to local disk write):", dbErr.message);
     }
 
-    // 2. Save to Disk (Prisma SQLite or local filesystem - will fail gracefully on serverless hosts like Vercel)
+    // 2. Save to Disk
     try {
       fs.writeFileSync(FILE_PATH, JSON.stringify(body, null, 2), "utf8");
     } catch (diskErr: any) {
-      console.warn("Disk write failed (expected on read-only cloud hosts like Vercel):", diskErr.message);
+      console.warn("Disk write failed (expected on read-only serverless hosts like Vercel):", diskErr.message);
     }
     
-    return NextResponse.json({ success: true, accessLevel: isUltimate ? "ultimate" : "content" });
+    return NextResponse.json({ 
+      success: true, 
+      databaseSaved,
+      accessLevel: isUltimate ? "ultimate" : "content" 
+    });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

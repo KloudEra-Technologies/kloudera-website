@@ -76,6 +76,12 @@ export default function PartnersPage() {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("token", token);
+    
+    const partner = partnersList[idx];
+    if (partner && partner.name) {
+      formData.append("partnerName", partner.name);
+    }
+
     try {
       const res = await fetch("/api/upload-image", {
         method: "POST",
