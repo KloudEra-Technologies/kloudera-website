@@ -1,0 +1,544 @@
+{
+  "credentials": {
+    "contentPassword": "content123",
+    "ultimatePassword": "PasswordAdmin",
+    "adminEmail": "info@kloudera.ai",
+    "emailConfig": {
+      "apiKey": "re_fRg4HCxq_2eC9iMrZCPHLer2QixdJBJzM",
+      "smtpHost": "smtp.gmail.com",
+      "smtpPort": 587,
+      "smtpUser": "info@kloudera.ai",
+      "smtpPass": "Pa$$w0rd@7056",
+      "fromEmail": "no-reply@kloudera.ai",
+      "webhookUrl": ""
+    }
+  },
+  "brand": {
+    "companyName": "KloudEra Technologies",
+    "tagline": "Secure, Innovate, Transform",
+    "logoUrl": "/logo.png",
+    "logoHeight": "96px",
+    "logoLeft": "0px",
+    "companyNameSize": "20px",
+    "companyNameLeft": "0px",
+    "taglineSize": "12px",
+    "taglineLeft": "0px"
+  },
+  "home": {
+    "lobbyTitle": "KLOUDERA TECHNOLOGIES // SOLUTIONS LAYER",
+    "lobbyTagline": "Secure, Innovate, Transform",
+    "heroBadge": "ENTERPRISE CYBERSECURITY & HARDWARE PLATFORM",
+    "heroTitlePrefix": "Architecting ",
+    "heroTitleHighlight": "Zero-Trust",
+    "heroTitleSuffix": " Digital Enterprises",
+    "heroSubtitle": "Empowering Fortune 500 infrastructure with 24/7 Security Operations Surveillance, custom GPU AI compute clusters, and seamless Microsoft Cloud ecosystem governance.",
+    "solutionCards": [
+      {
+        "category": "CYBERSECURITY",
+        "title": "Protect. Detect. Respond.",
+        "desc": "vCISO, vDPO, 24/7 Monitoring, VAPT, and proactive security strategy.",
+        "color": "#06b6d4"
+      },
+      {
+        "category": "CLOUD & INFRA",
+        "title": "Simplified Multi-Cloud",
+        "desc": "Cloud migration, serverless management, and cost optimization.",
+        "color": "#3b82f6"
+      },
+      {
+        "category": "AI COE & AUTOMATION",
+        "title": "Custom LLM Rigs",
+        "desc": "Gen-AI pipelines, RPA process automation, and MLSecOps workflows.",
+        "color": "#818cf8"
+      },
+      {
+        "category": "NEXT-GEN HARDWARE",
+        "title": "AI-Ready Compute",
+        "desc": "Enterprise GPU systems, servers, storage, and datacenter hardware.",
+        "color": "#10b981"
+      }
+    ],
+    "benefits": [
+      {
+        "title": "Proactive Defense",
+        "desc": "Identify risks early and protect critical digital assets with enterprise resilience.",
+        "color": "#06b6d4"
+      },
+      {
+        "title": "Process Automation",
+        "desc": "Eliminate repetitive tasks and optimize workflows with intelligent DevOps & RPA.",
+        "color": "#3b82f6"
+      },
+      {
+        "title": "Optimized IT Costs",
+        "desc": "Maximize cloud ROI, prevent budget waste, and streamline multi-cloud environments.",
+        "color": "#818cf8"
+      },
+      {
+        "title": "Data Innovation",
+        "desc": "Leverage custom LLM developments and high-density hardware for future growth.",
+        "color": "#10b981"
+      }
+    ],
+    "doors": [
+      {
+        "name": "Services Command Deck",
+        "desc": "Managed Cybersecurity, Cloud, Automation, Digital Technology, Custom LLM, and Hardware.",
+        "telemetry": "SERVICES_DECK: ONLINE",
+        "color": "#06b6d4"
+      },
+      {
+        "name": "About Our Enterprise",
+        "desc": "Our mission, company background, and core values of high quality and standards.",
+        "telemetry": "MISSION_DECK: LOCKED",
+        "color": "#ffffff"
+      },
+      {
+        "name": "Career Port",
+        "desc": "Explore job opportunities and join a team of innovators shaping the future.",
+        "telemetry": "RECRUIT_GATE: LISTENING",
+        "color": "#a855f7"
+      },
+      {
+        "name": "Our Partners",
+        "desc": "We collaborate with global leaders like Microsoft, MongoDB, Cross Cipher, and Sprinto.",
+        "telemetry": "ALLIANCES_BUS: RUNNING",
+        "color": "#1e40af"
+      },
+      {
+        "name": "Executive Briefing Deck",
+        "desc": "Get in touch with our Bengaluru and Pune offices for support and inquiries.",
+        "telemetry": "COMMS_GATEWAY: OPEN",
+        "color": "#cbd5e1"
+      }
+    ]
+  },
+  "services": {
+    "title": "Our Services",
+    "ctaText": "Interested in learning more about how our services can benefit your business? Contact us today to discuss your needs and find the perfect solution. Our team is ready to help you optimize, secure, and scale your IT infrastructure. Reach out now!",
+    "categories": [
+      {
+        "title": "Managed Cybersecurity services",
+        "desc": "Protect your business from evolving threats with our managed cybersecurity services. We provide real-time monitoring, threat detection, and risk management strategies to safeguard your data, infrastructure, and digital assets, ensuring compliance and business continuity.",
+        "items": [
+          "vCISO (Virtual CISO)",
+          "vDPO (Virtual Data Protection Officer)",
+          "VAPT / Red Teaming",
+          "IAM / IGA / PAM (Identity & Access Management)",
+          "EDR / XDR / MDR / SoC as a Service / VMDR",
+          "Cloud GRC (Governance, Risk & Compliance)",
+          "Email Security",
+          "OT Security (Operational Technology)",
+          "DC / On-Prem IT Infrastructure Security",
+          "DevSecOps – Application Security",
+          "DFIR (Digital Forensics & Incident Response)",
+          "Cyber Resilience",
+          "AI/ML Security – MLSecOps",
+          "Cloud Security",
+          "Data Security",
+          "Network Security"
+        ]
+      },
+      {
+        "title": "Automation services",
+        "desc": "Our managed IT services ensure seamless operations by providing proactive monitoring, maintenance, and support. We help businesses reduce downtime, enhance efficiency, and stay ahead with the latest technology solutions, allowing you to focus on growth while we handle the complexities of IT management.",
+        "items": [
+          "Process Automation",
+          "Robotic Process Automation (RPA)",
+          "IT Automation",
+          "DevOps Automation",
+          "Monitoring Automation",
+          "Cloud Automation",
+          "Infrastructure as Code (IaC)",
+          "Security Automation"
+        ]
+      },
+      {
+        "title": "Digital Technology Services",
+        "desc": "Empower your business with end-to-end technology solutions that combine custom software development with managed IT infrastructure. We design, build, deploy, secure, and manage scalable digital environments to help your business innovate, improve operational efficiency, and ensure business continuity.",
+        "items": [
+          "Data Center & Communication Management",
+          "Network Management",
+          "Cloud & Virtualization Services",
+          "Database Design & Optimization",
+          "Custom Software Development",
+          "Microservices Architecture",
+          "Data Center Management",
+          "DevOps & CI/CD Automation",
+          "Web & Mobile App Development"
+        ]
+      },
+      {
+        "title": "Managed Cloud services",
+        "desc": "Optimize your cloud infrastructure with our managed cloud services. We provide end-to-end support for cloud migration, monitoring, and security, ensuring scalability, performance, and cost efficiency while keeping your business operations running smoothly.",
+        "items": [
+          "Cloud Migration",
+          "Serverless Computing Management",
+          "Performance Monitoring & Optimisation",
+          "Cloud Native Application Development Management",
+          "Compliance & Governance",
+          "Cloud Cost Management",
+          "Cloud Infrastructure Management",
+          "Cloud Security Management",
+          "Multi-Cloud & Hybrid Cloud Management",
+          "Cloud Resiliency/ DR as a Service"
+        ]
+      },
+      {
+        "title": "AI CoE Custom LLM Development",
+        "desc": "Leverage the power of AI with our Center of Excellence (CoE) for custom LLM (Large Language Model) development. We create tailored AI solutions that enhance automation, decision-making, and customer experiences, helping businesses innovate and stay ahead in a rapidly evolving digital landscape.",
+        "items": [
+          "Gen-AI Pipeline",
+          "AI/ML Pipeline"
+        ]
+      },
+      {
+        "title": "Additional services",
+        "desc": "Beyond our core offerings, we provide a range of specialized services tailored to your unique business needs. Whether it's IT consulting, infrastructure optimization, or industry-specific solutions, we deliver expertise and innovation to drive success.",
+        "items": [
+          "Digital Transformation Consulting",
+          "Hybrid Directory/ Identity Management",
+          "ERP - SAP, Oracle, MS Dynamics 365 - All modules",
+          "ACM (Application Lifecycle Management)",
+          "Quantum Computing",
+          "Blockchain Consulting and Application",
+          "ITSM Tools - ServiceNow, Zoho",
+          "Enterprise Application Management",
+          "CRM - Salesforce"
+        ]
+      },
+      {
+        "title": "Next Generation Hardware",
+        "desc": "Accelerate your digital transformation with cutting-edge hardware solutions designed for performance, scalability, and reliability. From AI-ready infrastructure and enterprise servers to networking, storage, and endpoint devices, we deliver modern hardware ecosystems that empower businesses to operate securely and efficiently.",
+        "items": [
+          "Enterprise Servers & Workstations",
+          "AI & GPU Computing Systems",
+          "High-Performance Storage Solutions",
+          "Network Infrastructure & Switches",
+          "Edge Computing Devices",
+          "Hyperconverged Infrastructure (HCI)",
+          "Data Center Hardware",
+          "Endpoint Devices & Thin Clients",
+          "Backup & Disaster Recovery Appliances",
+          "Hardware Installation & Configuration",
+          "Hardware Lifecycle Management",
+          "Preventive Maintenance & Technical Support",
+          "Hardware Upgrades & Performance Optimization",
+          "Warranty & Asset Management Optimization"
+        ]
+      }
+    ]
+  },
+  "about": {
+    "title": "About KloudEra Technologies",
+    "missionTitle": "Built for High-Stakes Enterprise Resilience",
+    "missionDesc": "We believe in your success and that technology can drive the best results for your business, no matter your industry or goals.",
+    "whyChooseUs": [
+      {
+        "title": "Favourable terms",
+        "desc": "Each project we work on is tailored to the particular client's exact needs, not the other way around."
+      },
+      {
+        "title": "Quality for value",
+        "desc": "Our motto is to provide only the highest quality to our clients, no matter the circumstances."
+      },
+      {
+        "title": "Global experience",
+        "desc": "We have worked with multinational companies, as well as smaller businesses from all continents."
+      },
+      {
+        "title": "High standards",
+        "desc": "We take data seriously, meaning that we only deliver work that we can be proud of."
+      }
+    ],
+    "team": [
+      {
+        "name": "Ratnesh Pandey",
+        "role": "CEO | Co-Founder | vCISO | Director",
+        "initials": "RP",
+        "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&scale=1.5&y=-10"
+      },
+      {
+        "name": "Deepa",
+        "role": "Director | Co-Founder | CHRO",
+        "initials": "D",
+        "image": ""
+      },
+      {
+        "name": "Utkarsh",
+        "role": "Sr. Cyber Security SME | Partner Success Mgr",
+        "initials": "U",
+        "image": ""
+      }
+    ]
+  },
+  "careers": {
+    "title": "Bright Future Awaits You!",
+    "intro": "At KloudEra Technologies, we're shaping the future of Cyber Security, Cloud AI, and Digital Transformation. We're a team of innovators, creators, and problem-solvers who thrive on building impactful solutions.",
+    "whyJoinUs": "Work on cutting-edge projects in Cyber Security, Cloud & AI. Career growth & mentorship opportunities. Inclusive and collaborative culture. Flexible, future-ready workplace.",
+    "timeline": [
+      {
+        "step": "STEP_01",
+        "name": "APPLICATION",
+        "desc": "Submit your resume and engineering portfolio for review."
+      },
+      {
+        "step": "STEP_02",
+        "name": "TECH EVALUATION",
+        "desc": "Deep dive technical interview with senior engineering leads."
+      },
+      {
+        "step": "STEP_03",
+        "name": "LEADERSHIP MATCH",
+        "desc": "Culture alignment and leadership discussion."
+      },
+      {
+        "step": "STEP_04",
+        "name": "ONBOARDING",
+        "desc": "Welcome to KloudEra Technologies engineering core."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Let's get in touch",
+    "offices": [
+      {
+        "city": "Pune Office",
+        "address": "412, Tower B City Vista DownTown, Kharadi Pune - 411014 | Maharashtra | India",
+        "hours": "Monday - Friday 10am - 6pm",
+        "phone": "+91 9899822926, +91 9390484180",
+        "email": "info@kloudera.ai"
+      },
+      {
+        "city": "Bengaluru Office",
+        "address": "35/36, Shri Durga Kurupa, Thanisandra, Raechanhalli, Bengaluru, Karnataka - 560045",
+        "hours": "Monday - Friday 10am - 6pm",
+        "phone": "+91 9899822926, +91 9390484180",
+        "email": "info@kloudera.ai"
+      }
+    ]
+  },
+  "products": {
+    "title": "Kloudera Enterprise Software Suite",
+    "intro": "Proprietary workspace scheduling, disaster recovery, and remote device management products currently under active engineering development.",
+    "items": [
+      {
+        "name": "Kloudera Meet Scheduler",
+        "tagline": "Enterprise Meeting & Calendar Orchestration System",
+        "category": "WORKSPACE & COLLABORATION",
+        "desc": "Automated meeting scheduling, multi-timezone synchronization, and encrypted virtual room access governance for enterprise teams.",
+        "features": [
+          "End-to-End Encrypted Invites",
+          "Multi-Timezone Auto Sync",
+          "Granular Access Authorization",
+          "Instant Calendar Integration"
+        ],
+        "badge": "UNDER DEVELOPMENT",
+        "color": "#06b6d4"
+      },
+      {
+        "name": "Klodera Data Recovery Tool",
+        "tagline": "High-Assurance Disaster Recovery & Data Restoration",
+        "category": "DISASTER RECOVERY & BACKUP",
+        "desc": "Enterprise snapshot restoration, zero-data-loss ransomware recovery, and sector-level disk imaging for cloud and local infrastructure.",
+        "features": [
+          "Immutable Storage Backups",
+          "Sub-Second Delta Recovery",
+          "Ransomware Air-Gap Shield",
+          "Automated Integrity Verification"
+        ],
+        "badge": "IN STAGING",
+        "color": "#3b82f6"
+      },
+      {
+        "name": "Kloudera Remote Device Controller",
+        "tagline": "Zero-Trust Endpoint Management & Remote Telemetry",
+        "category": "DEVICE MANAGEMENT & MDM",
+        "desc": "Centralized remote device administration, automated endpoint patch deployment, and real-time security telemetry monitoring.",
+        "features": [
+          "Zero-Trust Remote Access",
+          "Automated Endpoint Patching",
+          "Real-Time Telemetry Stream",
+          "Remote Kill-Switch & Lock"
+        ],
+        "badge": "BETA TESTING",
+        "color": "#818cf8"
+      }
+    ]
+  },
+  "achievements": {
+    "title": "Our Achievements",
+    "intro": "Recognized and accredited by key government initiatives and national enterprise development bodies in India.",
+    "items": [
+      {
+        "name": "MSME Certified Enterprise",
+        "category": "GOVERNMENT ACCREDITATION",
+        "issuer": "Micro, Small & Medium Enterprises (Govt. of India)",
+        "badge": "MSME REGISTERED",
+        "tagline": "सूक्ष्म, लघु एवं मध्यम उद्यम",
+        "desc": "Officially certified enterprise under the Ministry of Micro, Small and Medium Enterprises, Government of India."
+      },
+      {
+        "name": "#startupindia",
+        "category": "DPIIT RECOGNITION",
+        "issuer": "Department for Promotion of Industry and Internal Trade",
+        "badge": "STARTUP INDIA",
+        "tagline": "#startupindia Recognized Venture",
+        "desc": "Recognized technology startup by the Government of India under the flagship Startup India initiative."
+      }
+    ]
+  },
+  "clienteles": {
+    "title": "Our Clienteles",
+    "intro": "Trusted engineering and security partner for leading financial, IT, construction, and educational organizations.",
+    "items": [
+      {
+        "name": "IndiaCapital",
+        "sector": "FinTech",
+        "category": "FINANCIAL SERVICES",
+        "logoType": "data:image/jpeg;base64,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",
+        "desc": "Enterprise financial technology and capital management solutions."
+      },
+      {
+        "name": "Fin Chikitsak",
+        "sector": "FinTech",
+        "category": "FINANCIAL WELLNESS",
+        "logoType": "finchikitsak",
+        "tagline": "Be Financially Fit",
+        "desc": "Comprehensive financial wellness and advisory platform."
+      },
+      {
+        "name": "gleeds",
+        "sector": "Construction Consultancy",
+        "category": "GLOBAL INFRASTRUCTURE",
+        "logoType": "gleeds",
+        "desc": "International property and construction management consultancy."
+      },
+      {
+        "name": "StatusNeo",
+        "sector": "MNC IT",
+        "category": "ENTERPRISE IT CONSULTING",
+        "logoType": "statusneo",
+        "desc": "Global digital transformation and enterprise IT consultancy."
+      },
+      {
+        "name": "SIT PUNE",
+        "sector": "Academic Institution",
+        "category": "EDUCATION & RESEARCH",
+        "logoType": "sitpune",
+        "tagline": "Symbiosis Institute of Technology",
+        "desc": "Premier engineering and technological research institute."
+      }
+    ]
+  },
+  "certifications": {
+    "title": "Security Compliance & Global Standards",
+    "intro": "Kloudera operates under audited global security frameworks, data privacy laws, and quality management protocols.",
+    "items": [
+      {
+        "code": "ISO 27001:2022",
+        "title": "Information Security Management System",
+        "issuer": "International Organization for Standardization",
+        "desc": "Certified governance over information security controls, risk management, and physical/digital asset protection.",
+        "status": "VERIFIED & ACTIVE"
+      },
+      {
+        "code": "SOC 2 TYPE II",
+        "title": "Trust Services Criteria Security & Confidentiality",
+        "issuer": "American Institute of CPAs (AICPA)",
+        "desc": "Independently audited operational effectiveness across security, availability, processing integrity, and privacy.",
+        "status": "VERIFIED & ACTIVE"
+      },
+      {
+        "code": "NIST CSF 2.0",
+        "title": "National Institute of Standards Cybersecurity Framework",
+        "issuer": "NIST Security Standards",
+        "desc": "Comprehensive alignment across Identify, Protect, Detect, Respond, and Recover cybersecurity functions.",
+        "status": "VERIFIED & ACTIVE"
+      },
+      {
+        "code": "CMMI LEVEL 5",
+        "title": "Capability Maturity Model Integration (Optimizing)",
+        "issuer": "CMMI Institute",
+        "desc": "Highest level of software engineering process optimization, quality assurance, and quantitative management.",
+        "status": "VERIFIED & ACTIVE"
+      },
+      {
+        "code": "HIPAA COMPLIANT",
+        "title": "Health Insurance Portability & Accountability Act",
+        "issuer": "US Department of Health & Human Services",
+        "desc": "Rigorous administrative, physical, and technical safeguards for protected health information (PHI).",
+        "status": "VERIFIED & ACTIVE"
+      },
+      {
+        "code": "PCI-DSS v4.0",
+        "title": "Payment Card Industry Data Security Standard",
+        "issuer": "PCI Security Standards Council",
+        "desc": "Maximum level security for processing, storing, and transmitting sensitive payment cardholder data.",
+        "status": "VERIFIED & ACTIVE"
+      }
+    ]
+  },
+  "partners": {
+    "title": "OUR STRATEGIC PARTNERS",
+    "tagline": "KLOUDERA TECHNOLOGIES // GLOBAL ECOSYSTEM",
+    "introTitle": "Enterprise Alliances & Security Nodes",
+    "introDesc": "We integrate with top-tier cybersecurity networks, cloud providers, and hardware infrastructure suppliers to deliver threat-shielded operational stability.",
+    "featured": [
+      {
+        "name": "Microsoft",
+        "logoColor": "#f25f22",
+        "tagline": "Enterprise Identity & Cloud Core Alliance",
+        "details": "We co-architect secure directory environments and unified identity governance protocols, integrating Microsoft Entra ID and Active Directory into automated threat defense pipelines."
+      },
+      {
+        "name": "MongoDB",
+        "logoColor": "#10b981",
+        "tagline": "High-Performance Secure Data Clusters",
+        "details": "Collaborating on encrypted document-model data clusters and telemetry databases to store and audit cyber security logs with zero-leak cryptographic signatures."
+      },
+      {
+        "name": "AWS (Amazon Web Services)",
+        "logoColor": "#ff9900",
+        "tagline": "Global Cloud Resiliency & Infrastructure Security",
+        "details": "Managed cloud security automation, hybrid architecture configuration, and serverless compute defense systems designed to withstand volumetric DDoS incursions."
+      },
+      {
+        "name": "Fortinet",
+        "logoColor": "#ef4444",
+        "tagline": "Next-Generation Hardware Boundary Firewalls",
+        "details": "Providing hardware-level boundary inspection, physical perimeter threat monitoring, and automated intrusion prevention systems (IPS) for private enterprise networks."
+      },
+      {
+        "name": "Google Cloud",
+        "logoColor": "#ea4335",
+        "tagline": "MLSecOps & Advanced Threat Intelligence Analytics",
+        "details": "Harnessing Google Cloud's globally distributed analytics pipelines and security lakes to run machine learning security threat prediction and automated heuristics."
+      },
+      {
+        "name": "Sprinto",
+        "logoColor": "#a855f7",
+        "tagline": "Automated GRC & Compliance Frameworks",
+        "details": "Continuous integration of audit-ready compliance scripts mapping system operations directly to ISO27001, SOC2, HIPAA, and GDPR standards."
+      },
+      {
+        "name": "Trend Micro",
+        "logoColor": "#f43f5e",
+        "tagline": "Endpoint Detection & Response (EDR) Systems",
+        "details": "Protecting host endpoints and virtual workstations via proactive sandboxing, behavioral anomaly analysis, and threat patch mitigation."
+      },
+      {
+        "name": "Cross Cipher",
+        "logoColor": "#0ea5e9",
+        "tagline": "Secure Cryptographic Communications Networks",
+        "details": "Deploying high-speed zero-knowledge communication tunnels, quantum-safe data encryption keys, and distributed transit path privacy routing protocols."
+      }
+    ],
+    "alliances": [
+      "AvePoint", "Axidian", "Ishan Technologies", "Web Werks", "Salesforce", 
+      "Seclogic", "Snowflake", "Adobe Enterprise", "Arcon GRC", "CloudBlue", 
+      "RAS Infotech", "Databricks", "Zendesk Security", "UiPath RPA", "Zoho ITSM", 
+      "ServiceNow Corp", "Tenable Network Security", "Veeam Data Resiliency"
+    ]
+  }
+}

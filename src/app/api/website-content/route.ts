@@ -26,6 +26,22 @@ export async function GET() {
     return NextResponse.json({ error: "Configuration not found in database" }, { status: 404 });
   } catch (dbErr: any) {
     console.error("DATABASE READ FAILURE in GET /api/website-content:", dbErr);
+    
+    // Fallback to local JSON file
+    if (fs.existsSync(FILE_PATH)) {
+      try {
+        const rawData = fs.readFileSync(FILE_PATH, "utf8");
+        const data = JSON.parse(rawData);
+        return NextResponse.json(data, {
+          headers: {
+            "Cache-Control": "no-store, max-age=0, must-revalidate",
+            "Pragma": "no-cache"
+          }
+        });
+      } catch (fileErr) {
+        console.error("Failed to read fallback file:", fileErr);
+      }
+    }
     return NextResponse.json({ error: "Database query failed: " + dbErr.message }, { status: 500 });
   }
 }
