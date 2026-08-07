@@ -208,29 +208,27 @@ export default function PartnersPage() {
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {partnersList.map((partner: any, idx: number) => (
-                <PartnerCard
-                  key={idx}
-                  partner={partner}
-                  idx={idx}
-                  isEditActive={isEditActive}
-                  localPreviewUrl={localPreviews[idx]}
-                  onDelete={() => deletePartner(idx)}
-                  onImageUpload={(file) => handleImageUpload(idx, file)}
-                  onNameChange={(val) => {
-                    const updated = [...partnersList];
-                    updated[idx] = { ...updated[idx], name: val };
-                    updateNestedValue(["partners", "featured"], updated);
-                  }}
-                  onTaglineChange={(val) => {
-                    const updated = [...partnersList];
-                    updated[idx] = { ...updated[idx], tagline: val };
-                    updateNestedValue(["partners", "featured"], updated);
-                  }}
-                />
-              ))}
-            </div>
+            {partnersList.map((partner: any, idx: number) => (
+              <PartnerCard
+                key={idx}
+                partner={partner}
+                idx={idx}
+                isEditActive={isEditActive}
+                localPreviewUrl={localPreviews[idx]}
+                onDelete={() => deletePartner(idx)}
+                onImageUpload={(file) => handleImageUpload(idx, file)}
+                onNameChange={(val) => {
+                  const updated = [...partnersList];
+                  updated[idx] = { ...updated[idx], name: val };
+                  updateNestedValue(["partners", "featured"], updated);
+                }}
+                onTaglineChange={(val) => {
+                  const updated = [...partnersList];
+                  updated[idx] = { ...updated[idx], tagline: val };
+                  updateNestedValue(["partners", "featured"], updated);
+                }}
+              />
+            ))}
 
             {/* Add Card Button — only in edit mode */}
             {isEditActive && (
