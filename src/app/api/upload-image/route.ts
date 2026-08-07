@@ -69,17 +69,23 @@ export async function POST(req: NextRequest) {
       const publicDir = path.join(process.cwd(), "public", "partners");
       const rootDir = path.join(process.cwd(), "partners");
 
-      // Ensure target folders exist
-      if (!fs.existsSync(publicDir)) {
-        fs.mkdirSync(publicDir, { recursive: true });
+      // Ensure target folders exist (skipped on Vercel to prevent EROFS)
+      const isVercel = Boolean(process.env.VERCEL);
+      if (!isVercel) {
+        try {
+          if (!fs.existsSync(publicDir)) {
+            fs.mkdirSync(publicDir, { recursive: true });
+          }
+          if (!fs.existsSync(rootDir)) {
+            fs.mkdirSync(rootDir, { recursive: true });
+          }
+          // Write file to both folders
+          fs.writeFileSync(path.join(publicDir, filename), buffer);
+          fs.writeFileSync(path.join(rootDir, filename), buffer);
+        } catch (fsErr: any) {
+          console.warn("Local filesystem write failed:", fsErr.message);
+        }
       }
-      if (!fs.existsSync(rootDir)) {
-        fs.mkdirSync(rootDir, { recursive: true });
-      }
-
-      // Write file to both folders
-      fs.writeFileSync(path.join(publicDir, filename), buffer);
-      fs.writeFileSync(path.join(rootDir, filename), buffer);
 
       // Commit and push to GitHub asynchronously
       const githubTokenSet = Boolean(process.env.GITHUB_PAT);

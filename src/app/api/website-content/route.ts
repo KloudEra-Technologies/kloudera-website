@@ -140,11 +140,14 @@ export async function POST(req: NextRequest) {
       console.error("DATABASE WRITE FAILURE in POST /api/website-content (will fallback to local disk write):", dbErr.message);
     }
 
-    // 2. Save to Disk
-    try {
-      fs.writeFileSync(FILE_PATH, JSON.stringify(body, null, 2), "utf8");
-    } catch (diskErr: any) {
-      console.warn("Disk write failed (expected on read-only serverless hosts like Vercel):", diskErr.message);
+    // 2. Save to Disk (skipped on Vercel to prevent EROFS failures)
+    const isVercel = Boolean(process.env.VERCEL);
+    if (!isVercel) {
+      try {
+        fs.writeFileSync(FILE_PATH, JSON.stringify(body, null, 2), "utf8");
+      } catch (diskErr: any) {
+        console.warn("Disk write failed:", diskErr.message);
+      }
     }
 
     // 3. Commit and push to GitHub asynchronously
