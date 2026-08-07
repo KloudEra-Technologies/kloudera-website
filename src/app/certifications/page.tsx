@@ -5,6 +5,7 @@ import Link from "next/link";
 import { KloudEraLogo } from "@/components/KloudEraLogo";
 import { InlineText, useEditor } from "@/components/editor";
 import { ReturnButton } from "@/components/ReturnButton";
+import { CertificationLogo } from "@/components/FallbackLogo";
 
 // Fisher-Yates shuffle — deterministic once called on mount
 function shuffle<T>(arr: T[]): T[] {
@@ -474,17 +475,8 @@ function CertCard({ cert, idx, isEditActive, onDelete, onImageUpload, onTitleCha
               </button>
             )}
             {/* Image Area */}
-            <div className="relative w-full bg-[#060c18] flex items-center justify-center overflow-hidden" style={{ minHeight: "160px" }}>
-              {cert.imageUrl ? (
-                <img src={cert.imageUrl} alt={cert.title || "Cert"} className="w-full h-full object-contain p-4" style={{ maxHeight: "160px" }} />
-              ) : (
-                <div className="flex flex-col items-center justify-center text-emerald-900 gap-2 py-8 px-4">
-                  <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                  </svg>
-                  <span className="text-[9px] font-mono text-emerald-900/60 tracking-wider">NO BADGE IMAGE</span>
-                </div>
-              )}
+            <div className="relative w-full bg-[#060c18] flex items-center justify-center overflow-hidden p-4" style={{ minHeight: "160px" }}>
+              <CertificationLogo code={cert.code || ""} title={cert.title} customImageUrl={cert.imageUrl} />
               {isEditActive && (
                 <>
                   <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) onImageUpload(f); }} />
