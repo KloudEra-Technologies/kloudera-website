@@ -98,12 +98,15 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
       </div>
 
       {showControls && (
-        <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] flex items-center justify-center animate-[fadeIn_0.2s_ease-out]"
-          onClick={() => setShowControls(false)}
-        >
+        <>
+          {/* Click outside to close overlay (completely transparent so it doesn't block the image view) */}
           <div 
-            className="bg-zinc-950 border border-teal-500/40 p-5 rounded-2xl shadow-2xl font-mono text-[10px] w-72 flex flex-col gap-4 text-left text-zinc-100"
+            className="fixed inset-0 z-[99998]"
+            onClick={() => setShowControls(false)}
+          />
+          {/* Floating side panel on the right side of the screen */}
+          <div 
+            className="fixed right-6 top-24 w-80 bg-zinc-950/95 border border-teal-500/40 p-5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] font-mono text-[10px] flex flex-col gap-4 text-left text-zinc-100 z-[99999] backdrop-blur-md"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex justify-between items-center border-b border-teal-500/20 pb-3">
@@ -175,7 +178,7 @@ export const InlineImage = ({ path, fallback, className = "", alt = "" }: Inline
               </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
