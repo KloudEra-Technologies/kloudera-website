@@ -533,6 +533,12 @@
         "logoColor": "#0ea5e9",
         "tagline": "Secure Cryptographic Communications Networks",
         "details": "Deploying high-speed zero-knowledge communication tunnels, quantum-safe data encryption keys, and distributed transit path privacy routing protocols."
+      },
+      {
+        "name": "Partner Name",
+        "tagline": "Short description of the partnership",
+        "logoUrl": "/partners/PartnerName.jpg",
+        "logoColor": "#14b8a6"
       }
     ],
     "alliances": [
