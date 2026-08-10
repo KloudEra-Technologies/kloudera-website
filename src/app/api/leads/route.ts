@@ -73,7 +73,8 @@ export async function POST(req: NextRequest) {
     `;
 
     try {
-      await sendEmailTransport(adminEmail, subjectLine, htmlBody, emailConfig);
+      const emailResult = await sendEmailTransport(adminEmail, subjectLine, htmlBody, emailConfig);
+      console.log("Lead email notification result:", emailResult);
     } catch (mailErr) {
       console.error("Failed to send email alert for lead:", mailErr);
     }

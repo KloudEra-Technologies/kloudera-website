@@ -63,6 +63,11 @@ export async function sendEmailTransport(recipientEmail: string, subject: string
       }
     } catch (apiErr: any) {
       console.error("Resend API error:", apiErr);
+      return {
+        success: false,
+        status: "RESEND_API_ERROR",
+        message: `Network error: ${apiErr.message}`
+      };
     }
   }
 
