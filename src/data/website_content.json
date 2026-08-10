@@ -269,6 +269,24 @@
         "role": "Sr. Cyber Security SME | Partner Success Mgr",
         "initials": "U",
         "image": "/team/about_team_2_image.png"
+      },
+      {
+        "name": "Abhay",
+        "role": "AI Developer",
+        "initials": "N",
+        "image": "/team/about_team_3_image.jpg"
+      },
+      {
+        "name": "Aditi",
+        "role": "Digital Marketing Lead",
+        "initials": "N",
+        "image": "/team/about_team_4_image.avif"
+      },
+      {
+        "name": "Yash",
+        "role": "Cybersecurity Analyst",
+        "initials": "N",
+        "image": "/team/about_team_5_image.png"
       }
     ]
   },
