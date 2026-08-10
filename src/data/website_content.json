@@ -4,11 +4,11 @@
     "ultimatePassword": "PasswordAdmin",
     "adminEmail": "info@kloudera.ai",
     "emailConfig": {
-      "apiKey": "re_fRg4HCxq_2eC9iMrZCPHLer2QixdJBJzM",
+      "apiKey": "",
       "smtpHost": "smtp.gmail.com",
       "smtpPort": 587,
       "smtpUser": "info@kloudera.ai",
-      "smtpPass": "Pa$$w0rd@7056",
+      "smtpPass": "",
       "fromEmail": "no-reply@kloudera.ai",
       "webhookUrl": ""
     }

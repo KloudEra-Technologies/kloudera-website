@@ -27,7 +27,7 @@ export async function sendEmailTransport(recipientEmail: string, subject: string
   const host = emailConfig?.smtpHost || "smtp.office365.com";
   const port = Number(emailConfig?.smtpPort || 587);
   const user = emailConfig?.smtpUser || recipientEmail;
-  const pass = emailConfig?.smtpPass || "";
+  const pass = emailConfig?.smtpPass || process.env.SMTP_PASSWORD || "";
 
   // 1. If Resend / SendGrid API Key is provided, use HTTP API (100% Inbox Delivery guaranteed)
   if (apiKey && apiKey.startsWith("re_")) {

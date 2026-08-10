@@ -183,14 +183,20 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 3. Commit and push to GitHub
+    // 3. Commit and push to GitHub (with secrets scrubbed)
     let githubSaved = false;
     const githubTokenSet = Boolean(process.env.GITHUB_PAT);
     if (githubTokenSet) {
       try {
+        const githubBody = JSON.parse(JSON.stringify(body));
+        if (githubBody.credentials?.emailConfig) {
+          githubBody.credentials.emailConfig.apiKey = "";
+          githubBody.credentials.emailConfig.smtpPass = "";
+        }
+
         const githubResult = await commitToGithub(
           "src/data/website_content.json",
-          Buffer.from(JSON.stringify(body, null, 2), "utf8"),
+          Buffer.from(JSON.stringify(githubBody, null, 2), "utf8"),
           `cms: publish website content update by ${isUltimate ? "ultimate admin" : "editor"}`
         );
         githubSaved = githubResult.success;
