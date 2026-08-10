@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { sendEmailTransport } from "@/app/api/admin-audit/route";
+import fs from "fs";
+import path from "path";
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,6 +38,45 @@ export async function POST(req: NextRequest) {
         ipAddress: req.headers.get("x-forwarded-for") || "127.0.0.1",
       },
     });
+
+    // Fetch email configurations from JSON
+    let adminEmail = "info@kloudera.ai";
+    let emailConfig: any = {};
+    try {
+      const contentRaw = fs.readFileSync(path.join(process.cwd(), "src", "data", "website_content.json"), "utf8");
+      const contentJson = JSON.parse(contentRaw);
+      adminEmail = contentJson.credentials?.adminEmail || "info@kloudera.ai";
+      emailConfig = contentJson.credentials?.emailConfig || {};
+    } catch (err) {
+      console.warn("Failed to load email config for lead notification:", err);
+    }
+
+    // Trigger email notification to the administrator
+    const subjectLine = `[Kloudera Inquiry] ${subject || "New Lead Submission"} (${type})`;
+    const htmlBody = `
+      <div style="background-color: #030712; color: #f4f4f5; font-family: monospace, sans-serif; padding: 30px; border-radius: 12px; border: 1px solid #06b6d4; max-width: 550px; margin: 0 auto;">
+        <div style="border-bottom: 1px solid #1e293b; padding-bottom: 15px; margin-bottom: 20px;">
+          <h2 style="color: #22d3ee; margin: 0; font-size: 18px; text-transform: uppercase;">KLOUDERA TECHNOLOGIES // NEW LEAD DISPATCH</h2>
+          <span style="color: #64748b; font-size: 11px;">VISITOR CONTACT SUBMISSION</span>
+        </div>
+        
+        <div style="background-color: #090d16; padding: 20px; border-radius: 8px; border: 1px solid #1e293b; margin-bottom: 20px; font-size: 13px; line-height: 1.6;">
+          <p style="margin: 0 0 8px 0; color: #cbd5e1;"><strong style="color: #f59e0b;">Name:</strong> ${name}</p>
+          <p style="margin: 0 0 8px 0; color: #cbd5e1;"><strong style="color: #f59e0b;">Email:</strong> ${email}</p>
+          <p style="margin: 0 0 8px 0; color: #cbd5e1;"><strong style="color: #f59e0b;">Phone:</strong> ${phone || "N/A"}</p>
+          <p style="margin: 0 0 8px 0; color: #cbd5e1;"><strong style="color: #f59e0b;">Company:</strong> ${company || "N/A"}</p>
+          <p style="margin: 0 0 8px 0; color: #cbd5e1;"><strong style="color: #f59e0b;">Type:</strong> ${type}</p>
+          <hr style="border: none; border-top: 1px solid #1e293b; margin: 15px 0;" />
+          <p style="margin: 0; color: #e2e8f0; white-space: pre-wrap;">${message || "No message content."}</p>
+        </div>
+      </div>
+    `;
+
+    try {
+      await sendEmailTransport(adminEmail, subjectLine, htmlBody, emailConfig);
+    } catch (mailErr) {
+      console.error("Failed to send email alert for lead:", mailErr);
+    }
 
     return NextResponse.json({ success: true, leadId: lead.id }, { status: 201 });
   } catch (err: any) {
