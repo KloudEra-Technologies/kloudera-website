@@ -16,28 +16,35 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Save lead to database
-    const lead = await prisma.leadSubmission.create({
-      data: {
-        type,
-        name,
-        email,
-        phone: phone || null,
-        company: company || null,
-        subject: subject || null,
-        message: message || null,
-        payload: payload || null,
-      },
-    });
+    let leadId = "FALLBACK_NO_DB";
+    
+    // Save lead to database (with fallback for database quota issues)
+    try {
+      const lead = await prisma.leadSubmission.create({
+        data: {
+          type,
+          name,
+          email,
+          phone: phone || null,
+          company: company || null,
+          subject: subject || null,
+          message: message || null,
+          payload: payload || null,
+        },
+      });
+      leadId = lead.id;
 
-    // Seed audit log
-    await prisma.auditLog.create({
-      data: {
-        action: "SUBMIT_LEAD",
-        details: `New lead created: ${type} from ${email}`,
-        ipAddress: req.headers.get("x-forwarded-for") || "127.0.0.1",
-      },
-    });
+      // Seed audit log
+      await prisma.auditLog.create({
+        data: {
+          action: "SUBMIT_LEAD",
+          details: `New lead created: ${type} from ${email}`,
+          ipAddress: req.headers.get("x-forwarded-for") || "127.0.0.1",
+        },
+      });
+    } catch (dbErr: any) {
+      console.error("Database lead storage failed (continuing to email):", dbErr.message);
+    }
 
     // Fetch email configurations from JSON
     let adminEmail = "info@kloudera.ai";
@@ -81,7 +88,7 @@ export async function POST(req: NextRequest) {
       emailResult = { success: false, status: "ERROR", message: mailErr.message };
     }
 
-    return NextResponse.json({ success: true, leadId: lead.id, emailResult }, { status: 201 });
+    return NextResponse.json({ success: true, leadId, emailResult }, { status: 201 });
   } catch (err: any) {
     console.error("API Leads Error:", err);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
