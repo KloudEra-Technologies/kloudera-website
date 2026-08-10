@@ -133,9 +133,27 @@ export function ProfessionalBlueHome({
     { title: "MS Solutions Architect", category: "MICROSOFT", desc: "Design Microsoft Entra ID security policies, M365 migrations, and automated Power RPA workflows." }
   ];
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!contactForm.name || !contactForm.email) return;
+    
+    try {
+      await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "HOMEPAGE_INQUIRY",
+          name: contactForm.name,
+          email: contactForm.email,
+          company: contactForm.company || null,
+          subject: "Systems Consultation Request (Homepage)",
+          message: contactForm.message
+        })
+      });
+    } catch (err) {
+      console.error("Failed to submit homepage lead:", err);
+    }
+
     playAudio("success");
     setFormSubmitted(true);
     setTimeout(() => {
