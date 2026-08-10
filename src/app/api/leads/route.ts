@@ -72,14 +72,16 @@ export async function POST(req: NextRequest) {
       </div>
     `;
 
+    let emailResult: any = null;
     try {
-      const emailResult = await sendEmailTransport(adminEmail, subjectLine, htmlBody, emailConfig);
+      emailResult = await sendEmailTransport(adminEmail, subjectLine, htmlBody, emailConfig);
       console.log("Lead email notification result:", emailResult);
-    } catch (mailErr) {
+    } catch (mailErr: any) {
       console.error("Failed to send email alert for lead:", mailErr);
+      emailResult = { success: false, status: "ERROR", message: mailErr.message };
     }
 
-    return NextResponse.json({ success: true, leadId: lead.id }, { status: 201 });
+    return NextResponse.json({ success: true, leadId: lead.id, emailResult }, { status: 201 });
   } catch (err: any) {
     console.error("API Leads Error:", err);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
