@@ -30,11 +30,25 @@ export const metadata: Metadata = {
   },
 };
 
+import fs from "fs";
+import path from "path";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Load initial content server-side to prevent client-side hydration flicker
+  let initialData = null;
+  try {
+    const filePath = path.join(process.cwd(), "src", "data", "website_content.json");
+    if (fs.existsSync(filePath)) {
+      initialData = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    }
+  } catch (err) {
+    console.error("Failed to load initial site data in RootLayout:", err);
+  }
+
   return (
     <html
       lang="en"
@@ -43,7 +57,7 @@ export default function RootLayout({
     >
       <body className="h-full bg-black text-zinc-100 flex flex-col antialiased">
         <AccessibilityProvider>
-          <EditorProvider>
+          <EditorProvider initialData={initialData}>
             <CustomCursor />
             <div className="flex-1 flex flex-col">{children}</div>
             <AiAssistant />

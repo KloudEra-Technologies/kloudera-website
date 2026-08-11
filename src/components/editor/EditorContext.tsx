@@ -15,9 +15,9 @@ interface EditorContextType {
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
-export const EditorProvider = ({ children }: { children: ReactNode }) => {
+export const EditorProvider = ({ children, initialData }: { children: ReactNode; initialData?: any }) => {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [siteData, setSiteData] = useState<any>(null);
+  const [siteData, setSiteData] = useState<any>(initialData || null);
   // authToken is NEVER persisted — always cleared on close
   const authTokenRef = useRef<string | null>(null);
   const [authToken, setAuthTokenState] = useState<string | null>(null);
