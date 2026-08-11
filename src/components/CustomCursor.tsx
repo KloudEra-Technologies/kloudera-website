@@ -116,15 +116,6 @@ export const CustomCursor: React.FC = () => {
               : "h-7 w-7"
           } ${isClicked ? "scale-75 border-white bg-white/20 shadow-[0_0_20px_rgba(255,255,255,0.4)]" : ""}`}
         >
-          {/* Target Reticle Crosshairs */}
-          {performanceMode !== "lite" && (
-            <>
-              <span className="absolute -left-[4px] top-1/2 h-[1px] w-[5px] -translate-y-1/2 bg-sky-400/70" />
-              <span className="absolute -right-[4px] top-1/2 h-[1px] w-[5px] -translate-y-1/2 bg-sky-400/70" />
-              <span className="absolute left-1/2 -top-[4px] h-[5px] w-[1px] -translate-x-1/2 bg-sky-400/70" />
-              <span className="absolute left-1/2 -bottom-[4px] h-[5px] w-[1px] -translate-x-1/2 bg-sky-400/70" />
-            </>
-          )}
         </div>
       </div>
 
