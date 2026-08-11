@@ -410,6 +410,13 @@
         "tagline": "#startupindia Recognized Venture",
         "desc": "Recognized technology startup by the Government of India under the flagship Startup India initiative.",
         "logoUrl": "/achievements/achievements_items_1_logoUrl.png?scale=2.2&y=-4"
+      },
+      {
+        "name": "Confederation of Indian Industry (CII) Membership",
+        "category": "Confederation of Indian Industry (CII) — Member",
+        "tagline": "Industry Association & Business Networking",
+        "desc": "Membership with CII, India’s premier industry association, fostering business growth, collaboration, innovation, and industry engagement.",
+        "logoUrl": "/achievements/achievements_items_2_logoUrl.png"
       }
     ]
   },
