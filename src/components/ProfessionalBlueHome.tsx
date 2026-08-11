@@ -7,7 +7,6 @@ import { useAccessibility } from "./AccessibilityContext";
 import { InlineText, InlineImage, useEditor } from "@/components/editor";
 import { BgAnimation } from "./BgAnimation";
 import { ScrollReveal } from "./ScrollReveal";
-import { CursorSparkTrail } from "./CursorSparkTrail";
 import { PartnerLogo, CertificationLogo } from "./FallbackLogo";
 
 interface ProfessionalBlueHomeProps {
@@ -237,7 +236,6 @@ export function ProfessionalBlueHome({
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
         <BgAnimation variant="home" />
       </div>
-      <CursorSparkTrail />
       {/* ----------------- Top Header Navbar ----------------- */}
       <header className="w-full sticky top-0 z-50 border-b border-blue-900/40 bg-[#030712]/95 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 sm:px-10 py-2">
