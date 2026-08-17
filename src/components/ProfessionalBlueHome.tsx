@@ -38,7 +38,6 @@ export function ProfessionalBlueHome({
   const certsInitRef = useRef(false);
 
   useEffect(() => {
-    if (initialSiteData) return;
     fetch("/api/website-content?t=" + Date.now(), { cache: "no-store" })
       .then((res) => {
         if (res.ok) return res.json();
@@ -50,7 +49,7 @@ export function ProfessionalBlueHome({
         }
       })
       .catch((err) => console.log("Using fallback blue home data:", err.message));
-  }, [initialSiteData]);
+  }, []);
 
   const getSectionData = (sectionKey: string) => {
     return siteData?.[sectionKey] || fetchedData?.[sectionKey] || initialSiteData?.[sectionKey] || {};
@@ -1335,8 +1334,8 @@ const DEFAULT_HOME_TEAM = [
 
 function TeamSection({ siteData, fetchedData }: { siteData: any; fetchedData: any }) {
   const teamData: any[] =
-    siteData?.about?.team ||
     fetchedData?.about?.team ||
+    siteData?.about?.team ||
     DEFAULT_HOME_TEAM;
 
   return (
