@@ -1333,7 +1333,9 @@ const DEFAULT_HOME_TEAM = [
 ];
 
 function TeamSection({ siteData, fetchedData }: { siteData: any; fetchedData: any }) {
+  const { siteData: editorSiteData } = useEditor();
   const teamData: any[] =
+    editorSiteData?.about?.team ||
     fetchedData?.about?.team ||
     siteData?.about?.team ||
     DEFAULT_HOME_TEAM;
@@ -1377,13 +1379,12 @@ function TeamSection({ siteData, fetchedData }: { siteData: any; fetchedData: an
               {/* Avatar */}
               <div className="relative">
                 <div className="w-28 h-28 rounded-full border-2 border-cyan-400/60 shadow-[0_0_24px_rgba(6,182,212,0.35)] overflow-hidden bg-slate-800 flex items-center justify-center">
-                  {mbr.image ? (
-                    <img src={mbr.image} alt={mbr.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-3xl font-extrabold text-cyan-400 font-mono select-none">
-                      {(mbr.name || "?")[0].toUpperCase()}
-                    </span>
-                  )}
+                  <InlineImage
+                    path={["about", "team", String(teamData.indexOf(mbr)), "image"]}
+                    fallback={mbr.image || "/logo.png"}
+                    className="w-full h-full object-cover"
+                    alt={mbr.name}
+                  />
                 </div>
                 {/* Online indicator */}
                 <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-emerald-400 border-2 border-slate-900 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
