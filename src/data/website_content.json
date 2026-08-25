@@ -418,6 +418,13 @@
         "tagline": "Industry Association & Business Networking",
         "desc": "Membership with CII, India’s premier industry association, fostering business growth, collaboration, innovation, and industry engagement.",
         "logoUrl": "/achievements/achievements_items_2_logoUrl.png"
+      },
+      {
+        "name": "IAMCP Member",
+        "category": "INTERNATIONAL ASSOCIATION",
+        "tagline": "International Association of Microsoft Channel Partners",
+        "desc": "Proud member of IAMCP, the global community of Microsoft Channel Partners driving technology innovation, business growth, and collaboration across the Microsoft ecosystem.",
+        "logoUrl": "/achievements/IAMCP.png"
       }
     ]
   },

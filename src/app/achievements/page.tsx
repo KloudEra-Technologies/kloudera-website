@@ -181,18 +181,32 @@ export default function AchievementsPage() {
                 </div>
 
                 <div className="w-full flex flex-col items-center gap-2">
-                  <InlineText 
-                    as="span" 
-                    className="text-xs font-mono font-bold uppercase text-blue-900 bg-blue-50 px-5 py-1.5 rounded-full border border-blue-200"
-                    path={["achievements", "items", String(idx), "category"]}
-                    fallback={item.category}
-                  />
-                  <InlineText 
-                    as="h3" 
-                    className="text-base font-extrabold text-slate-800 tracking-tight block"
-                    path={["achievements", "items", String(idx), "name"]}
-                    fallback={item.name}
-                  />
+                  <div className="w-full flex items-center justify-center min-h-[36px] py-1">
+                    <InlineText 
+                      as="span" 
+                      className="text-xs font-mono font-bold uppercase text-blue-900 bg-blue-50 px-5 py-1.5 rounded-full border border-blue-200"
+                      path={["achievements", "items", String(idx), "category"]}
+                      fallback={item.category}
+                    />
+                  </div>
+                  {(item.tagline || isEditActive) && (
+                    <div className="w-full flex items-center justify-center min-h-[32px] py-1">
+                      <InlineText
+                        as="span"
+                        className="text-xs text-slate-500 font-medium italic"
+                        path={["achievements", "items", String(idx), "tagline"]}
+                        fallback={item.tagline || "Certification Subtitle"}
+                      />
+                    </div>
+                  )}
+                  <div className="w-full flex items-center justify-center min-h-[36px] py-1">
+                    <InlineText 
+                      as="h3" 
+                      className="text-base font-extrabold text-slate-800 tracking-tight block"
+                      path={["achievements", "items", String(idx), "name"]}
+                      fallback={item.name}
+                    />
+                  </div>
                 </div>
               </div>
             );
