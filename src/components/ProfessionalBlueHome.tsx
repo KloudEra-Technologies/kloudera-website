@@ -1371,7 +1371,6 @@ export function ProfessionalBlueHome({
                 { label: "AI Solutions", href: "/services/ai-solutions" },
                 { label: "Microsoft Services", href: "/services/microsoft" },
                 { label: "Hardware Solutions", href: "/services/hardware" },
-                { label: "Book a Meeting", href: "/book-meeting" },
                 { label: "Support", href: "/support" },
               ].map(({ label, href }) => (
                 <li key={label}>
@@ -1396,8 +1395,9 @@ export function ProfessionalBlueHome({
                 </svg>
                 <span className="leading-relaxed">
                   KloudEra Technologies Pvt. Ltd.<br />
-                  Noida, Uttar Pradesh,<br />
-                  India — 201301
+                  412, Tower B, City Vista,<br />
+                  DownTown, Kharadi, Pune,<br />
+                  Maharashtra — 411014, India
                 </span>
               </li>
               {/* Email */}
