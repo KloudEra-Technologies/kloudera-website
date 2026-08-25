@@ -1291,27 +1291,149 @@ export function ProfessionalBlueHome({
       {/* ----------------- Social Media Connect ----------------- */}
       <SocialSection siteData={siteData} fetchedData={fetchedData} />
 
-      {/* ----------------- Footer ----------------- */}
-      <footer className="border-t border-blue-900/40 bg-[#02040a] py-12">
-        <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <KloudEraLogo className="h-24 w-auto text-blue-400" />
-            <InlineText as="span" className="text-xs text-slate-500 font-mono" path={["home", "footerCopyright"]} fallback="© 2026 Kloudera Technologies Inc. All rights reserved." />
+      {/* ----------------- Professional Footer ----------------- */}
+      <footer className="border-t border-blue-900/30 bg-[#02040a]">
+        {/* Main Footer Grid */}
+        <div className="mx-auto max-w-7xl px-6 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+
+          {/* Column 1 — Brand */}
+          <div className="space-y-5 lg:col-span-1">
+            <KloudEraLogo className="h-20 w-auto text-blue-400" />
+            <p className="text-xs text-slate-400 leading-relaxed font-mono max-w-xs">
+              Kloudera Technologies — delivering world-class cybersecurity, cloud, and AI solutions across India and beyond.
+            </p>
+            {/* Social Icons */}
+            <div className="flex items-center gap-3 pt-2">
+              <a href="https://www.linkedin.com/company/104839162/" target="_blank" rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-900/40 flex items-center justify-center text-blue-400 hover:bg-blue-500/25 hover:border-blue-500/60 hover:text-blue-300 transition-all duration-200"
+                title="LinkedIn">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                </svg>
+              </a>
+              <a href="https://www.instagram.com/klouderatech/" target="_blank" rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg bg-pink-500/10 border border-blue-900/40 flex items-center justify-center text-pink-400 hover:bg-pink-500/25 hover:border-pink-500/60 hover:text-pink-300 transition-all duration-200"
+                title="Instagram">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <a href="https://www.facebook.com/people/KloudEra-Technologies/61567616190162/" target="_blank" rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg bg-indigo-500/10 border border-blue-900/40 flex items-center justify-center text-indigo-400 hover:bg-indigo-500/25 hover:border-indigo-500/60 hover:text-indigo-300 transition-all duration-200"
+                title="Facebook">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1V12h3v3h-3v6.8c4.56-.93 8-4.96 8-9.8z"/>
+                </svg>
+              </a>
+              <a href="https://www.youtube.com/@KloudEraTechnologies-b3z" target="_blank" rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg bg-red-500/10 border border-blue-900/40 flex items-center justify-center text-red-500 hover:bg-red-500/25 hover:border-red-500/60 hover:text-red-400 transition-all duration-200"
+                title="YouTube">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.516 0-9.387.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.387.507 9.387.507s7.517 0 9.389-.507a3.002 3.002 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400">
-            <Link href="/privacy-policy" className="hover:text-cyan-300">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-cyan-300">Terms of Service</Link>
-            <Link href="/developer" className="hover:text-cyan-300 font-mono text-blue-400">Developer Portal</Link>
-            <button
-              onClick={() => {
-                playAudio("click");
-                onLaunch3D();
-              }}
-              className="hidden sm:inline-block font-bold text-cyan-400 hover:underline cursor-pointer"
-            >
-              Launch 3D Virtual HQ 🌌
-            </button>
+          {/* Column 2 — Quick Links */}
+          <div className="space-y-5">
+            <h4 className="text-[10px] font-mono font-bold text-cyan-400 tracking-widest uppercase">Quick Links</h4>
+            <ul className="space-y-3 text-xs text-slate-400">
+              {[
+                { label: "Home", href: "/" },
+                { label: "About Us", href: "/about" },
+                { label: "Services", href: "/services" },
+                { label: "Partners", href: "/partners" },
+                { label: "Certifications", href: "/certifications" },
+                { label: "Achievements", href: "/achievements" },
+                { label: "Careers", href: "/careers" },
+                { label: "Contact Us", href: "/contact" },
+              ].map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} className="hover:text-cyan-400 transition-colors duration-150 flex items-center gap-1.5 group">
+                    <span className="w-1 h-1 rounded-full bg-cyan-500/50 group-hover:bg-cyan-400 transition-colors shrink-0" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3 — Services */}
+          <div className="space-y-5">
+            <h4 className="text-[10px] font-mono font-bold text-cyan-400 tracking-widest uppercase">Our Services</h4>
+            <ul className="space-y-3 text-xs text-slate-400">
+              {[
+                { label: "Cyber Security", href: "/services/cyber-security" },
+                { label: "Cloud Solutions", href: "/services/cloud" },
+                { label: "AI Solutions", href: "/services/ai-solutions" },
+                { label: "Microsoft Services", href: "/services/microsoft" },
+                { label: "Hardware Solutions", href: "/services/hardware" },
+                { label: "Book a Meeting", href: "/book-meeting" },
+                { label: "Support", href: "/support" },
+              ].map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} className="hover:text-cyan-400 transition-colors duration-150 flex items-center gap-1.5 group">
+                    <span className="w-1 h-1 rounded-full bg-cyan-500/50 group-hover:bg-cyan-400 transition-colors shrink-0" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 4 — Contact & Address */}
+          <div className="space-y-5">
+            <h4 className="text-[10px] font-mono font-bold text-cyan-400 tracking-widest uppercase">Contact Us</h4>
+            <ul className="space-y-4 text-xs text-slate-400">
+              {/* Address */}
+              <li className="flex items-start gap-3">
+                <svg className="w-4 h-4 text-cyan-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span className="leading-relaxed">
+                  KloudEra Technologies Pvt. Ltd.<br />
+                  Noida, Uttar Pradesh,<br />
+                  India — 201301
+                </span>
+              </li>
+              {/* Email */}
+              <li className="flex items-center gap-3">
+                <svg className="w-4 h-4 text-cyan-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <a href="mailto:info@kloudera.ai" className="hover:text-cyan-400 transition-colors">info@kloudera.ai</a>
+              </li>
+              {/* Website */}
+              <li className="flex items-center gap-3">
+                <svg className="w-4 h-4 text-cyan-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+                <a href="https://www.kloudera.ai" className="hover:text-cyan-400 transition-colors">www.kloudera.ai</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="border-t border-blue-900/20 bg-[#010308]">
+          <div className="mx-auto max-w-7xl px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <InlineText
+              as="span"
+              className="text-[11px] text-slate-500 font-mono"
+              path={["home", "footerCopyright"]}
+              fallback="© 2026 KloudEra Technologies Pvt. Ltd. All rights reserved."
+            />
+            <div className="flex items-center gap-5 text-[11px] text-slate-500">
+              <Link href="/privacy-policy" className="hover:text-cyan-400 transition-colors">Privacy Policy</Link>
+              <span className="text-slate-700">|</span>
+              <Link href="/terms" className="hover:text-cyan-400 transition-colors">Terms of Service</Link>
+              <span className="text-slate-700">|</span>
+              <Link href="/sitemap.xml" className="hover:text-cyan-400 transition-colors">Sitemap</Link>
+            </div>
           </div>
         </div>
       </footer>
