@@ -36,8 +36,8 @@ export const metadata: Metadata = {
     description: "Future-proof your enterprise with world-class Cyber Security, cognitive AI workflows, Microsoft solutions, and premium GPU systems.",
     images: [
       {
-        url: "/og-image.jpg",
-        width: 1200,
+        url: "/og-image.png",
+        width: 630,
         height: 630,
         alt: "KloudEra Technologies — Cyber Security · Cloud · AI Solutions",
       },
@@ -45,10 +45,10 @@ export const metadata: Metadata = {
     locale: "en_IN",
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "KloudEra Technologies | Cyber Security · Cloud · AI Solutions",
     description: "Future-proof your enterprise with world-class Cyber Security, cognitive AI workflows, and Microsoft solutions.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
     site: "@KloudEraTech",
   },
 };
