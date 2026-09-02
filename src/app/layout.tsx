@@ -17,9 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kloudera Technologies | Secure Enterprise AI Command Center",
-  description: "Future-proof your enterprise with world-class Cyber Security, cognitive AI workflows, Microsoft solutions, and premium GPU systems.",
-  metadataBase: new URL("https://kloudera.tech"),
+  title: "Kloudera Technologies | Cyber Security · Cloud · AI Solutions",
+  description: "Future-proof your enterprise with world-class Cyber Security, cognitive AI workflows, Microsoft solutions, and premium GPU systems. Secure. Innovate. Transform.",
+  metadataBase: new URL("https://www.kloudera.ai"),
   icons: {
     icon: "/favicon.png",
     shortcut: "/favicon.png",
@@ -27,6 +27,29 @@ export const metadata: Metadata = {
   },
   verification: {
     google: "pRWllGWgk6Lq_VratDGf3nwXPLpJbkmTMPdVkrrDscg",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://www.kloudera.ai",
+    siteName: "KloudEra Technologies",
+    title: "KloudEra Technologies | Cyber Security · Cloud · AI Solutions",
+    description: "Future-proof your enterprise with world-class Cyber Security, cognitive AI workflows, Microsoft solutions, and premium GPU systems.",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "KloudEra Technologies — Cyber Security · Cloud · AI Solutions",
+      },
+    ],
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "KloudEra Technologies | Cyber Security · Cloud · AI Solutions",
+    description: "Future-proof your enterprise with world-class Cyber Security, cognitive AI workflows, and Microsoft solutions.",
+    images: ["/og-image.jpg"],
+    site: "@KloudEraTech",
   },
 };
 
