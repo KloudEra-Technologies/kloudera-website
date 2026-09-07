@@ -384,6 +384,13 @@
     "intro": "Recognized and accredited by key government initiatives and national enterprise development bodies in India.",
     "items": [
       {
+        "name": "ISO 27701:2019 Certified",
+        "category": "PRIVACY INFORMATION MANAGEMENT",
+        "tagline": "Privacy Information Management System (PIMS)",
+        "desc": "Certified under ISO 27701:2019 — the international standard for Privacy Information Management Systems (PIMS). This certification demonstrates KloudEra's commitment to protecting personal data, ensuring regulatory compliance (GDPR, PDPB), and maintaining the highest standards of data privacy governance.",
+        "logoUrl": "/achievements/TrustCenter.png"
+      },
+      {
         "name": "MSME Certified Enterprise",
         "category": "GOVERNMENT ACCREDITATION",
         "issuer": "Micro, Small & Medium Enterprises (Govt. of India)",
